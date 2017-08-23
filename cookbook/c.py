@@ -1,4 +1,6 @@
 #
+# Boston Key Party 2016 pwnable cookbook
+#
 # Shamelessly copied from LiveOverflow's code
 #
 
