@@ -22,7 +22,7 @@ from pwn import *
 
 b = ELF('inst_prof')
 
-# leak a few GOT address & use lib-database to identify the version of libc
+# leak a few GOT addresses & use lib-database to identify the version of libc
 libc = ELF('/lib/x86_64-linux-gnu/libc.so.6')
 
 context.arch = 'amd64'
