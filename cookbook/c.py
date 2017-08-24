@@ -17,7 +17,7 @@ PRITNF_OFFSET = 0x49670
 SYSTEM_OFFSET = 0x3ada0
 FREE_HOOK_OFFSET = 0x71476 + 0x140b8a - 0x9c
 
-# calculated from the leaked addresses
+# will calculate from the leaked addresses
 FREE_HOOK_PTR = 0
 LIBC = 0
 
