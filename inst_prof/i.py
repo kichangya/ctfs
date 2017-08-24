@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+# Shamelessly copied from https://khack40.info
+
 import struct
 import sys
 import subprocess
@@ -12,7 +14,6 @@ from pwn import *
 
 # pwntools - CTF framework
 # defuse.ca - online x86 assembler
-# https://khack40.info - writeup
 # https://dilsec.com - google ctf 2017 pwnables inst_prof writeup
 # WizardsOfDos' CTF writeup @ github
 
