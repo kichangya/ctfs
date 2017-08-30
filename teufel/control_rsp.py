@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-# Based on <https://www.youtube.com/watch?v=wDosab_Y4Hs>
-
 import sys
 from pwn import *
 
