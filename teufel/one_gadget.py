@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# gdb> info files
-# pmap
+# http://v0ids3curity.blogspot.kr/2015/12/32c3-ctf-pwn-200-teufel.html?m=0
 
 import sys
 from pwn import *
