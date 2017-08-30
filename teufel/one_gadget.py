@@ -50,7 +50,7 @@ if __name__ == "__main__":
 # 0xcafebabedeadbeef + 'A' + 
 # ef:be:ad:de:be:ba:fe:ca:41: a0:ad:0f:93:7f: 0a
 
-# leak rbp which points the start of mmap'ed memory 
+# leak rbp 
 
     mmap = resp[9:14]
     mmap = "\x00" + mmap + "\x00\x00"
