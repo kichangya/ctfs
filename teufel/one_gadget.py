@@ -47,8 +47,8 @@ if __name__ == "__main__":
 # sub_4004E6() pushes rbp into the stack
 # so we can leak the address with puts()
 #
-# 0xcafebabedeadbeef + 'A' + 
-# ef:be:ad:de:be:ba:fe:ca:41: a0:ad:0f:93:7f: 0a
+# cafebabe deadbeef + 'A' + addr + '\n'
+# ef:be:ad:de:be:ba:fe:ca: 41: a0:ad:0f:93:7f: 0a
 
 # leak rbp 
 
