@@ -74,11 +74,16 @@ if __name__ == "__main__":
 # we don't have enough room to execute ROP.
 # we have only 24 bytes. 
 #
+# ---------------------
+# PROTO_NONE memory region (no rw)
+# ---------------------
+# ...
+# ...
 # read() buf    8 bytes
 # saved RBP     8 bytes
 # saved RIP     8 bytes
 # ---------------------
-# PROTO 0 memory region (no rw)
+# PROTO_NONE memory region (no rw)
 # ---------------------
 #
 # we can use the gadget to move down RSP just a little bit
