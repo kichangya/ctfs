@@ -82,7 +82,7 @@ if __name__ == "__main__":
 # read() buf    8 bytes
 # saved RBP     8 bytes
 # saved RIP     8 bytes
-# ---------------------
+# --------------------- <--- Initial RSP
 # PROTO_NONE memory region (no rw)
 # ---------------------
 #
