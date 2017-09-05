@@ -88,4 +88,4 @@ if __name__ == "__main__":
 # and the difference won't change (pretty deterministic)
 # so, we can calc LIBC_BASE without killing the daemon.
 #
-# Refer "On the effectiveness of Full-ASLR on 64-bit Linux" @ DeepSec
+# Refer to "On the effectiveness of Full-ASLR on 64-bit Linux" @ DeepSec
