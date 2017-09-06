@@ -46,7 +46,7 @@ if __name__ == "__main__":
     junk = r.recvuntil("What's your name? ")
 
 # "Fun with FORTIFY_SOURCE", http://seclists.org/bugtraq/2010/Apr/243
-# argv & envp on Stack, http://softwaretechnique.jp/OS_Development/Supplement/Binary/elf_stack.html
+# argv & envp on stack, http://softwaretechnique.jp/OS_Development/Supplement/Binary/elf_stack.html
 # 0x600d20 is obvious.
 # 0x400d20... I will figure it out (binfmt_elf.c)
 
