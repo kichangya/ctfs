@@ -26,12 +26,12 @@ context.arch = 'amd64'
 context.log_level = 'info'
 
 # socat TCP-LISTEN:8888,reuseaddr,fork 'SYSTEM:./inst_prof'
-r = remote('localhost', 8888)
+#r = remote('localhost', 8888)
 
-#r = process('./inst_prof')
-#gdb.attach(r, '''
-#'''
-#)
+r = process('./inst_prof')
+gdb.attach(r, '''
+'''
+)
 #raw_input('Go!')
 
 #
