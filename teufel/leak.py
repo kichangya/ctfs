@@ -84,8 +84,8 @@ if __name__ == "__main__":
 
     log.info('mmaped - LIBC_BASE: %#x' % (mmap - LIBC_BASE))
 
-# now we know the difference, 
-# and the difference won't change (pretty deterministic)
-# so, we can calc LIBC_BASE without killing the daemon.
+# now we know the distance, 
+# and the distance won't change (pretty deterministic)
+# so, we can calc LIBC_BASE without worrying to kill the daemon.
 #
 # Refer to "On the effectiveness of Full-ASLR on 64-bit Linux" @ DeepSec
