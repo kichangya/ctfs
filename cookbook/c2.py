@@ -14,18 +14,12 @@ FREE_HOOK_OFFSET = 0x71476 + 0x140b8a - 0x9c
 
 #r = remote('localhost', 8888)
 
-# b *0x8048a42 # main_menu
-# b *0x8049199 # create_recipe
 r = process('./cookbook',)
-#gdb.attach(r, '''
-#'''
-#)
 
 b = ELF('./cookbook')
 libc = ELF('/lib/x86_64-linux-gnu/libc.so.6')
 context.arch = b.arch
 context.log_level = 'info'
-
 
 # use-after-free:
 # 
