@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Shamelessly copied from https://khack40.info
+# Shamelessly copied https://khack40.info
 
 import struct
 import sys
