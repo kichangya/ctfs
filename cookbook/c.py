@@ -81,7 +81,6 @@ if __name__ == "__main__":
     r.recvuntil("what's your name?")
     send("babo")
 
-
     #
     # leak the address of TOP CHUNK
     #
