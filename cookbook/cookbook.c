@@ -81,7 +81,7 @@ _UNKNOWN unk_804D098; // weak
 void *CURRENT_INGREDIENT; // idb
 void *CURRENT_RECIPE; // idb
 char *ptr; // idb
-char *dword_804D0AC; // idb
+char *name_of_hacker; // idb
 // extern _UNKNOWN _gmon_start__; weak
 
 
@@ -356,10 +356,10 @@ char *your_name()
   char *result; // eax@1
 
   puts("what's your name?");
-  dword_804D0AC = (char *)calloc(0x40u, 1u);
-  fgets(dword_804D0AC, 64, stdin);
-  v0 = dword_804D0AC;
-  result = &v0[strcspn(dword_804D0AC, "\n")];
+  name_of_hacker = (char *)calloc(0x40u, 1u);
+  fgets(name_of_hacker, 64, stdin);
+  v0 = name_of_hacker;
+  result = &v0[strcspn(name_of_hacker, "\n")];
   *result = 0;
   return result;
 }
@@ -656,7 +656,7 @@ unsigned int recipe_book()
   unsigned int v3; // [sp+8h] [bp-10h]@1
 
   v3 = list_length(&RECIPE_LIST);
-  printf("%s's cookbook", dword_804D0AC);
+  printf("%s's cookbook", name_of_hacker);
   for ( i = 0; ; ++i )
   {
     result = i;
@@ -799,7 +799,7 @@ int __cdecl calc_total_calories(int a1)
 //----- (08049BED) --------------------------------------------------------
 void free_structures()
 {
-  free(dword_804D0AC);
+  free(name_of_hacker);
   free(ptr);
   free_list(&RECIPE_LIST);
   free_list((int *)&unk_804D090);
