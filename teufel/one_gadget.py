@@ -69,13 +69,13 @@ if __name__ == "__main__":
 #
 # 0x4526a execve("/bin/sh", rsp+0x30, environ)
 # constraints:
-#   [rsp+0x30] == NULL -> can't access! (mmap'ed to PROTO 0)
+#   [rsp+0x30] == NULL -> can't access! (mmap'ed to PROTO 0 region)
 #
 # 0xf66c0 execve("/bin/sh", rcx, [rbp-0xf8])
 # constraints:
 #   [rcx] == NULL || rcx == NULL  -> can't set rcx to 0!
 #   [[rbp-0xf8]] == NULL || [rbp-0xf8] == NULL
-#
+ 
     ONE_GADGET = LIBC_BASE + 0xf66c0
     log.info('ONE_GADGET: %#x' % ONE_GADGET)
 
