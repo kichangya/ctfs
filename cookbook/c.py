@@ -78,7 +78,7 @@ def parse_ingredient():
     return stou(int(m.groups()[0]))
 
 if __name__ == "__main__":
-    recv_all()
+    r.recvuntil("what's your name?")
     send("babo")
 
     send("c")
