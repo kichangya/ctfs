@@ -3,9 +3,9 @@
 
 ## How-to
 
-$ python leak.py
-$ vi control_rsp.py ( edit the distance )
-$ python control_rsp.py
+* $ python leak.py
+* $ vi control_rsp.py ( edit the distance )
+* $ python control_rsp.py
 
 ## Reference
 
