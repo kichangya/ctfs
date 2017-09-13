@@ -12,7 +12,7 @@ import ctypes
 
 '''
 
-information leakage: 'ptr to the top chunk' is revealed.
+information leakage: 'ptr to the top chunk' can be leaked.
 
 * create recipe
 
@@ -30,7 +30,7 @@ information leakage: 'ptr to the top chunk' is revealed.
     list_add(CURRENT_RECIPE_HOWMANY, strtoul(ntpr)) ->
         calloc(1u, 8u)
 
-* discard recipe -> the last (large) chunk gets freed and moved to bins. [head to howmany list] gets overwritten with the pointer which points somewhere in main_arena.binlist
+* discard recipe -> the last (large) chunk gets freed and moved to bins. both [head to ingredient list] and [head to howmany list] get overwritten with the pointer which points somewhere in main_arena.binlist
 
     free(CURRENT_RECIPE)
 
@@ -41,16 +41,16 @@ information leakage: 'ptr to the top chunk' is revealed.
                 |
                 |
 main_arena      V
-binlist  [ptr to the top chunk]
-
-    // list_length() should be > 0 
-    // becuase, [head to ingredient list] is not NULL (also points somewhere in main_arena.binlist)
+binlist  [ptr to the top chunk] [NULL]
+                                  ^
+                                  |
+                                  +- Why NULL? I don't know. Pretty convenient, though.
 
     for (i = 0; i < list_length(&CURRENT_RECIPE); i++) { 
-        v8 = nth_item(&CURRENT_RECIPE_HOWMANY, i)
+        v8 = nth_item(&CURRENT_RECIPE_HOWMANY, i) // [bk] becomes the listhead
         ...
+        printf("%zd - %s\n", v8, ...); // [ptr to the top chunk] is getting leaked
     }
-    printf("%zd - %s\n", v8, ...);
 
 
 heap overflow:
