@@ -44,6 +44,8 @@ int __cdecl print_recipe(int a1);
 unsigned int recipe_book();
 signed int __cdecl contains(int *a1, const char *a2);
 void __cdecl exterminate_ingredient(char *s2);
+void __cdecl sub_804996E(char *s2);
+int sub_8049A50();
 int __cdecl calc_total_cost(int a1);
 int __cdecl calc_total_calories(int a1);
 void free_structures();
@@ -736,6 +738,53 @@ void __cdecl exterminate_ingredient(char *s2)
 // 804D08C: using guessed type int RECIPE_LIST;
 // 804D094: using guessed type int INGREDIENT_LIST;
 
+//----- (0804996E) --------------------------------------------------------
+void __cdecl sub_804996E(char *s2)
+{
+  int v1; // ST28_4@2
+  int v2; // ST2C_4@7
+  unsigned int i; // [sp+Ch] [bp-1Ch]@1
+  unsigned int j; // [sp+10h] [bp-18h]@6
+  unsigned int v5; // [sp+14h] [bp-14h]@1
+  unsigned int v6; // [sp+14h] [bp-14h]@6
+
+  v5 = list_length(&RECIPE_LIST);
+  for ( i = 0; i < v5; ++i )
+  {
+    v1 = nth_item(&RECIPE_LIST, i);
+    if ( !strcmp((const char *)(v1 + 8), s2) )
+    {
+      remove_at(&RECIPE_LIST, i);
+      break;
+    }
+  }
+  v6 = list_length((int *)&unk_804D090);
+  for ( j = 0; j < v6; ++j )
+  {
+    v2 = nth_item((int *)&unk_804D090, j);
+    if ( !strcmp((const char *)(v2 + 8), s2) )
+    {
+      remove_at((int *)&unk_804D090, j);
+      return;
+    }
+  }
+}
+// 804D08C: using guessed type int RECIPE_LIST;
+
+//----- (08049A50) --------------------------------------------------------
+int sub_8049A50()
+{
+  unsigned int i; // [sp+0h] [bp-18h]@1
+  int v2; // [sp+4h] [bp-14h]@1
+  unsigned int v3; // [sp+8h] [bp-10h]@1
+
+  v3 = list_length((int *)&unk_804D098);
+  v2 = 0;
+  for ( i = 0; i < v3; ++i )
+    v2 += *(_DWORD *)(nth_item((int *)&unk_804D098, i) + 4);
+  return v2;
+}
+
 //----- (08049AA6) --------------------------------------------------------
 int __cdecl calc_total_cost(int a1)
 {
@@ -1080,4 +1129,4 @@ void term_proc()
   ;
 }
 
-#error "There were 1 decompilation failure(s) on 38 function(s)"
+#error "There were 1 decompilation failure(s) on 40 function(s)"
