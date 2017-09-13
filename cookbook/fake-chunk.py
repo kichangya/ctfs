@@ -11,7 +11,6 @@ import ctypes
 
 
 '''
-
 information leakage: 'ptr to the top chunk' can be leaked.
 
 * create recipe
@@ -44,7 +43,7 @@ main_arena      V
 binlist  [ptr to the top chunk] [NULL]
                                   ^
                                   |
-                                  +- Why NULL? I don't know. Pretty convenient, though.
+                                  +- Why NULL? I don't know. pretty convenient, though.
 
     for (i = 0; i < list_length(&CURRENT_RECIPE); i++) { 
         v8 = nth_item(&CURRENT_RECIPE_HOWMANY, i) // [bk] becomes the listhead
