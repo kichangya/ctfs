@@ -2,7 +2,8 @@
 #
 # Boston Key Party 2016 pwnable cookbook
 #
-# Shamelessly copied Joshua Wang's write-up (http://blog.rh0gue.com/2016-08-20-bkpctf-2015-cookbook/)
+# Based on the Joshua Wang's write-up (http://blog.rh0gue.com/2016-08-20-bkpctf-2015-cookbook/)
+#
 
 from pwn import *
 import re

@@ -2,7 +2,7 @@
 #
 # Boston Key Party 2016 pwnable cookbook
 #
-# Shamelessly copied LiveOverflow's code
+# Based on the LiveOverflow's code
 #
 
 import ctypes
