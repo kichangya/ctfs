@@ -510,13 +510,13 @@ LABEL_2:
     s[strcspn(s, "\n")] = 0;
     switch ( s[0] )
     {
-      case 110:
+      case 110: // n
         CURRENT_RECIPE = calloc(1u, 0x40Cu);
         continue;
-      case 100:
+      case 100: // d
         free(CURRENT_RECIPE);
         continue;
-      case 97:
+      case 97: // a
         if ( !CURRENT_RECIPE )
           puts("can't do it on a null guy");
         printf("which ingredient to add? ");
@@ -538,7 +538,7 @@ LABEL_2:
           printf("I dont know about, %s!, please add it to the ingredient list!\n", nptr);
         }
         continue;
-      case 114:
+      case 114: // r
         if ( !CURRENT_RECIPE )
         {
           puts("can't do it on a null guy");
@@ -549,13 +549,13 @@ LABEL_2:
         v2 = 0;
         v3 = *(_DWORD *)CURRENT_RECIPE;
         break;
-      case 103:
+      case 103: // g
         if ( CURRENT_RECIPE )
           fgets((char *)CURRENT_RECIPE + 140, 1036, stdin);
         else
           puts("can't do it on a null guy");
         continue;
-      case 105:
+      case 105: // i
         if ( CURRENT_RECIPE )
         {
           fgets((char *)CURRENT_RECIPE + 140, 1036, stdin);
@@ -566,7 +566,7 @@ LABEL_2:
           puts("can't do it on a null guy");
         }
         continue;
-      case 115:
+      case 115: // s
         if ( CURRENT_RECIPE )
         {
           if ( recipe_idx((char *)CURRENT_RECIPE + 8) == -1 && *((_BYTE *)CURRENT_RECIPE + 8) )
@@ -586,14 +586,14 @@ LABEL_2:
           puts("can't do it on a null guy");
         }
         continue;
-      case 112:
+      case 112: // p
         if ( CURRENT_RECIPE )
           print_recipe((int)CURRENT_RECIPE);
         continue;
       default:
         puts("UNKNOWN DIRECTIVE");
         continue;
-      case 113:
+      case 113: // q
         return *MK_FP(__GS__, 20) ^ v8;
     }
     while ( v3 )
