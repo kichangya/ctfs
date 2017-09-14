@@ -2,13 +2,10 @@
 #
 # Boston Key Party 2016 pwnable cookbook
 #
-# Based on 
 
 from pwn import *
 import re
 import ctypes
-import sys
-
 
 r = process('./cookbook')
 
