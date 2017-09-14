@@ -80,7 +80,7 @@ if __name__ == '__main__':
     s('babo')
 
     #
-    # LEAK TOP CHUNK (needed to do house-of-force)
+    # LEAK TOP CHUNK (for house-of-force)
     #
 
     s('c')
