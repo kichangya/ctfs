@@ -292,28 +292,28 @@ int main_menu()
     fgets(&v2, 10, stdin);
     switch ( v2 )
     {
-      case 108:
+      case 108: // 'l'
         list_ingredients();
         break;
-      case 114:
+      case 114: // 'r'
         recipe_book();
         break;
-      case 97:
+      case 97: // 'a'
         add_ingredient();
         break;
-      case 99:
+      case 99: // 'c'
         create_recipe();
         break;
-      case 103:
+      case 103: // 'g'
         give_cookbook_name();
         break;
-      case 82:
+      case 82: // 'R'
         remove_cookbook_name();
         break;
-      case 113:
+      case 113: // 'q'
         puts("goodbye, thanks for cooking with us!");
         return *MK_FP(__GS__, 20) ^ v3;
-      case 101:
+      case 101: // 'e'
         s2 = (char *)calloc(0x80u, 1u);
         printf("which ingredient to exterminate? ");
         fgets(s2, 128, stdin);
@@ -392,24 +392,24 @@ int add_ingredient()
     v4[strcspn(v4, "\n")] = 0;
     switch ( v4[0] )
     {
-      case 108:
+      case 108: // 'l'
         if ( CURRENT_INGREDIENT )
           print_ingredient((int)CURRENT_INGREDIENT);
         else
           puts("can't print NULL!");
         break;
-      case 110:
+      case 110: // 'n'
         CURRENT_INGREDIENT = malloc(0x90u);
         *((_DWORD *)CURRENT_INGREDIENT + 35) = CURRENT_INGREDIENT;
         break;
-      case 99:
+      case 99: // 'c'
         puts("still editing this guy");
         break;
-      case 100:
+      case 100: // 'd'
         free(CURRENT_INGREDIENT);
         CURRENT_INGREDIENT = 0;
         break;
-      case 103:
+      case 103: // 'g'
         v1 = (char *)calloc(0x80u, 1u);
         if ( CURRENT_INGREDIENT )
         {
@@ -423,7 +423,7 @@ int add_ingredient()
         }
         free(v1);
         break;
-      case 112:
+      case 112: // 'p'
         nptr = (char *)calloc(0x80u, 1u);
         if ( CURRENT_INGREDIENT )
         {
@@ -437,7 +437,7 @@ int add_ingredient()
         }
         free(nptr);
         break;
-      case 115:
+      case 115: // 's'
         v3 = (char *)calloc(0x80u, 1u);
         if ( CURRENT_INGREDIENT )
         {
@@ -451,7 +451,7 @@ int add_ingredient()
         }
         free(v3);
         break;
-      case 101:
+      case 101: // 'e'
         if ( CURRENT_INGREDIENT )
         {
           if ( ingredient_idx((char *)CURRENT_INGREDIENT + 8) == -1 && *((_BYTE *)CURRENT_INGREDIENT + 8) )
@@ -473,7 +473,7 @@ int add_ingredient()
       default:
         puts("UNKNOWN DIRECTIVE");
         break;
-      case 113:
+      case 113: 'q'
         return *MK_FP(__GS__, 20) ^ v5;
     }
   }
@@ -510,13 +510,13 @@ LABEL_2:
     s[strcspn(s, "\n")] = 0;
     switch ( s[0] )
     {
-      case 110: // n
+      case 110: // 'n'
         CURRENT_RECIPE = calloc(1u, 0x40Cu);
         continue;
-      case 100: // d
+      case 100: // 'd'
         free(CURRENT_RECIPE);
         continue;
-      case 97: // a
+      case 97: // 'a'
         if ( !CURRENT_RECIPE )
           puts("can't do it on a null guy");
         printf("which ingredient to add? ");
@@ -538,7 +538,7 @@ LABEL_2:
           printf("I dont know about, %s!, please add it to the ingredient list!\n", nptr);
         }
         continue;
-      case 114: // r
+      case 114: // 'r'
         if ( !CURRENT_RECIPE )
         {
           puts("can't do it on a null guy");
@@ -549,13 +549,13 @@ LABEL_2:
         v2 = 0;
         v3 = *(_DWORD *)CURRENT_RECIPE;
         break;
-      case 103: // g
+      case 103: // 'g'
         if ( CURRENT_RECIPE )
           fgets((char *)CURRENT_RECIPE + 140, 1036, stdin);
         else
           puts("can't do it on a null guy");
         continue;
-      case 105: // i
+      case 105: // 'i'
         if ( CURRENT_RECIPE )
         {
           fgets((char *)CURRENT_RECIPE + 140, 1036, stdin);
@@ -566,7 +566,7 @@ LABEL_2:
           puts("can't do it on a null guy");
         }
         continue;
-      case 115: // s
+      case 115: // 's'
         if ( CURRENT_RECIPE )
         {
           if ( recipe_idx((char *)CURRENT_RECIPE + 8) == -1 && *((_BYTE *)CURRENT_RECIPE + 8) )
@@ -586,14 +586,14 @@ LABEL_2:
           puts("can't do it on a null guy");
         }
         continue;
-      case 112: // p
+      case 112: // 'p'
         if ( CURRENT_RECIPE )
           print_recipe((int)CURRENT_RECIPE);
         continue;
       default:
         puts("UNKNOWN DIRECTIVE");
         continue;
-      case 113: // q
+      case 113:
         return *MK_FP(__GS__, 20) ^ v8;
     }
     while ( v3 )
