@@ -1,6 +1,6 @@
 Boston Key Party 2016 pwn cookbook
 
-* $ python no-wild-guess.py (elegant solution)
+* $ python no-wild-guess.py
 
 or 
 
