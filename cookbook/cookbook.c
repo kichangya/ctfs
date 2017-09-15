@@ -69,10 +69,10 @@ void term_proc();
 
 int (*off_804CF08[2])() = { &sub_80486D0, &sub_80486B0 }; // weak
 int (*off_804CF0C)() = &sub_80486B0; // weak
-char *off_804D054 = "main dish"; // weak
-char *off_804D058 = "side dish"; // weak
-char *off_804D05C = "drink"; // weak
-char *off_804D064 = "drink"; // weak
+char *MAIN_DISH = "main dish"; // weak
+char *SIDE_DISH = "side dish"; // weak
+char *DRINK = "drink"; // weak
+char *DRINK_2 = "drink"; // weak
 FILE *stdin; // idb
 FILE *stdout; // idb
 char byte_804D088; // weak
@@ -571,7 +571,7 @@ LABEL_2:
         {
           if ( recipe_idx((char *)CURRENT_RECIPE + 8) == -1 && *((_BYTE *)CURRENT_RECIPE + 8) )
           {
-            *((_DWORD *)CURRENT_RECIPE + 31) = off_804D064;
+            *((_DWORD *)CURRENT_RECIPE + 31) = DRINK_2;
             list_add(&RECIPE_LIST, (int)CURRENT_RECIPE);
             CURRENT_RECIPE = 0;
             puts("saved!");
@@ -611,7 +611,7 @@ LABEL_2:
     }
   }
 }
-// 804D064: using guessed type char *off_804D064;
+// 804D064: using guessed type char *DRINK_2;
 // 804D08C: using guessed type int RECIPE_LIST;
 // 8049092: using guessed type char s[10];
 // 8049092: using guessed type char nptr[144];
@@ -979,7 +979,7 @@ int init_recipes()
   memcpy((char *)v7 + 140, "just grill it on a tiny .vn grill", 0x21u);
   list_add(&v2, 4);
   *((_DWORD *)v7 + 1) = v2;
-  *((_DWORD *)v7 + 31) = off_804D054;
+  *((_DWORD *)v7 + 31) = MAIN_DISH;
   list_add(&RECIPE_LIST, (int)v7);
   v9 = calloc(1u, 0x40Cu);
   memcpy((char *)v9 + 8, "roasted tomato with basil and garlic", 0x24u);
@@ -1003,7 +1003,7 @@ int init_recipes()
   list_add(&v4, 2);
   *(_DWORD *)v9 = v3;
   *((_DWORD *)v9 + 1) = v4;
-  *((_DWORD *)v9 + 31) = off_804D058;
+  *((_DWORD *)v9 + 31) = SIDE_DISH;
   list_add(&RECIPE_LIST, (int)v9);
   v14 = calloc(1u, 0x40Cu);
   v5 = 0;
@@ -1015,13 +1015,13 @@ int init_recipes()
   memcpy((char *)v14 + 140, "pour it in a glass", 0x12u);
   list_add(&v6, 1);
   *((_DWORD *)v14 + 1) = v6;
-  *((_DWORD *)v14 + 31) = off_804D05C;
+  *((_DWORD *)v14 + 31) = DRINK;
   list_add(&RECIPE_LIST, (int)v14);
   return *MK_FP(__GS__, 20) ^ v16;
 }
-// 804D054: using guessed type char *off_804D054;
-// 804D058: using guessed type char *off_804D058;
-// 804D05C: using guessed type char *off_804D05C;
+// 804D054: using guessed type char *MAIN_DISH;
+// 804D058: using guessed type char *SIDE_DISH;
+// 804D05C: using guessed type char *DRINK;
 // 804D08C: using guessed type int RECIPE_LIST;
 
 //----- (0804A214) --------------------------------------------------------
