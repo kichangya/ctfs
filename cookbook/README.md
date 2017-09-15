@@ -8,7 +8,7 @@ or
 
 or 
 
-* $ python fake-chunk.py
+* $ python fake_chunk.py
 
 or
 
