@@ -137,7 +137,9 @@ if __name__ == "__main__":
     # 
 
     # UNLINK approach failed! couldn't meet the constraint.
-    # 
+    #
+    # list_length() tries to traverse the list and it explodes!
+    
     print "gdb -p `pidof cookbook` ./cookbook"
     print "pwndbg> set {int}0x804d03c = 0"
     print "pwndbg> quit"
