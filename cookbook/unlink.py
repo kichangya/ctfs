@@ -139,6 +139,8 @@ if __name__ == "__main__":
     # [7] free the second node
     # 
 
+    # UNLINK approach failed! couldn't meet the constraint.
+    # 
     # gdb -p `pidof cookbook` ./cookbook
     # pwndbg> set {int}0x804d03c = 0
     # pwndbg> quit
