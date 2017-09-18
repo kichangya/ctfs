@@ -12,4 +12,4 @@ or
 
 or
 
-    * $ python unlink.py (was able to overwrite calloc@got with system(), but failed to set the argument to '/bin/sh')
+* $ python unlink.py (failed)
