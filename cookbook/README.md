@@ -1,19 +1,16 @@
 Boston Key Party 2016 pwn cookbook
 
-* $ python no-wild-guess.py
+* $ python no-wild-guess.py (house-of-force & heap overflow)
 
 or 
 
-* $ python c.py 
+* $ python unlink.py (unlink)
+
+or
+
+* $ python c.py (house-of-force & use-after-free)
+
 
 or 
 
-* $ python fake_chunk.py
-
-or
-
-* $ python unlink.py (failed)
-
-or
-
-* $ python stephenR.py (in-progress)
+* $ python fake_chunk.py (a lot of offset calculations)
