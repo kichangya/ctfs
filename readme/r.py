@@ -6,8 +6,8 @@
 
 from pwn import *
 
-r = remote('localhost', 8888)
-#r = process('./readme.bin')
+#r = remote('localhost', 8888)
+r = process('./readme.bin')
 #gdb.attach(r, '''
 #b *0x4006d0
 #'''
