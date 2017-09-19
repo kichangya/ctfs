@@ -69,7 +69,7 @@ if __name__ == "__main__":
     log.info('CURRENT_RECIPE: 0x%x' % CURRENT_RECIPE)
 
     #
-    # add node to the list 
+    # add nodes to the list 
     #
     #
     # [listhead] [listhead] [name]
@@ -130,7 +130,7 @@ if __name__ == "__main__":
     r.recv()
 
     #
-    # [6] overwrite the first node to 0x804d098
+    # [6] overwrite the first node 
     #
     # 0x804d098->next == 0x804d09c == CURRENT_INGREDIENT
     # so, CURRENT_INGREDIENT will point 0x804cff8 after the unlinking
