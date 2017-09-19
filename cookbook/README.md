@@ -1,5 +1,11 @@
 Boston Key Party 2016 pwn cookbook
 
+## Prerequisite
+
+* install pwntools (https://github.com/Gallopsled/pwntools)
+
+## 4 approaches
+
 * $ python no-wild-guess.py (house-of-force & heap overflow)
 
 or 
@@ -9,7 +15,6 @@ or
 or
 
 * $ python c.py (house-of-force & use-after-free)
-
 
 or 
 
