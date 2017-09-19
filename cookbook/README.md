@@ -14,7 +14,7 @@ or
 
 or
 
-* $ python c.py (house-of-force & use-after-free)
+* $ python liveoverflow.py (house-of-force & use-after-free)
 
 or 
 
