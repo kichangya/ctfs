@@ -6,11 +6,11 @@ Boston Key Party 2016 pwn cookbook
 
 ## Four approaches
 
-* $ python no-wild-guess.py (house-of-force & heap overflow)
+* $ python unlink.py (unlink)
 
 or 
 
-* $ python unlink.py (unlink)
+* $ python no-wild-guess.py (house-of-force & heap overflow)
 
 or
 
