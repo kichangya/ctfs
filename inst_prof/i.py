@@ -1,5 +1,9 @@
-# -*- coding: utf-8 -*-
-# Shamelessly copied https://khack40.info
+#
+# Google CTF 2017 pwn inst_prof
+#
+# Based on
+# * https://khack40.info
+#
 
 import struct
 import sys
