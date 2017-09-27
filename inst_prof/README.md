@@ -2,7 +2,7 @@ Google CTF 2017 pwn inst_prof
 
 ## Three approaches
 
-* $ python rop.py (make_page_executable() + crude stack adjustment)
+* $ python rop.py (crude)
 
 or
 
@@ -10,7 +10,7 @@ or
 
 or
 
-* $ rop2.py (info leak + mprotect)
+* $ rop2.py (info leak)
 
 ## Write-ups
 
