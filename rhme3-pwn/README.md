@@ -8,4 +8,4 @@ RHME3 Qual 2017 pwn
 
 ## Write-ups
 
-*
+* https://0x00sec.org/t/heap-exploitation-abusing-use-after-free/3580
