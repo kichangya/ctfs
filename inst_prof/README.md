@@ -17,3 +17,4 @@ or
 * https://dilsec.com - google ctf 2017 pwnables inst_prof writeup
 * WizardsOfDos' CTF writeup @ github
 * https://develbranch.com
+* http://gmiru.com/writeups/gctf-inst/
