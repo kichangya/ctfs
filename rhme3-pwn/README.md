@@ -4,9 +4,8 @@ RHME3 Qual 2017 pwn
 
 * main.elf.modified - 'undaemonized' executable
 
-* $ python pwn.py
+* $ python nogada.py
 
 ## Write-ups
 
-*
 *
