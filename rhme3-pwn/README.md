@@ -2,7 +2,8 @@ RHME3 Qual 2017 pwn
 
 ## How-to
 
-* main - 'undaemonized' executable
+* main.elf - the original binary
+* main - 'undaemonized' executable (patched with NOP codes)
 
 * $ python nogada.py
 
