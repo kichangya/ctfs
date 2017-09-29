@@ -1,0 +1,13 @@
+source ~/git/peda/peda.py
+
+set follow-fork-mode child
+
+break *0x401793
+commands
+silent
+print "---------------------------------------\n"
+x/10gx $rdi
+continue
+end
+
+run
