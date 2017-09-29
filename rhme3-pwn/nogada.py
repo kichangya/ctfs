@@ -82,7 +82,7 @@ if __name__ == "__main__":
     # set_name() references the variable 'selected' even after the chunk has gone! (UaF)
     # -> strcpy(*(char **)(selected + 16), &s);
     #
-    # typedef _player_st { _DWORD attack, defense, speed, precision; char * name } player_st;
+    # typedef struct _player_st { _DWORD attack, defense, speed, precision; char * name } player_st;
     # -> malloc(sizeof(player_st)) -> 24 bytes from LIFO fastbin (previous chunk C-1)
     # -> malloc("EEEE....EEEE" + "\x18\x30\x60") -> 16+3+1 bytes from unsorted bin (previous chunk A-1)
     # so, 'selected' overlaps with chunk E-2 (player name "EEEEE....")
