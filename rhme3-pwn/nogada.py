@@ -84,7 +84,7 @@ if __name__ == "__main__":
     #
     # typedef struct _player_st { _DWORD attack, defense, speed, precision; char * name_ptr } player_st;
     #
-    # add_player() allocates two chunks, payer_st and name. 
+    # add_player() allocates two chunks, player_st and name. 
     # -> malloc(sizeof(player_st)) -> 24 bytes from LIFO fastbin (previous chunk C-1)
     # -> malloc("EEEE....EEEE" + "\x18\x30\x60") -> 16+3+1 bytes from unsorted bin (previous chunk A-1)
     # so, chunk A-1 which has been deleted overlaps with chunk E-2 (player name "EEEEE....")
