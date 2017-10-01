@@ -29,10 +29,10 @@ int sub_8048600();
 int sub_8048670();
 int sub_8048690();
 unsigned int __cdecl sub_80486BB(char *a1, int a2);
-unsigned int __cdecl sub_8048724(unsigned __int8 a1);
-_DWORD *__cdecl sub_8048816(size_t a1);
-unsigned int __cdecl sub_8048905(unsigned __int8 a1);
-unsigned int __cdecl sub_804898F(unsigned __int8 a1);
+unsigned int __cdecl update_user_desc(unsigned __int8 a1);
+_DWORD *__cdecl add_user(size_t a1);
+unsigned int __cdecl delete_user(unsigned __int8 a1);
+unsigned int __cdecl display_user(unsigned __int8 a1);
 void __cdecl __noreturn main();
 void init(void); // idb
 void term_proc();
@@ -130,7 +130,7 @@ unsigned int __cdecl sub_80486BB(char *a1, int a2)
 }
 
 //----- (08048724) --------------------------------------------------------
-unsigned int __cdecl sub_8048724(unsigned __int8 a1)
+unsigned int __cdecl update_user_desc(unsigned __int8 a1)
 {
   char v2; // [esp+17h] [ebp-11h]
   int v3; // [esp+18h] [ebp-10h]
@@ -156,7 +156,7 @@ unsigned int __cdecl sub_8048724(unsigned __int8 a1)
 // 804B069: using guessed type char byte_804B069;
 
 //----- (08048816) --------------------------------------------------------
-_DWORD *__cdecl sub_8048816(size_t a1)
+_DWORD *__cdecl add_user(size_t a1)
 {
   void *s; // ST24_4
   _DWORD *v2; // ST28_4
@@ -169,13 +169,13 @@ _DWORD *__cdecl sub_8048816(size_t a1)
   ptr[(unsigned __int8)byte_804B069] = v2;
   printf("name: ");
   sub_80486BB((char *)ptr[(unsigned __int8)byte_804B069] + 4, 124);
-  sub_8048724(++byte_804B069 - 1);
+  update_user_desc(++byte_804B069 - 1);
   return v2;
 }
 // 804B069: using guessed type char byte_804B069;
 
 //----- (08048905) --------------------------------------------------------
-unsigned int __cdecl sub_8048905(unsigned __int8 a1)
+unsigned int __cdecl delete_user(unsigned __int8 a1)
 {
   unsigned int v2; // [esp+1Ch] [ebp-Ch]
 
@@ -191,7 +191,7 @@ unsigned int __cdecl sub_8048905(unsigned __int8 a1)
 // 804B069: using guessed type char byte_804B069;
 
 //----- (0804898F) --------------------------------------------------------
-unsigned int __cdecl sub_804898F(unsigned __int8 a1)
+unsigned int __cdecl display_user(unsigned __int8 a1)
 {
   unsigned int v2; // [esp+1Ch] [ebp-Ch]
 
@@ -231,25 +231,25 @@ void __cdecl __noreturn main()
     {
       printf("size of description: ");
       __isoc99_scanf("%u%c", &v2, &v0);
-      sub_8048816(v2);
+      add_user(v2);
     }
     if ( v1 == 1 )
     {
       printf("index: ");
       __isoc99_scanf("%d", &v2);
-      sub_8048905(v2);
+      delete_user(v2);
     }
     if ( v1 == 2 )
     {
       printf("index: ");
       __isoc99_scanf("%d", &v2);
-      sub_804898F(v2);
+      display_user(v2);
     }
     if ( v1 == 3 )
     {
       printf("index: ");
       __isoc99_scanf("%d", &v2);
-      sub_8048724(v2);
+      update_user_desc(v2);
     }
     if ( v1 == 4 )
     {
