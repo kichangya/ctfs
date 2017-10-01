@@ -88,6 +88,7 @@ if __name__ == "__main__":
     # -> malloc(sizeof(player_st)) -> 24 bytes from LIFO fastbin (previous chunk C-1)
     # -> malloc("EEEE....EEEE" + "\x18\x30\x60") -> 16+3+1 bytes from unsorted bin (previous chunk A-1)
     # so, chunk A-1 which has been deleted overlaps with chunk E-2 (player name "EEEEE....")
+    # and we can still access chunk A-1 via 'selected'
     # so, a carefully crafted name for chunk E will overwrite chunk A-1's name_ptr
     # so we can manipulate 'chunk A-1'->name_ptr.
     # and future set_name() will reference the overwritten pointer. 
