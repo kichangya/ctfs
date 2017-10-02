@@ -2,7 +2,7 @@
 
 ## How-to
 
-* babyfenshui - replaced alarm() with NOP
+* babyfenshui - patched alarm() with NOP
 
 * $ python nogada.py
 
