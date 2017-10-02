@@ -1,5 +1,11 @@
 33C3 CTF pwn babyfengshui
 
+## How-to
+
+* babyfenshui - replaced alarm() with NOP
+
+* $ python nogada.py
+
 ## Write-ups
 
 * https://galhacktictrendsetters.wordpress.com/2017/01/05/33c3-ctf-babyfengshui/
