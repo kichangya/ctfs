@@ -1,6 +1,8 @@
 #
 # 33C3 CTF 2016 pwn babyfengshui
 #
+# Kichang Yang original version.
+#
 
 from pwn import *
 import re
@@ -120,4 +122,3 @@ if __name__ == "__main__":
     delete(0)
     
     r.interactive()
-
