@@ -28,7 +28,7 @@ void sub_80485F0();
 int sub_8048600();
 int sub_8048670();
 int sub_8048690();
-unsigned int __cdecl sub_80486BB(char *a1, int a2);
+unsigned int __cdecl fgets_wrapper(char *a1, int a2);
 unsigned int __cdecl update_user_desc(unsigned __int8 a1);
 _DWORD *__cdecl add_user(size_t a1);
 unsigned int __cdecl delete_user(unsigned __int8 a1);
@@ -48,7 +48,7 @@ _UNKNOWN unk_804B04B; // weak
 FILE *stdin; // idb
 FILE *stdout; // idb
 char byte_804B068; // weak
-char byte_804B069; // weak
+char g_player_count; // weak
 void *ptr[50]; // idb
 // extern _UNKNOWN __gmon_start__; weak
 
@@ -116,7 +116,7 @@ int sub_8048690()
 // 8048690: could not find valid save-restore pair for ebp
 
 //----- (080486BB) --------------------------------------------------------
-unsigned int __cdecl sub_80486BB(char *a1, int a2)
+unsigned int __cdecl fgets_wrapper(char *a1, int a2)
 {
   char *v3; // [esp+18h] [ebp-10h]
   unsigned int v4; // [esp+1Ch] [ebp-Ch]
@@ -137,7 +137,7 @@ unsigned int __cdecl update_user_desc(unsigned __int8 a1)
   unsigned int v4; // [esp+1Ch] [ebp-Ch]
 
   v4 = __readgsdword(0x14u);
-  if ( a1 < (unsigned __int8)byte_804B069 && ptr[a1] )
+  if ( a1 < (unsigned __int8)g_player_count && ptr[a1] )
   {
     v3 = 0;
     printf("text length: ");
@@ -148,31 +148,31 @@ unsigned int __cdecl update_user_desc(unsigned __int8 a1)
       exit(1);
     }
     printf("text: ");
-    sub_80486BB(*(char **)ptr[a1], v3 + 1);
+    fgets_wrapper(*(char **)ptr[a1], v3 + 1);
   }
   return __readgsdword(0x14u) ^ v4;
 }
 // 80485A0: using guessed type int __isoc99_scanf(const char *, ...);
-// 804B069: using guessed type char byte_804B069;
+// 804B069: using guessed type char g_player_count;
 
 //----- (08048816) --------------------------------------------------------
 _DWORD *__cdecl add_user(size_t a1)
 {
   void *s; // ST24_4
-  _DWORD *v2; // ST28_4
+  _DWORD *s2; // ST28_4
 
   s = malloc(a1);
   memset(s, 0, a1);
-  v2 = malloc(0x80u);
-  memset(v2, 0, 0x80u);
-  *v2 = s;
-  ptr[(unsigned __int8)byte_804B069] = v2;
+  s2 = malloc(0x80u);
+  memset(s2, 0, 0x80u);
+  *s2 = s;
+  ptr[(unsigned __int8)g_player_count] = s2;
   printf("name: ");
-  sub_80486BB((char *)ptr[(unsigned __int8)byte_804B069] + 4, 124);
-  update_user_desc(++byte_804B069 - 1);
-  return v2;
+  fgets_wrapper((char *)ptr[(unsigned __int8)g_player_count] + 4, 124);
+  update_user_desc(++g_player_count - 1);
+  return s2;
 }
-// 804B069: using guessed type char byte_804B069;
+// 804B069: using guessed type char g_player_count;
 
 //----- (08048905) --------------------------------------------------------
 unsigned int __cdecl delete_user(unsigned __int8 a1)
@@ -180,7 +180,7 @@ unsigned int __cdecl delete_user(unsigned __int8 a1)
   unsigned int v2; // [esp+1Ch] [ebp-Ch]
 
   v2 = __readgsdword(0x14u);
-  if ( a1 < (unsigned __int8)byte_804B069 && ptr[a1] )
+  if ( a1 < (unsigned __int8)g_player_count && ptr[a1] )
   {
     free(*(void **)ptr[a1]);
     free(ptr[a1]);
@@ -188,7 +188,7 @@ unsigned int __cdecl delete_user(unsigned __int8 a1)
   }
   return __readgsdword(0x14u) ^ v2;
 }
-// 804B069: using guessed type char byte_804B069;
+// 804B069: using guessed type char g_player_count;
 
 //----- (0804898F) --------------------------------------------------------
 unsigned int __cdecl display_user(unsigned __int8 a1)
@@ -196,24 +196,24 @@ unsigned int __cdecl display_user(unsigned __int8 a1)
   unsigned int v2; // [esp+1Ch] [ebp-Ch]
 
   v2 = __readgsdword(0x14u);
-  if ( a1 < (unsigned __int8)byte_804B069 && ptr[a1] )
+  if ( a1 < (unsigned __int8)g_player_count && ptr[a1] )
   {
     printf("name: %s\n", (char *)ptr[a1] + 4);
     printf("description: %s\n", *(_DWORD *)ptr[a1]);
   }
   return __readgsdword(0x14u) ^ v2;
 }
-// 804B069: using guessed type char byte_804B069;
+// 804B069: using guessed type char g_player_count;
 
 //----- (08048A17) --------------------------------------------------------
 void __cdecl __noreturn main()
 {
-  char v0; // [esp+3h] [ebp-15h]
-  int v1; // [esp+4h] [ebp-14h]
-  size_t v2; // [esp+8h] [ebp-10h]
-  unsigned int v3; // [esp+Ch] [ebp-Ch]
+  char one_byte; // [esp+3h] [ebp-15h]
+  int choice; // [esp+4h] [ebp-14h]
+  size_t four_bytes; // [esp+8h] [ebp-10h]
+  unsigned int canary; // [esp+Ch] [ebp-Ch]
 
-  v3 = __readgsdword(0x14u);
+  canary = __readgsdword(0x14u);
   setvbuf(stdin, 0, 2, 0);
   setvbuf(stdout, 0, 2, 0);
   alarm(0x14u);
@@ -225,38 +225,38 @@ void __cdecl __noreturn main()
     puts("3: Update a user description");
     puts("4: Exit");
     printf("Action: ");
-    if ( __isoc99_scanf("%d", &v1) == -1 )
+    if ( __isoc99_scanf("%d", &choice) == -1 )
       break;
-    if ( !v1 )
+    if ( !choice )
     {
       printf("size of description: ");
-      __isoc99_scanf("%u%c", &v2, &v0);
-      add_user(v2);
+      __isoc99_scanf("%u%c", &four_bytes, &one_byte);
+      add_user(four_bytes);
     }
-    if ( v1 == 1 )
+    if ( choice == 1 )
     {
       printf("index: ");
-      __isoc99_scanf("%d", &v2);
-      delete_user(v2);
+      __isoc99_scanf("%d", &four_bytes);
+      delete_user(four_bytes);
     }
-    if ( v1 == 2 )
+    if ( choice == 2 )
     {
       printf("index: ");
-      __isoc99_scanf("%d", &v2);
-      display_user(v2);
+      __isoc99_scanf("%d", &four_bytes);
+      display_user(four_bytes);
     }
-    if ( v1 == 3 )
+    if ( choice == 3 )
     {
       printf("index: ");
-      __isoc99_scanf("%d", &v2);
-      update_user_desc(v2);
+      __isoc99_scanf("%d", &four_bytes);
+      update_user_desc(four_bytes);
     }
-    if ( v1 == 4 )
+    if ( choice == 4 )
     {
       puts("Bye");
       exit(0);
     }
-    if ( (unsigned __int8)byte_804B069 > 0x31u )
+    if ( (unsigned __int8)g_player_count > 0x31u )
     {
       puts("maximum capacity exceeded, bye");
       exit(0);
@@ -265,7 +265,7 @@ void __cdecl __noreturn main()
   exit(1);
 }
 // 80485A0: using guessed type int __isoc99_scanf(const char *, ...);
-// 804B069: using guessed type char byte_804B069;
+// 804B069: using guessed type char g_player_count;
 
 //----- (08048C30) --------------------------------------------------------
 void init(void)
