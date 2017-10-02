@@ -48,7 +48,7 @@ _UNKNOWN unk_804B04B; // weak
 FILE *stdin; // idb
 FILE *stdout; // idb
 char byte_804B068; // weak
-char g_player_count; // weak
+char g_player_cnt; // weak
 void *g_player_tbl[50]; // idb
 // extern _UNKNOWN __gmon_start__; weak
 
@@ -137,7 +137,7 @@ unsigned int __cdecl update_user_desc(unsigned __int8 a1)
   unsigned int v4; // [esp+1Ch] [ebp-Ch]
 
   v4 = __readgsdword(0x14u);
-  if ( a1 < (unsigned __int8)g_player_count && g_player_tbl[a1] )
+  if ( a1 < (unsigned __int8)g_player_cnt && g_player_tbl[a1] )
   {
     v3 = 0;
     printf("text length: ");
@@ -153,7 +153,7 @@ unsigned int __cdecl update_user_desc(unsigned __int8 a1)
   return __readgsdword(0x14u) ^ v4;
 }
 // 80485A0: using guessed type int __isoc99_scanf(const char *, ...);
-// 804B069: using guessed type char g_player_count;
+// 804B069: using guessed type char g_player_cnt;
 
 //----- (08048816) --------------------------------------------------------
 _DWORD *__cdecl add_user(size_t a1)
@@ -166,13 +166,13 @@ _DWORD *__cdecl add_user(size_t a1)
   s2 = malloc(0x80u);
   memset(s2, 0, 0x80u);
   *s2 = s;
-  g_player_tbl[(unsigned __int8)g_player_count] = s2;
+  g_player_tbl[(unsigned __int8)g_player_cnt] = s2;
   printf("name: ");
-  fgets_wrapper((char *)g_player_tbl[(unsigned __int8)g_player_count] + 4, 124);
-  update_user_desc(++g_player_count - 1);
+  fgets_wrapper((char *)g_player_tbl[(unsigned __int8)g_player_cnt] + 4, 124);
+  update_user_desc(++g_player_cnt - 1);
   return s2;
 }
-// 804B069: using guessed type char g_player_count;
+// 804B069: using guessed type char g_player_cnt;
 
 //----- (08048905) --------------------------------------------------------
 unsigned int __cdecl delete_user(unsigned __int8 a1)
@@ -180,7 +180,7 @@ unsigned int __cdecl delete_user(unsigned __int8 a1)
   unsigned int v2; // [esp+1Ch] [ebp-Ch]
 
   v2 = __readgsdword(0x14u);
-  if ( a1 < (unsigned __int8)g_player_count && g_player_tbl[a1] )
+  if ( a1 < (unsigned __int8)g_player_cnt && g_player_tbl[a1] )
   {
     free(*(void **)g_player_tbl[a1]);
     free(g_player_tbl[a1]);
@@ -188,7 +188,7 @@ unsigned int __cdecl delete_user(unsigned __int8 a1)
   }
   return __readgsdword(0x14u) ^ v2;
 }
-// 804B069: using guessed type char g_player_count;
+// 804B069: using guessed type char g_player_cnt;
 
 //----- (0804898F) --------------------------------------------------------
 unsigned int __cdecl display_user(unsigned __int8 a1)
@@ -196,14 +196,14 @@ unsigned int __cdecl display_user(unsigned __int8 a1)
   unsigned int v2; // [esp+1Ch] [ebp-Ch]
 
   v2 = __readgsdword(0x14u);
-  if ( a1 < (unsigned __int8)g_player_count && g_player_tbl[a1] )
+  if ( a1 < (unsigned __int8)g_player_cnt && g_player_tbl[a1] )
   {
     printf("name: %s\n", (char *)g_player_tbl[a1] + 4);
     printf("description: %s\n", *(_DWORD *)g_player_tbl[a1]);
   }
   return __readgsdword(0x14u) ^ v2;
 }
-// 804B069: using guessed type char g_player_count;
+// 804B069: using guessed type char g_player_cnt;
 
 //----- (08048A17) --------------------------------------------------------
 void __cdecl __noreturn main()
@@ -256,7 +256,7 @@ void __cdecl __noreturn main()
       puts("Bye");
       exit(0);
     }
-    if ( (unsigned __int8)g_player_count > 0x31u )
+    if ( (unsigned __int8)g_player_cnt > 0x31u )
     {
       puts("maximum capacity exceeded, bye");
       exit(0);
@@ -265,7 +265,7 @@ void __cdecl __noreturn main()
   exit(1);
 }
 // 80485A0: using guessed type int __isoc99_scanf(const char *, ...);
-// 804B069: using guessed type char g_player_count;
+// 804B069: using guessed type char g_player_cnt;
 
 //----- (08048C30) --------------------------------------------------------
 void init(void)
