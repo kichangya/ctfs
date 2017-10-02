@@ -49,7 +49,7 @@ FILE *stdin; // idb
 FILE *stdout; // idb
 char byte_804B068; // weak
 char g_player_count; // weak
-void *ptr[50]; // idb
+void *g_player_tbl[50]; // idb
 // extern _UNKNOWN __gmon_start__; weak
 
 
@@ -137,18 +137,18 @@ unsigned int __cdecl update_user_desc(unsigned __int8 a1)
   unsigned int v4; // [esp+1Ch] [ebp-Ch]
 
   v4 = __readgsdword(0x14u);
-  if ( a1 < (unsigned __int8)g_player_count && ptr[a1] )
+  if ( a1 < (unsigned __int8)g_player_count && g_player_tbl[a1] )
   {
     v3 = 0;
     printf("text length: ");
     __isoc99_scanf("%u%c", &v3, &v2);
-    if ( (char *)(v3 + *(_DWORD *)ptr[a1]) >= (char *)ptr[a1] - 4 )
+    if ( (char *)(v3 + *(_DWORD *)g_player_tbl[a1]) >= (char *)g_player_tbl[a1] - 4 )
     {
       puts("my l33t defenses cannot be fooled, cya!");
       exit(1);
     }
     printf("text: ");
-    fgets_wrapper(*(char **)ptr[a1], v3 + 1);
+    fgets_wrapper(*(char **)g_player_tbl[a1], v3 + 1);
   }
   return __readgsdword(0x14u) ^ v4;
 }
@@ -166,9 +166,9 @@ _DWORD *__cdecl add_user(size_t a1)
   s2 = malloc(0x80u);
   memset(s2, 0, 0x80u);
   *s2 = s;
-  ptr[(unsigned __int8)g_player_count] = s2;
+  g_player_tbl[(unsigned __int8)g_player_count] = s2;
   printf("name: ");
-  fgets_wrapper((char *)ptr[(unsigned __int8)g_player_count] + 4, 124);
+  fgets_wrapper((char *)g_player_tbl[(unsigned __int8)g_player_count] + 4, 124);
   update_user_desc(++g_player_count - 1);
   return s2;
 }
@@ -180,11 +180,11 @@ unsigned int __cdecl delete_user(unsigned __int8 a1)
   unsigned int v2; // [esp+1Ch] [ebp-Ch]
 
   v2 = __readgsdword(0x14u);
-  if ( a1 < (unsigned __int8)g_player_count && ptr[a1] )
+  if ( a1 < (unsigned __int8)g_player_count && g_player_tbl[a1] )
   {
-    free(*(void **)ptr[a1]);
-    free(ptr[a1]);
-    ptr[a1] = 0;
+    free(*(void **)g_player_tbl[a1]);
+    free(g_player_tbl[a1]);
+    g_player_tbl[a1] = 0;
   }
   return __readgsdword(0x14u) ^ v2;
 }
@@ -196,10 +196,10 @@ unsigned int __cdecl display_user(unsigned __int8 a1)
   unsigned int v2; // [esp+1Ch] [ebp-Ch]
 
   v2 = __readgsdword(0x14u);
-  if ( a1 < (unsigned __int8)g_player_count && ptr[a1] )
+  if ( a1 < (unsigned __int8)g_player_count && g_player_tbl[a1] )
   {
-    printf("name: %s\n", (char *)ptr[a1] + 4);
-    printf("description: %s\n", *(_DWORD *)ptr[a1]);
+    printf("name: %s\n", (char *)g_player_tbl[a1] + 4);
+    printf("description: %s\n", *(_DWORD *)g_player_tbl[a1]);
   }
   return __readgsdword(0x14u) ^ v2;
 }
