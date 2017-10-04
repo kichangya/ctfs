@@ -10,7 +10,7 @@ or
 
 or
 
-* $ python rop2.py (info leak)
+* $ python rop_short.py (info leak)
 
 ## Write-ups
 
