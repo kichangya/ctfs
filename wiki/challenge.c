@@ -31,13 +31,13 @@ __int64 (**sub_AC0())(void);
 __int64 sub_AF0();
 __int64 (**sub_B30())(void);
 __int64 sub_B70();
-int sub_BA5();
-signed __int64 __fastcall sub_BE6(__int64 a1, __int64 a2);
-__int64 __fastcall sub_C00(int fd, __int64 a2, __int64 a3);
-signed __int64 __fastcall sub_C5E(__int64 a1);
-void __fastcall __noreturn sub_CB7(__int64 a1);
-char *__fastcall sub_D42(char *file);
-char *sub_DA1();
+int list_files();
+signed __int64 __fastcall str_equ(__int64 a1, __int64 a2);
+__int64 __fastcall read_n(int fd, __int64 a2, __int64 a3);
+signed __int64 __fastcall check_pass(__int64 a1);
+void __fastcall __noreturn do_menu(__int64 a1);
+char *__fastcall read_file(char *file);
+char *read_pass();
 void __fastcall init(unsigned int a1, __int64 a2, __int64 a3);
 void term_proc();
 // __int64 ITM_deregisterTMCloneTable(void); weak
@@ -51,7 +51,7 @@ __int64 (__fastcall *off_201DE0[2])() = { &sub_B70, &sub_B30 }; // weak
 __int64 (__fastcall *off_201DE8)() = &sub_B30; // weak
 __int64 qword_201DF0 = 0LL; // weak
 void *off_202098 = &off_202098; // weak
-__int64 (__fastcall *off_2020A0)() = &sub_C5E; // weak
+__int64 (__fastcall *func_ptrs)() = &check_pass; // weak
 char _bss_start; // weak
 _UNKNOWN unk_2020BF; // weak
 // extern struct _IO_FILE *stdout;
@@ -87,7 +87,7 @@ void __fastcall __noreturn main(__int64 a1, char **a2, char **a3)
   signed __int64 i; // rcx
   char v6; // [rsp+8h] [rbp-20h]
 
-  v3 = &off_2020A0;
+  v3 = &func_ptrs;
   v4 = &v6;
   for ( i = 6LL; i; --i )
   {
@@ -97,9 +97,9 @@ void __fastcall __noreturn main(__int64 a1, char **a2, char **a3)
   }
   setvbuf(stdin, 0LL, 2, 0LL);
   setvbuf(stdout, 0LL, 2, 0LL);
-  sub_CB7((__int64)&v6);
+  do_menu((__int64)&v6);
 }
-// 2020A0: using guessed type __int64 (__fastcall *off_2020A0)();
+// 2020A0: using guessed type __int64 (__fastcall *func_ptrs)();
 
 //----- (0000000000000A8F) ----------------------------------------------------
 #error "A95: positive sp value has been found (funcsize=3)"
@@ -157,7 +157,7 @@ __int64 sub_B70()
 // 202158: using guessed type __int64 __fastcall Jv_RegisterClasses(_QWORD);
 
 //----- (0000000000000BA5) ----------------------------------------------------
-int sub_BA5()
+int list_files()
 {
   DIR *v0; // rbx
   struct dirent *v1; // rax
@@ -177,7 +177,7 @@ int sub_BA5()
 }
 
 //----- (0000000000000BE6) ----------------------------------------------------
-signed __int64 __fastcall sub_BE6(__int64 a1, __int64 a2)
+signed __int64 __fastcall str_equ(__int64 a1, __int64 a2)
 {
   __int64 v2; // rax
   char v3; // dl
@@ -196,7 +196,10 @@ signed __int64 __fastcall sub_BE6(__int64 a1, __int64 a2)
 }
 
 //----- (0000000000000C00) ----------------------------------------------------
-__int64 __fastcall sub_C00(int fd, __int64 a2, __int64 a3)
+// edi: fd
+// rsi: buf
+// rdx: bytes to read
+__int64 __fastcall read_n(int fd, __int64 a2, __int64 a3)
 {
   __int64 v3; // rbp
   __int64 i; // rbx
@@ -215,7 +218,7 @@ __int64 __fastcall sub_C00(int fd, __int64 a2, __int64 a3)
 }
 
 //----- (0000000000000C5E) ----------------------------------------------------
-signed __int64 __fastcall sub_C5E(__int64 a1)
+signed __int64 __fastcall check_pass(__int64 a1)
 {
   __int64 v1; // rbp
   signed __int64 v2; // rcx
@@ -234,10 +237,10 @@ signed __int64 __fastcall sub_C5E(__int64 a1)
     --v2;
   }
   v4 = 0;
-  if ( sub_C00(0, (__int64)&v6, 4096LL) & 7 )
+  if ( read_n(0, (__int64)&v6, 4096LL) & 7 )
 LABEL_7:
     _exit(v4);
-  result = sub_BE6((__int64)&v6, v1);
+  result = str_equ((__int64)&v6, v1);
   if ( (_DWORD)result )
   {
     v4 = system("cat flag.txt");
@@ -247,37 +250,38 @@ LABEL_7:
 }
 
 //----- (0000000000000CB7) ----------------------------------------------------
-void __fastcall __noreturn sub_CB7(__int64 a1)
+// rdi: points an array of function pointers
+void __fastcall __noreturn do_menu(__int64 a1)
 {
   __int64 v1; // r12
-  char v2; // [rsp+Fh] [rbp-99h]
+  char buf; // [rsp+Fh] [rbp-99h]
 
   v1 = 0LL;
   while ( 1 )
   {
     while ( 1 )
     {
-      memset(&v2, 0, 0x81uLL);
-      sub_C00(0, (__int64)&v2, 128LL);
-      if ( !(unsigned int)sub_BE6((__int64)&v2, (__int64)"USER") )
+      memset(&buf, 0, 0x81uLL);
+      read_n(0, (__int64)&buf, 128LL);
+      if ( !(unsigned int)str_equ((__int64)&buf, (__int64)"USER") )
         break;
       if ( v1 )
         _exit(0);
-      v1 = (*(__int64 (__fastcall **)(char *, const char *))(a1 + 8))(&v2, "USER");
+      v1 = (*(__int64 (__fastcall **)(char *, const char *))(a1 + 8))(&buf, "USER");
     }
-    if ( (unsigned int)sub_BE6((__int64)&v2, (__int64)"PASS") )
+    if ( (unsigned int)str_equ((__int64)&buf, (__int64)"PASS") )
     {
       (*(void (__fastcall **)(__int64, const char *))a1)(v1, "PASS");
     }
-    else if ( (unsigned int)sub_BE6((__int64)&v2, (__int64)"LIST") )
+    else if ( (unsigned int)str_equ((__int64)&buf, (__int64)"LIST") )
     {
-      (*(void (__fastcall **)(char *, const char *))(a1 + 16))(&v2, "LIST");
+      (*(void (__fastcall **)(char *, const char *))(a1 + 16))(&buf, "LIST");
     }
   }
 }
 
 //----- (0000000000000D42) ----------------------------------------------------
-char *__fastcall sub_D42(char *file)
+char *__fastcall read_file(char *file)
 {
   int v1; // eax
   int v2; // ebx
@@ -288,13 +292,13 @@ char *__fastcall sub_D42(char *file)
   v2 = v1;
   if ( v1 == -1 )
     _exit(0);
-  sub_C00(v1, (__int64)&s, 4096LL);
+  read_n(v1, (__int64)&s, 4096LL);
   close(v2);
   return strdup(&s);
 }
 
 //----- (0000000000000DA1) ----------------------------------------------------
-char *sub_DA1()
+char *read_pass()
 {
   signed __int64 v0; // rcx
   char *v1; // rdi
@@ -314,10 +318,10 @@ char *sub_DA1()
   file = 100;
   v4 = 98;
   v5 = 47;
-  sub_C00(0, (__int64)&v6, 128LL);
+  read_n(0, (__int64)&v6, 128LL);
   if ( strchr(&v6, 47) )
     _exit(0);
-  return sub_D42(&file);
+  return read_file(&file);
 }
 
 //----- (0000000000000E10) ----------------------------------------------------
