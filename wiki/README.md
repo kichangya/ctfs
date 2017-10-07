@@ -7,6 +7,10 @@ Google CTF 2017 pwn wiki
 
 * $ python nogada.py 
 
-## Write-ups
+## Write-up
 
 * http://gmiru.com/writeups/gctf-wiki/
+
+## Reference
+
+* https://stackoverflow.com/questions/19938324/what-are-vdso-and-vsyscall
