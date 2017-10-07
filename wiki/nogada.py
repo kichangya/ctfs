@@ -31,7 +31,7 @@ r.send('PASS\n')
 #
 #
 # [2] vsyscall address is fixed and sys_gettimeofday returns timeval in rdi
-
+#
 # [3] in main(), function pointers pointing check_pass(), read_user_n_load_pass(), and list_files()
 # are copied onto stack, so we can reach check_pass (which is func_ptrs[0], conveniently) 
 # after 24 times of calling gettimeofday()
