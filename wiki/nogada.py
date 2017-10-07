@@ -30,7 +30,6 @@ r.send('PASS\n')
 # mov edx,1000h
 # call read_n ; rsi: buf, rdx: bytes to read == 4096
 #
-#
 # [2] vsyscall address is fixed and sys_gettimeofday returns timeval in rdi 
 # (and check_pass() takes rdi as an argument, conveniently. so we can chain them together)
 #
