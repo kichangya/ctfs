@@ -5,7 +5,7 @@ Google CTF 2017 pwn wiki
 * db/zomo - password file
 * flag.txt - flag file
 
-* python nogada.py (not yet finished)
+* $ python nogada.py 
 
 ## Write-ups
 
