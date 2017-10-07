@@ -1,6 +1,8 @@
 #
 # Google CTF 2017 pwn wiki
 #
+# Based on:
+# * http://gmiru.com/writeups/gctf-wiki/
 
 from pwn import *
 import time
