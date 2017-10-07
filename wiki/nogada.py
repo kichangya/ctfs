@@ -8,7 +8,6 @@
 from pwn import *
 import time
 
-
 #r = process('./challenge', aslr=False)
 r = process('./challenge')
 #gdb.attach(r, '''
