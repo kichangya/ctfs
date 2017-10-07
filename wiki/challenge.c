@@ -36,8 +36,8 @@ signed __int64 __fastcall str_equ(__int64 a1, __int64 a2);
 __int64 __fastcall read_n(int fd, __int64 a2, __int64 a3);
 signed __int64 __fastcall check_pass(__int64 a1);
 void __fastcall __noreturn do_menu(__int64 a1);
-char *__fastcall read_file(char *file);
-char *read_pass();
+char *__fastcall load_pass(char *file);
+char *read_user_n_load_pass();
 void __fastcall init(unsigned int a1, __int64 a2, __int64 a3);
 void term_proc();
 // __int64 ITM_deregisterTMCloneTable(void); weak
@@ -281,7 +281,7 @@ void __fastcall __noreturn do_menu(__int64 a1)
 }
 
 //----- (0000000000000D42) ----------------------------------------------------
-char *__fastcall read_file(char *file)
+char *__fastcall load_pass(char *file)
 {
   int v1; // eax
   int v2; // ebx
@@ -298,7 +298,7 @@ char *__fastcall read_file(char *file)
 }
 
 //----- (0000000000000DA1) ----------------------------------------------------
-char *read_pass()
+char *read_user_n_load_pass()
 {
   signed __int64 v0; // rcx
   char *v1; // rdi
@@ -321,7 +321,7 @@ char *read_pass()
   read_n(0, (__int64)&v6, 128LL);
   if ( strchr(&v6, 47) )
     _exit(0);
-  return read_file(&file);
+  return load_pass(&file);
 }
 
 //----- (0000000000000E10) ----------------------------------------------------
