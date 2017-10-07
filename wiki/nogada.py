@@ -20,7 +20,7 @@ r.send('zomo\n')
 r.send('PASS\n')
 
 #
-# [1] check_pass() has stack-overflow vulnerability. (buf_size < bytes_to_read)
+# [1] check_pass() has a stack-overflow vulnerability. (buf_size < bytes_to_read)
 #
 # push rbp
 # push rbx
@@ -30,7 +30,8 @@ r.send('PASS\n')
 # call read_n ; rsi: buf, rdx: bytes to read == 4096
 #
 #
-# [2] vsyscall address is fixed and sys_gettimeofday returns timeval in rdi
+# [2] vsyscall address is fixed and sys_gettimeofday returns timeval in rdi 
+# (and check_pass() takes rdi as an argument, conveniently. so we can chain them together)
 #
 # [3] in main(), function pointers pointing check_pass(), read_user_n_load_pass(), and list_files()
 # are copied onto stack, so we can reach check_pass (which is func_ptrs[0], conveniently) 
