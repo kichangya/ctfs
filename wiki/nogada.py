@@ -30,7 +30,7 @@ r.send('PASS\n')
 # mov edx,1000h
 # call read_n ; rsi: buf, rdx: bytes to read == 4096
 #
-# [2] vsyscall address is fixed and sys_gettimeofday returns timeval in rdi 
+# [2] vsyscall addresses are fixed and sys_gettimeofday returns timeval in rdi 
 # (and check_pass() takes rdi as an argument, conveniently. so we can chain them together)
 #
 # [3] in main(), function pointers pointing check_pass(), read_user_n_load_pass(), and list_files()
