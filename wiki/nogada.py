@@ -42,7 +42,7 @@ r.send('PASS\n')
 # mov ecx,6
 # rep movsd <-- copy func_ptrs onto stack
 #
-# [3] check_pass() takes rdi as an argument (rdi == loaded password). 
+# [3] check_pass() takes rdi as an argument (normally, rdi == loaded password). 
 # so check_pass() will try to compare the read buf with timeval after 24 times of gettimeofday().
 #
 # [4] if we can guess the remote timeval, we can bypass the following check.
