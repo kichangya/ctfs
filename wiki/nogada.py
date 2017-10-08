@@ -47,7 +47,7 @@ r.send('PASS\n')
 #
 # [4] if we can guess the remote timeval, we can bypass the following check.
 # 
-# mov rbp,rdi <- the argument is moved to rbp
+# mov rbp,rdi <- the argument is assigned to rbp
 # ...
 # call read_n
 # test al,7
