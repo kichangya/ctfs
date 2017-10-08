@@ -54,9 +54,9 @@ r.send('PASS\n')
 # call read_n
 # test al,7
 # jnz short loc_CA8
-# mov rsi, rbp <-- normally, it would be a loaded password from db/{user}, but...
+# mov rsi, rbp <-- normally, it would point the loaded password from db/{user}, but...
 # mov rdi, rsp <-- from stdin
-# call str_equ
+# call str_equ 
 # test eax,eax
 # jz short loc_CAD
 # mov rdi, command
