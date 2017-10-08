@@ -44,7 +44,7 @@ r.send('PASS\n')
 # mov ecx,6
 # rep movsd <-- copy func_ptrs onto stack
 #
-# [3] check_pass() takes rdi as an argument (normally, rdi would be a loaded password). 
+# [3] check_pass() takes rdi as an argument (normally, rdi would point the loaded password). 
 # but, check_pass() will try to compare stdin with timeval.
 #
 # [4] if we can guess the remote timeval, we can bypass the following check.
