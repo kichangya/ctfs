@@ -34,13 +34,13 @@ r.send('PASS\n')
 # (and check_pass() takes rdi as an argument, conveniently. so we can chain them together)
 #
 # [3] in main(), function pointers pointing check_pass(), read_user_n_load_pass(), and list_files()
-# are copied onto stack, so we can reach check_pass (which is func_ptrs[0], conveniently) 
+# are copied onto stack, so we can reach check_pass() (which is func_ptrs[0], conveniently) 
 # after 24 times of calling gettimeofday()
 # 
 # lea rsi,func_ptrs
 # lea rdi,[rsp+28h-20h]
 # mov ecx,6
-# rep movsd
+# rep movsd <-- copy func_ptrs onto stack
 #
 # [3] check_pass() takes rdi as an argument (rdi == loaded password). 
 # so check_pass() will try to compare the read buf with timeval after 24 times of gettimeofday().
