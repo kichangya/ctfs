@@ -6,7 +6,7 @@ Google CTF 2017 pwn inst_prof
 
 or
 
-* $ python i.py (info leak + libc.so)
+* $ python leak_got.py (info leak + libc.so)
 
 or
 
