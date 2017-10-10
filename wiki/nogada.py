@@ -3,7 +3,6 @@
 #
 # Based on:
 # * http://gmiru.com/writeups/gctf-wiki/
-# * https://stackoverflow.com/questions/19938324/what-are-vdso-and-vsyscall
 #
 
 from pwn import *
