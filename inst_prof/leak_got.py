@@ -172,7 +172,7 @@ if __name__ == "__main__":
 
     # libc 를 구했다는 가정하에 여기부터 후반부!
 
-    # CTF 서버에서 사용된는 libc 버전은 ROP 를 통해 구해내야한다. 아래 설명되어있음.
+    # CTF 서버에서 사용된는 libc 버전은 ROP 를 통해 구해내야한다. Explained above.
     libc = ELF('/lib/x86_64-linux-gnu/libc.so.6')
 
     LIBC_BASE = l - libc.symbols['write']
