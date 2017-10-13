@@ -10,6 +10,7 @@ Google CTF 2017 pwn wiki
 ## Write-up
 
 * http://gmiru.com/writeups/gctf-wiki/
+* https://dilsec.com/2017/07/27/google-ctf-2017-pwriteup/
 
 ## Reference
 
