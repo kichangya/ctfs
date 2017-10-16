@@ -26,16 +26,16 @@ signed __int64 sub_4007A0();
 __int64 sub_4007D0();
 signed __int64 sub_400810();
 __int64 sub_400830();
-__int64 __fastcall sub_40085D(__int64 a1, signed int a2);
-__int64 __fastcall sub_4008C9(__int64 a1, int a2);
-int sub_40094E();
-int sub_400998();
-unsigned int sub_4009FD();
-_QWORD *sub_400A49();
-int sub_400B14();
-int sub_400BC2();
-int sub_400D87();
-int sub_400F7D();
+__int64 __fastcall read_n(__int64 a1, signed int a2);
+__int64 __fastcall read_z_until_lf(__int64 a1, int a2);
+int read_number();
+int do_menu();
+unsigned int initialize();
+_QWORD *malloc_n_init();
+int list_note();
+int new_note();
+int edit_note();
+int delete_note();
 __int64 __fastcall main(__int64 a1, char **a2, char **a3);
 void __fastcall init(unsigned int a1, __int64 a2, __int64 a3);
 void term_proc();
@@ -52,7 +52,7 @@ _UNKNOWN unk_60208F; // weak
 FILE *stdout; // idb
 FILE *stdin; // idb
 char byte_6020A0; // weak
-__int64 qword_6020A8; // weak
+__int64 NOTE_TABLE; // weak
 // extern _UNKNOWN _gmon_start__; weak
 
 
@@ -117,24 +117,24 @@ __int64 sub_400830()
 // 400830: could not find valid save-restore pair for rbp
 
 //----- (000000000040085D) ----------------------------------------------------
-__int64 __fastcall sub_40085D(__int64 a1, signed int a2)
+__int64 __fastcall read_n(__int64 a1, signed int a2)
 {
-  unsigned int i; // [rsp+18h] [rbp-8h]
+  signed int i; // [rsp+18h] [rbp-8h]
   int v4; // [rsp+1Ch] [rbp-4h]
 
   if ( a2 <= 0 )
     return 0LL;
-  for ( i = 0; (signed int)i < a2; i += v4 )
+  for ( i = 0; i < a2; i += v4 )
   {
-    v4 = read(0, (void *)(a1 + (signed int)i), (signed int)(a2 - i));
+    v4 = read(0, (void *)(a1 + i), a2 - i);
     if ( v4 <= 0 )
       break;
   }
-  return i;
+  return (unsigned int)i;
 }
 
 //----- (00000000004008C9) ----------------------------------------------------
-__int64 __fastcall sub_4008C9(__int64 a1, int a2)
+__int64 __fastcall read_z_until_lf(__int64 a1, int a2)
 {
   int i; // [rsp+18h] [rbp-8h]
 
@@ -147,18 +147,18 @@ __int64 __fastcall sub_4008C9(__int64 a1, int a2)
 }
 
 //----- (000000000040094E) ----------------------------------------------------
-int sub_40094E()
+int read_number()
 {
   char nptr; // [rsp+0h] [rbp-30h]
   unsigned __int64 v2; // [rsp+28h] [rbp-8h]
 
   v2 = __readfsqword(0x28u);
-  sub_4008C9((__int64)&nptr, 32);
+  read_z_until_lf((__int64)&nptr, 32);
   return atoi(&nptr);
 }
 
 //----- (0000000000400998) ----------------------------------------------------
-int sub_400998()
+int do_menu()
 {
   puts("== 0ops Free Note ==");
   puts("1. List Note");
@@ -168,11 +168,11 @@ int sub_400998()
   puts("5. Exit");
   puts("====================");
   printf("Your choice: ");
-  return sub_40094E();
+  return read_number();
 }
 
 //----- (00000000004009FD) ----------------------------------------------------
-unsigned int sub_4009FD()
+unsigned int initialize()
 {
   setvbuf(stdin, 0LL, 2, 0LL);
   setvbuf(stdout, 0LL, 2, 0LL);
@@ -180,35 +180,35 @@ unsigned int sub_4009FD()
 }
 
 //----- (0000000000400A49) ----------------------------------------------------
-_QWORD *sub_400A49()
+_QWORD *malloc_n_init()
 {
   _QWORD *v0; // rax
   _QWORD *result; // rax
   signed int i; // [rsp+Ch] [rbp-4h]
 
   v0 = malloc(0x1810uLL);
-  qword_6020A8 = (__int64)v0;
+  NOTE_TABLE = (__int64)v0;
   *v0 = 256LL;
-  result = (_QWORD *)qword_6020A8;
-  *(_QWORD *)(qword_6020A8 + 8) = 0LL;
+  result = (_QWORD *)NOTE_TABLE;
+  *(_QWORD *)(NOTE_TABLE + 8) = 0LL;
   for ( i = 0; i <= 255; ++i )
   {
-    *(_QWORD *)(qword_6020A8 + 24LL * i + 16) = 0LL;
-    *(_QWORD *)(qword_6020A8 + 24LL * i + 24) = 0LL;
-    result = (_QWORD *)(qword_6020A8 + 24LL * i + 32);
+    *(_QWORD *)(NOTE_TABLE + 24LL * i + 16) = 0LL;
+    *(_QWORD *)(NOTE_TABLE + 24LL * i + 24) = 0LL;
+    result = (_QWORD *)(NOTE_TABLE + 24LL * i + 32);
     *result = 0LL;
   }
   return result;
 }
-// 6020A8: using guessed type __int64 qword_6020A8;
+// 6020A8: using guessed type __int64 NOTE_TABLE;
 
 //----- (0000000000400B14) ----------------------------------------------------
-int sub_400B14()
+int list_note()
 {
   __int64 v0; // rax
   unsigned int i; // [rsp+Ch] [rbp-4h]
 
-  if ( *(_QWORD *)(qword_6020A8 + 8) <= 0LL )
+  if ( *(_QWORD *)(NOTE_TABLE + 8) <= 0LL )
   {
     LODWORD(v0) = puts("You need to create some new notes first.");
   }
@@ -216,47 +216,47 @@ int sub_400B14()
   {
     for ( i = 0; ; ++i )
     {
-      v0 = *(_QWORD *)qword_6020A8;
-      if ( (signed __int64)(signed int)i >= *(_QWORD *)qword_6020A8 )
+      v0 = *(_QWORD *)NOTE_TABLE;
+      if ( (signed __int64)(signed int)i >= *(_QWORD *)NOTE_TABLE )
         break;
-      if ( *(_QWORD *)(qword_6020A8 + 24LL * (signed int)i + 16) == 1LL )
-        printf("%d. %s\n", i, *(_QWORD *)(qword_6020A8 + 24LL * (signed int)i + 32));
+      if ( *(_QWORD *)(NOTE_TABLE + 24LL * (signed int)i + 16) == 1LL )
+        printf("%d. %s\n", i, *(_QWORD *)(NOTE_TABLE + 24LL * (signed int)i + 32));
     }
   }
   return v0;
 }
-// 6020A8: using guessed type __int64 qword_6020A8;
+// 6020A8: using guessed type __int64 NOTE_TABLE;
 
 //----- (0000000000400BC2) ----------------------------------------------------
-int sub_400BC2()
+int new_note()
 {
   __int64 v0; // rax
   void *v1; // ST18_8
   int i; // [rsp+Ch] [rbp-14h]
   int v4; // [rsp+10h] [rbp-10h]
 
-  if ( *(_QWORD *)(qword_6020A8 + 8) < *(_QWORD *)qword_6020A8 )
+  if ( *(_QWORD *)(NOTE_TABLE + 8) < *(_QWORD *)NOTE_TABLE )
   {
     for ( i = 0; ; ++i )
     {
-      v0 = *(_QWORD *)qword_6020A8;
-      if ( (signed __int64)i >= *(_QWORD *)qword_6020A8 )
+      v0 = *(_QWORD *)NOTE_TABLE;
+      if ( (signed __int64)i >= *(_QWORD *)NOTE_TABLE )
         break;
-      if ( !*(_QWORD *)(qword_6020A8 + 24LL * i + 16) )
+      if ( !*(_QWORD *)(NOTE_TABLE + 24LL * i + 16) )
       {
         printf("Length of new note: ");
-        v4 = sub_40094E();
+        v4 = read_number();
         if ( v4 > 0 )
         {
           if ( v4 > 4096 )
             v4 = 4096;
           v1 = malloc((128 - v4 % 128) % 128 + v4);
           printf("Enter your note: ");
-          sub_40085D((__int64)v1, v4);
-          *(_QWORD *)(qword_6020A8 + 24LL * i + 16) = 1LL;
-          *(_QWORD *)(qword_6020A8 + 24LL * i + 24) = v4;
-          *(_QWORD *)(qword_6020A8 + 24LL * i + 32) = v1;
-          ++*(_QWORD *)(qword_6020A8 + 8);
+          read_n((__int64)v1, v4);
+          *(_QWORD *)(NOTE_TABLE + 24LL * i + 16) = 1LL;
+          *(_QWORD *)(NOTE_TABLE + 24LL * i + 24) = v4;
+          *(_QWORD *)(NOTE_TABLE + 24LL * i + 32) = v1;
+          ++*(_QWORD *)(NOTE_TABLE + 8);
           LODWORD(v0) = puts("Done.");
         }
         else
@@ -273,76 +273,76 @@ int sub_400BC2()
   }
   return v0;
 }
-// 6020A8: using guessed type __int64 qword_6020A8;
+// 6020A8: using guessed type __int64 NOTE_TABLE;
 
 //----- (0000000000400D87) ----------------------------------------------------
-int sub_400D87()
+int edit_note()
 {
   __int64 v1; // rbx
   int v2; // [rsp+4h] [rbp-1Ch]
   int v3; // [rsp+8h] [rbp-18h]
 
   printf("Note number: ");
-  v3 = sub_40094E();
-  if ( v3 < 0 || (signed __int64)v3 >= *(_QWORD *)qword_6020A8 || *(_QWORD *)(qword_6020A8 + 24LL * v3 + 16) != 1LL )
+  v3 = read_number();
+  if ( v3 < 0 || (signed __int64)v3 >= *(_QWORD *)NOTE_TABLE || *(_QWORD *)(NOTE_TABLE + 24LL * v3 + 16) != 1LL )
     return puts("Invalid number!");
   printf("Length of note: ");
-  v2 = sub_40094E();
+  v2 = read_number();
   if ( v2 <= 0 )
     return puts("Invalid length!");
   if ( v2 > 4096 )
     v2 = 4096;
-  if ( v2 != *(_QWORD *)(qword_6020A8 + 24LL * v3 + 24) )
+  if ( v2 != *(_QWORD *)(NOTE_TABLE + 24LL * v3 + 24) )
   {
-    v1 = qword_6020A8;
-    *(_QWORD *)(v1 + 24LL * v3 + 32) = realloc(*(void **)(qword_6020A8 + 24LL * v3 + 32), (128 - v2 % 128) % 128 + v2);
-    *(_QWORD *)(qword_6020A8 + 24LL * v3 + 24) = v2;
+    v1 = NOTE_TABLE;
+    *(_QWORD *)(v1 + 24LL * v3 + 32) = realloc(*(void **)(NOTE_TABLE + 24LL * v3 + 32), (128 - v2 % 128) % 128 + v2);
+    *(_QWORD *)(NOTE_TABLE + 24LL * v3 + 24) = v2;
   }
   printf("Enter your note: ");
-  sub_40085D(*(_QWORD *)(qword_6020A8 + 24LL * v3 + 32), v2);
+  read_n(*(_QWORD *)(NOTE_TABLE + 24LL * v3 + 32), v2);
   return puts("Done.");
 }
-// 6020A8: using guessed type __int64 qword_6020A8;
+// 6020A8: using guessed type __int64 NOTE_TABLE;
 
 //----- (0000000000400F7D) ----------------------------------------------------
-int sub_400F7D()
+int delete_note()
 {
   int v1; // [rsp+Ch] [rbp-4h]
 
-  if ( *(_QWORD *)(qword_6020A8 + 8) <= 0LL )
+  if ( *(_QWORD *)(NOTE_TABLE + 8) <= 0LL )
     return puts("No notes yet.");
   printf("Note number: ");
-  v1 = sub_40094E();
-  if ( v1 < 0 || (signed __int64)v1 >= *(_QWORD *)qword_6020A8 )
+  v1 = read_number();
+  if ( v1 < 0 || (signed __int64)v1 >= *(_QWORD *)NOTE_TABLE )
     return puts("Invalid number!");
-  --*(_QWORD *)(qword_6020A8 + 8);
-  *(_QWORD *)(qword_6020A8 + 24LL * v1 + 16) = 0LL;
-  *(_QWORD *)(qword_6020A8 + 24LL * v1 + 24) = 0LL;
-  free(*(void **)(qword_6020A8 + 24LL * v1 + 32));
+  --*(_QWORD *)(NOTE_TABLE + 8);
+  *(_QWORD *)(NOTE_TABLE + 24LL * v1 + 16) = 0LL;
+  *(_QWORD *)(NOTE_TABLE + 24LL * v1 + 24) = 0LL;
+  free(*(void **)(NOTE_TABLE + 24LL * v1 + 32));
   return puts("Done.");
 }
-// 6020A8: using guessed type __int64 qword_6020A8;
+// 6020A8: using guessed type __int64 NOTE_TABLE;
 
 //----- (0000000000401087) ----------------------------------------------------
 __int64 __fastcall main(__int64 a1, char **a2, char **a3)
 {
-  sub_4009FD();
-  sub_400A49();
+  initialize();
+  malloc_n_init();
   while ( 1 )
   {
-    switch ( sub_400998() )
+    switch ( do_menu() )
     {
       case 1:
-        sub_400B14();
+        list_note();
         break;
       case 2:
-        sub_400BC2();
+        new_note();
         break;
       case 3:
-        sub_400D87();
+        edit_note();
         break;
       case 4:
-        sub_400F7D();
+        delete_note();
         break;
       case 5:
         puts("Bye");
