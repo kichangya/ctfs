@@ -30,7 +30,7 @@ __int64 __fastcall read_n(__int64 a1, signed int a2);
 __int64 __fastcall read_z_until_lf(__int64 a1, int a2);
 int read_number();
 int do_menu();
-unsigned int initialize();
+unsigned int init_io();
 _QWORD *malloc_n_init();
 int list_note();
 int new_note();
@@ -117,17 +117,19 @@ __int64 sub_400830()
 // 400830: could not find valid save-restore pair for rbp
 
 //----- (000000000040085D) ----------------------------------------------------
+// rdi: buf
+// esi: n
 __int64 __fastcall read_n(__int64 a1, signed int a2)
 {
   signed int i; // [rsp+18h] [rbp-8h]
-  int v4; // [rsp+1Ch] [rbp-4h]
+  int nread; // [rsp+1Ch] [rbp-4h]
 
   if ( a2 <= 0 )
     return 0LL;
-  for ( i = 0; i < a2; i += v4 )
+  for ( i = 0; i < a2; i += nread )
   {
-    v4 = read(0, (void *)(a1 + i), a2 - i);
-    if ( v4 <= 0 )
+    nread = read(0, (void *)(a1 + i), a2 - i);
+    if ( nread <= 0 )
       break;
   }
   return (unsigned int)i;
@@ -172,7 +174,7 @@ int do_menu()
 }
 
 //----- (00000000004009FD) ----------------------------------------------------
-unsigned int initialize()
+unsigned int init_io()
 {
   setvbuf(stdin, 0LL, 2, 0LL);
   setvbuf(stdout, 0LL, 2, 0LL);
@@ -326,7 +328,7 @@ int delete_note()
 //----- (0000000000401087) ----------------------------------------------------
 __int64 __fastcall main(__int64 a1, char **a2, char **a3)
 {
-  initialize();
+  init_io();
   malloc_n_init();
   while ( 1 )
   {
