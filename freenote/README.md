@@ -6,7 +6,7 @@ In-progress.
 
 ## Write-ups
 
-* https://m.blog.naver.com/PostView.nhn?blogId=kafuuchin0&logNo=220748412582&categoryNo=11&proxyReferer=https%3A%2F%2Fwww.google.co.kr%2F
+* https://m.blog.naver.com/PostView.nhn?blogId=kafuuchin0&logNo=220748412582&categoryNo=11
 * [Chinese](http://winesap.logdown.com/posts/258859-0ctf-2015-freenode-write-up)
 * http://ww9210.cn/2015/04/01/0ctf-2015-freenote-playing-with-malloc-library/
 
