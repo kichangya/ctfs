@@ -12,6 +12,6 @@ In-progress.
 
 ## References
 
-* https://github.com/shellp/master/unsafe_unlink.c
+* https://github.com/shellphish/how2heap/blob/master/unsafe_unlink.c
 * https://www.blackhat.com/presentations/bh-usa-07/Ferguson/Whitepaper/bh-usa-07-ferguson-WP.pdf
 * http://www.win.tue.nl/~aeb/linux/hh/hh-11.html
