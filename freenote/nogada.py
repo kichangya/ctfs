@@ -90,4 +90,4 @@ if __name__ == "__main__":
     #offset = 0x01c20820 - 0x01c1f000
     leaked_heap = leak_after_two_free()
     
-    raw_input('after leaking something...')
+    raw_input('after leaking heap...')
