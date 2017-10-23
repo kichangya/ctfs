@@ -125,7 +125,7 @@ if __name__ == "__main__":
     #
     # Step 1)
     #
-    # doning heap feng shui suitable for "unsafe_unlink" technique
+    # doing heap feng shui suitable for "unsafe_unlink" technique
     #
 
     new_note('A'*0x100)
@@ -145,6 +145,6 @@ if __name__ == "__main__":
     #
     # Step 3)
     # 
-    # doing free()'ing a chunk which has corrupted metadata will do classic 'FD->bk = BK' memory write.
+    # doing free() a chunk which has corrupted metadata will do classic 'FD->bk = BK' memory write.
     # by using this write primitive, we can overwrite GOT
     #
