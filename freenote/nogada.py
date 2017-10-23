@@ -102,8 +102,8 @@ if __name__ == "__main__":
     raw_input("after malloc four 0xcafebabe's...")
 
     #
-    # don't free adjacent chunks!!! 
-    # we need to prevent coalescing 
+    # don't free adjacent chunks!!! it will cause heap coalescing.
+    # we need two free chunks pointing each other
     #
 
     delete_note(2)
