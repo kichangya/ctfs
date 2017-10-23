@@ -106,7 +106,7 @@ if __name__ == "__main__":
     # we need two free chunks pointing each other
     #
 
-    delete_note(2)
+    delete_note(2) # basically, the order is not important.
     delete_note(0)
     
     raw_input('after 2 frees...')
