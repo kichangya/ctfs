@@ -79,13 +79,20 @@ if __name__ == "__main__":
     #
     # NOTE_TABLE
     #
-    # [NAME, initial value]
+    # [NAME, value]
     # ---------------------
     # [TABLE SIZE, 256]
     # [COUNT, 0 ~ 256]
+    #
     # [OCCUPIED FLAG, 0 or 1]
     # [NOTE SIZE, 0 ~ 4096]
     # [PTR TO CHUNK]
+    #
+    # [OCCUPIED FLAG, 0 or 1]
+    # [NOTE SIZE, 0 ~ 4096]
+    # [PTR TO CHUNK]
+    #
+    # ...
     #
 
     r.recvuntil('Your choice:')
@@ -152,6 +159,10 @@ if __name__ == "__main__":
     # Step 2)
     #
     # land the carefully crafted one big chunk which will overwrite the metadata of 3 (already free'ed) chunks
+    #
+
+    #
+    # unlink(AV, P, BK, FD) will take a chunk P off a binlist ( FD <-> P <-> BK ) 
     #
 
     #
