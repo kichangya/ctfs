@@ -76,6 +76,18 @@ if __name__ == "__main__":
     # 3) free the chunk again 
     #
 
+    #
+    # NOTE_TABLE
+    #
+    # [NAME, initial value]
+    # ---------------------
+    # [TABLE SIZE, 256]
+    # [COUNT, 0 ~ 256]
+    # [OCCUPIED FLAG, 0 or 1]
+    # [NOTE SIZE, 0 ~ 4096]
+    # [PTR TO CHUNK]
+    #
+
     r.recvuntil('Your choice:')
 
     new_note(p32(0xdeadbeef))
