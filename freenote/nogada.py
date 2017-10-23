@@ -162,13 +162,21 @@ if __name__ == "__main__":
     #
     # Step 2)
     #
-    # land the carefully crafted one big chunk which will overwrite the metadata of 3 (already free'ed) chunks
+    # land the carefully crafted one big chunk which will overwrite the metadata of 2 (already free'ed) chunks
     #
-
+    # what will happen:
     #
-    # unlink(AV, P, BK, FD) will take a chunk P off a binlist ( FD <-> P <-> BK ) 
+    # 1) free( note_1 ) will cause coalescing (take note_0 off a free list and merge with note_1)
+    # 2)  -> unlink( note_0 ) 
+    # 3)      -> FD = note_0->fd
+    #         -> BK = note_0->bk
+    #         -> FD->bk = BK
+    #         -> BK->fd = FD
     #
-    # we have to bypass a lot of integrity checks.
+    # unlink(AV, P, BK, FD) will take a chunk P off a binlist (P == note_0)
+    # and we have to bypass a lot of integrity checks.
+    #
+    # invariants)
     #
     # FD->bk == P && BK->fd == P
     # 
