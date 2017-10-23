@@ -135,7 +135,7 @@ if __name__ == "__main__":
     #
     # Step 2)
     #
-    # land the carefully crafted one big chunk which will overwrite the metadata 
+    # land the carefully crafted one big chunk which will overwrite the metadata of 3 (already free'ed) chunks
     #
 
 
