@@ -168,7 +168,10 @@ if __name__ == "__main__":
     #
     # unlink(AV, P, BK, FD) will take a chunk P off a binlist ( FD <-> P <-> BK ) 
     #
+    # we have to bypass a lot of integrity checks.
     #
+    # FD->bk == P && BK->fd == P
+    # 
 
     #
     # Step 3)
