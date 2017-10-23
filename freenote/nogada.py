@@ -79,11 +79,15 @@ if __name__ == "__main__":
     #
     # NOTE_TABLE
     #
-    # [NAME, value]
-    # ---------------------
+    # ------------------------
+    # [HEADER]
+    # ------------------------
     # [TABLE SIZE, 256]
     # [COUNT, 0 ~ 256]
     #
+    # ------------------------
+    # [DATA]
+    # ------------------------
     # [OCCUPIED FLAG, 0 or 1]
     # [NOTE SIZE, 0 ~ 4096]
     # [PTR TO CHUNK]
@@ -163,6 +167,7 @@ if __name__ == "__main__":
 
     #
     # unlink(AV, P, BK, FD) will take a chunk P off a binlist ( FD <-> P <-> BK ) 
+    #
     #
 
     #
