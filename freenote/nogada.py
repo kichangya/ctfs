@@ -103,8 +103,8 @@ if __name__ == "__main__":
     # don't free adjacent chunks!!! 
     # we need to prevent coalescing 
     #
-    delete_note(0)
     delete_note(2)
+    delete_note(0)
     
     raw_input('after 2 frees...')
 
