@@ -165,17 +165,14 @@ if __name__ == "__main__":
     # what will happen:
     #
     # 1) free( note_1 ) will cause coalescing (take note_0 off a free list and merge with note_1)
-    # 2)  -> unlink( note_0 ) 
+    # 2)  -> unlink( note_0 ) ( to take note_0 off )
     # 3)      -> FD = note_0->fd
     #         -> BK = note_0->bk
     #         -> FD->bk = BK
     #         -> BK->fd = FD
     #
-    # unlink(AV, P, BK, FD) will take a chunk P off a binlist (P == note_0)
-    # and we have to bypass a lot of integrity checks.
-    #
-    # invariants)
-    #
+    # Invariants: unlink( AV, P, BK, FD )
+    # 
     # FD->bk == P && BK->fd == P
     # 
 
