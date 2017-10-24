@@ -212,6 +212,6 @@ if __name__ == "__main__":
 
     raw_input('after new note /bin/sh...')
     
-    delete_note(17)
+    delete_note(17) # need refactoring. add '/bin/sh' first. recalc offset.
 
     r.interactive()
