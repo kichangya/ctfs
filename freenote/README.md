@@ -2,6 +2,7 @@
 
 ## How-to
 
+* freenote- - patched binary (no alarm() call)
 * $ python nogada.py (very dirty, needs refactoring)
 
 ## Write-ups
