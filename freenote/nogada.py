@@ -82,21 +82,19 @@ if __name__ == "__main__":
     # ------------------------
     # [HEADER]
     # ------------------------
-    # [TABLE SIZE, 256]
-    # [COUNT, 0 ~ 256]
-    #
+    #   [TABLE SIZE, 256]
+    #   [COUNT, 0 ~ 256]
     # ------------------------
     # [DATA]
     # ------------------------
-    # [OCCUPIED FLAG, 0 or 1]
-    # [NOTE SIZE, 0 ~ 4096]
-    # [PTR TO CHUNK]
+    #   [OCCUPIED FLAG, 0 or 1]
+    #   [NOTE SIZE, 0 ~ 4096]
+    #   [PTR TO CHUNK]
     #
-    # [OCCUPIED FLAG, 0 or 1]
-    # [NOTE SIZE, 0 ~ 4096]
-    # [PTR TO CHUNK]
-    #
-    # ...
+    #   [OCCUPIED FLAG, 0 or 1]
+    #   [NOTE SIZE, 0 ~ 4096]
+    #   [PTR TO CHUNK]
+    #   ...
     #
 
     r.recvuntil('Your choice:')
@@ -185,5 +183,7 @@ if __name__ == "__main__":
     # Step 3)
     # 
     # doing free() a chunk which has corrupted metadata will do classic 'FD->bk = BK' memory write.
-    # by using this write primitive, we can overwrite GOT
+    # By using this write primitive, we can make [PTR TO CHUNK] pointing itself (to be pricise, very near).
+    # With [PTR TO CHUNK] which points itself, we can overwrite [PTR TO CHUNK] to point GOT by edit_note().
+    # With [PTR TO CHUNK] which points GOT, doing edit_note() again will end this misery.
     #
