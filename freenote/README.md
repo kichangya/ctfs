@@ -2,7 +2,7 @@
 
 ## How-to
 
-In-progress.
+* $ python nogada.py (very dirty)
 
 ## Write-ups
 
