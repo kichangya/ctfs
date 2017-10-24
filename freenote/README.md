@@ -2,7 +2,7 @@
 
 ## How-to
 
-* $ python nogada.py (very dirty)
+* $ python nogada.py (very dirty, needs refactoring)
 
 ## Write-ups
 
