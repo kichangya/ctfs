@@ -25,7 +25,9 @@ int main()
 
     printf("&chunk0_ptr: %p\n", &chunk0_ptr);
     printf("chunk0_ptr: %p\n", chunk0_ptr);
+    printf("sizeof(size_t): %ld\n", sizeof(size_t));
 
+    chunk0_ptr[0] = 0;
     chunk0_ptr[1] = sizeof(size_t);
     chunk0_ptr[2] = (uint64_t)&chunk0_ptr - (sizeof(uint64_t)*3); // fd
     chunk0_ptr[3] = (uint64_t)&chunk0_ptr - (sizeof(uint64_t)*2); // bk

