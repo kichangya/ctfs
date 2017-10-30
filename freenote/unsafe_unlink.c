@@ -44,6 +44,7 @@ int main()
     chunk1_hdr[1] &= ~1; // clear PREV_INUSE bit and chunk0 will be treated as a free chunk.
 
     // since chunk0 became a free chunk, free(chunk1) will induce merging chunk1 with chunk0
+    // (it's not in fastbin, so memory manager tries to build one big free chunk out of two small chunks)
     // which will induce memory manager to unlink chunk0 from binlist with the forged fd/bk ptr.
     // unlink() with a forged fd/bk? sounds familiar?
 
