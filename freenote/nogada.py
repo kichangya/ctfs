@@ -189,7 +189,7 @@ if __name__ == "__main__":
     #
     # Step 3)
     # 
-    # doing free() a chunk which has corrupted metadata will do classic 'FD->bk = BK' memory write.
+    # doing free() on a chunk whose metadata has been corrupted will do classic 'FD->bk = BK' memory write.
     # By using this write primitive, we can make [PTR TO CHUNK] to point itself (to be pricise, -24).
     # With [PTR TO CHUNK] which points itself, we can overwrite [PTR TO CHUNK] to point GOT by edit_note().
     # With [PTR TO CHUNK] which points GOT, doing edit_note() again will end this misery.
