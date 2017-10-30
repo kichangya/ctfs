@@ -199,7 +199,7 @@ if __name__ == "__main__":
 
     raw_input('after deleting note_1...')
 
-    # delete_note(1) makes target points to itself (to be precise, -24 bytes)
+    # delete_note(1) makes the target point itself (to be precise, -24 bytes)
     #
     # since, note0->ptr points &note0->ptr-24, we need to add 3-qword prefix.
     # entire payload size should be same as previous malloc(), or realloc() will come into play and break the entire exploit sequence apart.
