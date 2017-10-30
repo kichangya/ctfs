@@ -201,8 +201,8 @@ if __name__ == "__main__":
 
     # delete_note(1) makes target points to itself (to be precise, -24 bytes)
     #
-    # since, note0->ptr points &note0->ptr-24, we need to prefix 3 qwords.
-    # entire payload size should be same, or realloc() will break the entire exploit sequence apart.
+    # since, note0->ptr points &note0->ptr-24, we need to add 3-qword prefixes.
+    # entire payload size should be same as previous malloc(), or realloc() will come into play and break the entire exploit sequence apart.
     #
     # [COUNT 1] [OCCUPIED YES] [NOTE SIZE 8] [PTR to CHUNK]
 
