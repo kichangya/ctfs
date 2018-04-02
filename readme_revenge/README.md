@@ -6,5 +6,4 @@
 
 ## Write-ups
 
-* https://github.com/ct2015/tree/master/32c3-ctf-2015/pwn/readme-200
-
+* https://github.com/r00ta/myWriteUps/tree/master/34C32017/pwn_readme_revenge
