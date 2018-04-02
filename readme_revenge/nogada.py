@@ -53,7 +53,7 @@ lines = [line.rstrip('\n') for line in open('memdump')]
 gef➤  x __stack_chk_fail
 0x4359b0 <__stack_chk_fail_local>:      0x08ec8348
 hex(ord("s")) == 0x73 ($rdx)
-0x6b7424 * 0x73*8 == 0x6b77bc
+0x6b7424 + 0x73*8 == 0x6b77bc
 
 gef➤  x/s 0x6b4040
 0x6b4040 <flag>:        "34C3_", 'X' <repeats 30 times>
