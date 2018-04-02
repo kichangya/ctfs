@@ -41,5 +41,5 @@ Hi, z@ubuntu:~/git/ctfs/readme_revenge$
 
 ## Write-ups
 
-* https://youtu.be/IE6ke7pqCNY 
+* https://youtu.be/lE6ke7pqCNY 
 * https://github.com/r00ta/myWriteUps/tree/master/34C32017/pwn_readme_revenge
