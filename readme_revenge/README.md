@@ -6,6 +6,7 @@
 
 or
 
+```
 z@ubuntu:~/git/ctfs/readme_revenge$ export LIBC_FATAL_STDERR_=1
 z@ubuntu:~/git/ctfs/readme_revenge$ socat TCP-LISTEN:8000,reuseaddr exec:"./readme_revenge",stderr
 
@@ -36,6 +37,7 @@ Hi, z@ubuntu:~/git/ctfs/readme_revenge$ python n.py|nc localhost 8000
 7ffe9adc2000-7ffe9adc4000 r-xp 00000000 00:00 0                          [vdso]
 ffffffffff600000-ffffffffff601000 r-xp 00000000 00:00 0                  [vsyscall]
 Hi, z@ubuntu:~/git/ctfs/readme_revenge$
+```
 
 ## Write-ups
 
