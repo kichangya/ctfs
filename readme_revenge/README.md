@@ -8,7 +8,7 @@ or
 
 ```
 
-# Setting up the CTF daemon
+# Setting up the daemon
 
 z@ubuntu:~/git/ctfs/readme_revenge$ export LIBC_FATAL_STDERR_=1
 z@ubuntu:~/git/ctfs/readme_revenge$ socat TCP-LISTEN:8000,reuseaddr exec:"./readme_revenge",stderr
