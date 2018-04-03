@@ -1,4 +1,4 @@
-0CTF 2015 babyheap
+0CTF 2015 Quals babyheap
 
 ## How-to
 

@@ -1,4 +1,4 @@
-RHME3 Qual 2017 pwn
+RHME3 Quals 2017 pwn
 
 ## How-to
 
