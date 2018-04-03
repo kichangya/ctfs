@@ -42,7 +42,7 @@ $3 = 0x73 <-- $rdx is ord('s')
 
 [0x00000000]> pd 20 @ 0x45ad08
 |           ; DATA XREF from 0x00467aa8 (fcn.00467aa8)
-|           0x0045ad08    488b0d99cd2. mov rcx, [rip+0x25cd99] ; 0x00467aa8
+|           0x0045ad08    488b0d99cd2. mov rcx, [rip+0x25cd99] ; 0x00467aa8 <-- __printf_arginfo_table
 |           0x0045ad0f    488b04d1     mov rax, [rcx+rdx*8] <-- __printf_arginfo_table['s']
 |           0x0045ad13    4885c0       test rax, rax
 |           0x0045ad16    0f84dcfcffff jz 0x45a9f8
@@ -50,7 +50,7 @@ $3 = 0x73 <-- $rdx is ord('s')
 |           0x0045ad20    488d5334     lea rdx, [rbx+0x34]
 |           0x0045ad24    be01000000   mov esi, 0x1
 |           0x0045ad29    4889df       mov rdi, rbx
-|           0x0045ad2c    ffd0         call rax <-- we can control $rax (*__printf_arginfo_table['s'])()
+|           0x0045ad2c    ffd0         call rax <-- we can control $rax --> (*__printf_arginfo_table['s'])()
 |
 
 if (__builtin_expect (__printf_function_table == NULL, 1)
