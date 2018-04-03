@@ -12,7 +12,7 @@ z@ubuntu:~/git/ctfs/readme_revenge$ socat TCP-LISTEN:8000,reuseaddr exec:"./read
 
 -----
 
-Hi, z@ubuntu:~/git/ctfs/readme_revenge$ python n.py|nc localhost 8000
+z@ubuntu:~/git/ctfs/readme_revenge$ python n.py|nc localhost 8000
 *** stack smashing detected ***: 34C3_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX terminated
 ======= Backtrace: =========
 [0x40a29e]
