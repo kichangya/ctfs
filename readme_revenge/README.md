@@ -7,10 +7,15 @@
 or
 
 ```
+
+# Setting up the CTF daemon
+
 z@ubuntu:~/git/ctfs/readme_revenge$ export LIBC_FATAL_STDERR_=1
 z@ubuntu:~/git/ctfs/readme_revenge$ socat TCP-LISTEN:8000,reuseaddr exec:"./readme_revenge",stderr
 
 -----
+
+# Exploitation
 
 z@ubuntu:~/git/ctfs/readme_revenge$ python n.py|nc localhost 8000
 *** stack smashing detected ***: 34C3_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX terminated
