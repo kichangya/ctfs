@@ -16,10 +16,10 @@ context.log_level = 'info'
 
 #r = remote('localhost', 8888)
 r = process('./teufel')
-gdb.attach(r, '''
-b *0x40051f
-'''
-)
+#gdb.attach(r, '''
+#b *0x40051f
+#'''
+#)
 #raw_input('Go!')
 
 # strace: 

